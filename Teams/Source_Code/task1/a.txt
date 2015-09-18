@@ -1,0 +1,17 @@
+{
+	a = 2;
+	b = 3*a + 4;
+	if (a > 5)
+	{
+		c = 2;
+		a = c + 1
+	}
+	else c = 3;
+	while (a)
+		a = a - 1;
+	do
+	{
+		a = a + 1
+	}
+	while (a != 5)
+}
