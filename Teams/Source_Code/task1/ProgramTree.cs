@@ -87,6 +87,21 @@ namespace ProgramTree
         }
     }
 
+    public class CoutNode : StatementNode
+    {
+        public List<ExprNode> ExprList = new List<ExprNode>();
+
+        public CoutNode(ExprNode expr)
+        {
+            Add(expr);
+        }
+
+        public void Add(ExprNode expr)
+        {
+            ExprList.Add(expr);
+        }
+    }
+
     public class BlockNode : StatementNode
     {
         public List<StatementNode> StList = new List<StatementNode>();

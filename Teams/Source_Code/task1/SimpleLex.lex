@@ -49,6 +49,8 @@ ID {Alpha}{AlphaDigit}*
 "{" { return (int)Tokens.BEGIN; }
 "}" { return (int)Tokens.END; }
 
+"<<" { return (int)Tokens.STREAM; }
+
 [^ \r\n\t] {
 	LexError();
 }
@@ -85,7 +87,7 @@ class ScannerHelper
 	keywords.Add("bool", (int)Tokens.BOOL);
 	keywords.Add("if", (int)Tokens.IF);
 	keywords.Add("else", (int)Tokens.ELSE);
-	
+	keywords.Add("cout", (int)Tokens.COUT);	
   }
   public static int GetIDToken(string s)
   {

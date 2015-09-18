@@ -14,13 +14,14 @@
 			public ExprNode eVal;
 			public StatementNode stVal;
 			public BlockNode blVal;
+			public CoutNode cVal;
        }
 
 %using ProgramTree;
 
 %namespace SimpleParser
 
-%token BEGIN END WHILE DO ASSIGN SEMICOLON PLUS MINUS MULT DIV BRACKETL BRACKETR LESS MORE EQUAL NOTEQUAL LESSEQUAL MOREEQUAL INT BOOL IF ELSE
+%token BEGIN END WHILE DO ASSIGN SEMICOLON PLUS MINUS MULT DIV BRACKETL BRACKETR LESS MORE EQUAL NOTEQUAL LESSEQUAL MOREEQUAL INT BOOL IF ELSE COUT STREAM
 %token <iVal> INUM 
 %token <dVal> RNUM 
 %token <sVal> ID
@@ -28,6 +29,7 @@
 %type <eVal> expr ident T F L
 %type <stVal> assign statement cycle var if
 %type <blVal> stlist block
+%type <cVal> cout
 
 %%
 
@@ -50,6 +52,7 @@ statement: assign { $$ = $1; }
 		| cycle   { $$ = $1; }
 		| var 	  { $$ = $1; }
 		| if	  { $$ = $1; }
+		| cout 	  { $$ = $1; }
 	;
 
 ident 	: ID { $$ = new IdNode($1); }	
@@ -95,6 +98,10 @@ block	: BEGIN stlist END { $$ = $2; }
 
 cycle	: WHILE BRACKETL expr BRACKETR statement { $$ = new CycleNode(CycleType.While, $3, $5); }
 		| DO statement WHILE BRACKETL expr BRACKETR { $$ = new CycleNode(CycleType.DoWhile, $5, $2); }
+		;
+	
+cout	: COUT STREAM expr { $$ = new CoutNode($3); }
+		| cout STREAM expr { $1.Add($3); $$ = $1; }
 		;
 	
 %%

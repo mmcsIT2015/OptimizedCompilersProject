@@ -4,7 +4,7 @@
 // ==========================================================================
 //  Version:  1.3.6
 //  Machine:  UNREAL-SMARTPC
-//  DateTime: 18.09.2015 18:40:38
+//  DateTime: 18.09.2015 19:07:38
 //  UserName: Vladislav
 // ==========================================================================
 
@@ -31,22 +31,18 @@
 
 %namespace SimpleParser
 
-%token BEGIN END CYCLE ASSIGN SEMICOLON PLUS MINUS MULT DIV BRACKETL BRACKETR LESS MORE EQUAL NOTEQUAL LESSEQUAL MOREQUAL INT BOOL IF ELSE
+%token BEGIN END WHILE DO ASSIGN SEMICOLON PLUS MINUS MULT DIV BRACKETL BRACKETR LESS MORE EQUAL NOTEQUAL LESSEQUAL MOREEQUAL INT BOOL IF ELSE COUT STREAM
 %token <iVal> INUM 
 %token <dVal> RNUM 
 %token <sVal> ID
 
-%type <eVal> expr ident T F
-%type <stVal> assign statement cycle var if
+%type <eVal> expr ident T F L
+%type <stVal> assign statement cycle var if cout
 %type <blVal> stlist block
 
 %%
-// Error: NonTerminal symbol "MOREEQUAL" has no productions
-// Warning: Terminating MOREEQUAL fixes the following size-1 NonTerminal set
-   // {MOREEQUAL}
-// Error: There are 1 non-terminating NonTerminal Symbols
-   //  {MOREEQUAL}
-// -------------------------------------------------------------------------
+// Warning: NonTerminal symbol "cout" is unreachable
+// -------------------------------------------------
 
 progr   : block { root = $1; }
 		;
@@ -110,7 +106,11 @@ F    	: ident { $$ = $1 as IdNode; }
 block	: BEGIN stlist END { $$ = $2; }
 		;
 
-cycle	: CYCLE BRACKETL expr BRACKETR statement { $$ = new CycleNode($3, $5); }
+cycle	: WHILE BRACKETL expr BRACKETR statement { $$ = new CycleNode(CycleType.While, $3, $5); }
+		| DO statement WHILE BRACKETL expr BRACKETR { $$ = new CycleNode(CycleType.DoWhile, $5, $2); }
+		;
+	
+cout	: COUT STREAM expr
 		;
 	
 %%

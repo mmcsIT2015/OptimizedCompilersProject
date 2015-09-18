@@ -13,3 +13,8 @@ C:\Users\Vladislav\Downloads\Разработка оптимизирующих �
 C:\Users\Vladislav\Downloads\Разработка оптимизирующих компиляторов\task1\obj\x86\Debug\SimpleLang1.csprojResolveAssemblyReference.cache
 C:\Users\Vladislav\Downloads\Разработка оптимизирующих компиляторов\task1\bin\Debug\SimpleLang.exe
 C:\Users\Vladislav\Downloads\Разработка оптимизирующих компиляторов\task1\bin\Debug\SimpleLang.pdb
+C:\Users\Vladislav\Documents\Repos\OptimizedCompilersProject\Teams\Source_Code\task1\obj\x86\Debug\SimpleLang.exe
+C:\Users\Vladislav\Documents\Repos\OptimizedCompilersProject\Teams\Source_Code\task1\obj\x86\Debug\SimpleLang.pdb
+C:\Users\Vladislav\Documents\Repos\OptimizedCompilersProject\Teams\Source_Code\task1\obj\x86\Debug\SimpleLang1.csprojResolveAssemblyReference.cache
+C:\Users\Vladislav\Documents\Repos\OptimizedCompilersProject\Teams\Source_Code\task1\bin\Debug\SimpleLang.exe
+C:\Users\Vladislav\Documents\Repos\OptimizedCompilersProject\Teams\Source_Code\task1\bin\Debug\SimpleLang.pdb
