@@ -36,7 +36,12 @@ namespace ProgramTree
         public ExprNode LeftOperand { get; set; }
         public ExprNode RightOperand { get; set; }
         public BinaryType Operation { get; set; }
-        public BinaryNode(ExprNode leftoperand, ExprNode rightoperand, BinaryType operation) { LeftOperand = leftoperand; RightOperand = rightoperand; Operation = operation; }
+
+        public BinaryNode(ExprNode lhs, ExprNode rhs, BinaryType operation) {
+          LeftOperand = lhs;
+          RightOperand = rhs;
+          Operation = operation;
+        }
     }
 
     public class StatementNode : Node // базовый класс для всех операторов
@@ -48,8 +53,8 @@ namespace ProgramTree
         public IdNode Id { get; set; }
         public ExprNode Expr { get; set; }
         public AssignType AssOp { get; set; }
-        public AssignNode(IdNode id, ExprNode expr, AssignType assop = AssignType.Assign)
-        {
+
+        public AssignNode(IdNode id, ExprNode expr, AssignType assop = AssignType.Assign) {
             Id = id;
             Expr = expr;
             AssOp = assop;
@@ -59,10 +64,12 @@ namespace ProgramTree
     public class VarNode : StatementNode
     {
         public VarType Type { get; set; }
-
         public IdNode Id { get; set; }
 
-        public VarNode(VarType type, IdNode id) { Type = type; Id = id; }
+        public VarNode(VarType type, IdNode id) {
+          Type = type;
+          Id = id;
+        }
     }
 
     public class IfNode : StatementNode
@@ -71,7 +78,11 @@ namespace ProgramTree
         public StatementNode Stat { get; set; }
         public StatementNode StatElse { get; set; }
 
-        public IfNode(ExprNode expr, StatementNode stat, StatementNode statelse = null) { Expr = expr; Stat = stat; StatElse = statelse; }
+        public IfNode(ExprNode expr, StatementNode stat, StatementNode statelse = null) {
+          Expr = expr;
+          Stat = stat;
+          StatElse = statelse;
+        }
     }
 
     public class CycleNode : StatementNode
@@ -79,8 +90,8 @@ namespace ProgramTree
         public CycleType Type { get; set; }
         public ExprNode Expr { get; set; }
         public StatementNode Stat { get; set; }
-        public CycleNode(CycleType type, ExprNode expr, StatementNode stat)
-        {
+
+        public CycleNode(CycleType type, ExprNode expr, StatementNode stat) {
             Type = type;
             Expr = expr;
             Stat = stat;
@@ -91,13 +102,11 @@ namespace ProgramTree
     {
         public List<ExprNode> ExprList = new List<ExprNode>();
 
-        public CoutNode(ExprNode expr)
-        {
+        public CoutNode(ExprNode expr) {
             Add(expr);
         }
 
-        public void Add(ExprNode expr)
-        {
+        public void Add(ExprNode expr) {
             ExprList.Add(expr);
         }
     }
@@ -105,12 +114,12 @@ namespace ProgramTree
     public class BlockNode : StatementNode
     {
         public List<StatementNode> StList = new List<StatementNode>();
-        public BlockNode(StatementNode stat)
-        {
+
+        public BlockNode(StatementNode stat) {
             Add(stat);
         }
-        public void Add(StatementNode stat)
-        {
+
+        public void Add(StatementNode stat) {
             StList.Add(stat);
         }
     }
