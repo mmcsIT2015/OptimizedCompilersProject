@@ -1,0 +1,34 @@
+begin
+  b := -2.3;
+  a := 3;
+  a := 3 + b1 * 2 / (a - c4 );
+  while 3 > 3 do
+    if 3 < 3 then
+       a := 3;
+  begin
+    a := c;
+    c := 1.1
+  end;
+  if a < b then
+     a := b <> c
+  else
+     e := a > 3;
+  if (3 - 5) > 7 * 4 then
+     c := 3 - a = 7 * (2 + 4.5);
+  repeat
+    a := a + 1
+  until a < b;
+  write(a, b = c, 2, a - b);
+  write(x);
+  readln;
+  exit;
+  if a then
+    write(a);
+  repeat
+    a := 3
+  until 3;
+  while 5 * a do
+    readln;
+  a -= b;
+  b *= 3 * 5 + 7
+end
