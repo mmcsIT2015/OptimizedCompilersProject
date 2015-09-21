@@ -15,13 +15,14 @@
 			public StatementNode stVal;
 			public BlockNode blVal;
 			public PredicateBinaryNode prVal;
+			public IfNode ifVal;
        }
 
 %using ProgramTree;
 
 %namespace SimpleParser
 
-%token BEGIN END CYCLE ASSIGN SEMICOLON PLUS MINUS MULT DIV LEFTBRACKET RIGHTBRACKET GREATER LESS EQUAL NOTEQUAL
+%token BEGIN END CYCLE ASSIGN SEMICOLON PLUS MINUS MULT DIV LEFTBRACKET RIGHTBRACKET GREATER LESS EQUAL NOTEQUAL IF THEN ELSE
 %token <iVal> INUM 
 %token <dVal> RNUM 
 %token <sVal> ID
@@ -30,6 +31,7 @@
 %type <stVal> assign statement cycle 
 %type <blVal> stlist block
 %type <prVal> prexpr
+%type <ifVal> if
 
 %%
 
@@ -50,6 +52,7 @@ stlist	: statement
 statement: assign { $$ = $1; }
 		| block   { $$ = $1; }
 		| cycle   { $$ = $1; }
+		| if { $$ = $1; }
 	;
 
 ident 	: ID { $$ = new IdNode($1); }	
@@ -85,6 +88,10 @@ block	: BEGIN stlist END { $$ = $2; }
 		;
 
 cycle	: CYCLE expr statement { $$ = new CycleNode($2, $3); }
+		;
+
+if		: IF prexpr THEN statement { $$ = new IfNode($2, $4); }
+		| IF prexpr THEN statement ELSE statement { $$ = new IfNode($2, $4, $6); }
 		;
 	
 %%

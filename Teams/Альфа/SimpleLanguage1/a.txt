@@ -7,6 +7,10 @@ begin
     a := c;
     c := 1.1
   end;
-  e := a > 3;
-  c := 3 - a != 7 * (2 + 4.5)
+  if a < b then
+     a := b
+  else
+     e := a > 3;
+  if (3 - 5) > 7 * 4 then
+     c := 3 - a != 7 * (2 + 4.5)
 end

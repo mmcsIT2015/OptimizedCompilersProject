@@ -97,4 +97,16 @@ namespace ProgramTree
             this.Operation = Operation;
         }
     }
+    public class IfNode : StatementNode
+    {
+        public PredicateBinaryNode Predicate { get; set; }
+        public StatementNode IfStat { get; set; }
+        public StatementNode ElseStat { get; set; }
+        public IfNode(PredicateBinaryNode Predicate, StatementNode IfStat, StatementNode ElseStat = null)
+        {
+            this.Predicate = Predicate;
+            this.IfStat = IfStat;
+            this.ElseStat = ElseStat;
+        }
+    }
 }
