@@ -11,7 +11,7 @@ namespace ProgramTree
     {
     }
 
-    public class ExprNode : Node // базовый класс для всех выражений
+    public class ExprNode : ExprAndPredicateNode // базовый класс для всех выражений
     {
     }
 
@@ -53,9 +53,9 @@ namespace ProgramTree
     public class AssignNode : StatementNode
     {
         public IdNode Id { get; set; }
-        public ExprNode Expr { get; set; }
+        public ExprAndPredicateNode Expr { get; set; }
         public AssignType AssOp { get; set; }
-        public AssignNode(IdNode id, ExprNode expr, AssignType assop = AssignType.Assign)
+        public AssignNode(IdNode id, ExprAndPredicateNode expr, AssignType assop)
         {
             Id = id;
             Expr = expr;
@@ -65,10 +65,10 @@ namespace ProgramTree
 
     public class WhileNode : StatementNode
     {
-        public PredicateBinaryNode PrExpr { get; set; }
+        public ExprAndPredicateNode PrExpr { get; set; }
         public StatementNode Stat { get; set; }
         public CycleType cycle { get; set; }
-        public WhileNode(PredicateBinaryNode prexpr, StatementNode stat, CycleType cycle)
+        public WhileNode(ExprAndPredicateNode prexpr, StatementNode stat, CycleType cycle)
         {
             PrExpr = prexpr;
             Stat = stat;
@@ -88,7 +88,7 @@ namespace ProgramTree
             StList.Add(stat);
         }
     }
-    public class PredicateBinaryNode : ExprNode
+    public class PredicateBinaryNode : ExprAndPredicateNode
     {
         public ExprNode LeftOperand { get; set; }
         public ExprNode RightOperand { get; set; }
@@ -102,10 +102,10 @@ namespace ProgramTree
     }
     public class IfNode : StatementNode
     {
-        public PredicateBinaryNode Predicate { get; set; }
+        public ExprAndPredicateNode Predicate { get; set; }
         public StatementNode IfStat { get; set; }
         public StatementNode ElseStat { get; set; }
-        public IfNode(PredicateBinaryNode Predicate, StatementNode IfStat, StatementNode ElseStat = null)
+        public IfNode(ExprAndPredicateNode Predicate, StatementNode IfStat, StatementNode ElseStat = null)
         {
             this.Predicate = Predicate;
             this.IfStat = IfStat;
@@ -124,14 +124,18 @@ namespace ProgramTree
     }
     public class ArgsNode : Node
     {
-        public List<ExprNode> exprs = new List<ExprNode>();
-        public void Add(ExprNode expr)
+        public List<ExprAndPredicateNode> exprs = new List<ExprAndPredicateNode>();
+        public void Add(ExprAndPredicateNode expr)
         {
             exprs.Add(expr);
         }
-        public ArgsNode(ExprNode expr)
+        public ArgsNode(ExprAndPredicateNode expr)
         {
             Add(expr);
         }
+    }
+    public class ExprAndPredicateNode : Node
+    {
+
     }
 }

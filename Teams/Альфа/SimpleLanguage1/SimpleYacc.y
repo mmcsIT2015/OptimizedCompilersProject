@@ -18,13 +18,14 @@
 			public IfNode ifVal;
 			public ProcedureNode pcVal;
 			public ArgsNode aVal;
+			public ExprAndPredicateNode eapbVal;
        }
 
 %using ProgramTree;
 
 %namespace SimpleParser
 
-%token BEGIN END WHILE DO ASSIGN SEMICOLON PLUS MINUS MULT DIV LEFTBRACKET RIGHTBRACKET GREATER LESS EQUAL NOTEQUAL IF THEN ELSE REPEAT UNTIL COMMA
+%token BEGIN END WHILE DO ASSIGN ASSIGNPLUS ASSIGNMINUS ASSIGNMULT ASSIGNDIVIDE SEMICOLON PLUS MINUS MULT DIV LEFTBRACKET RIGHTBRACKET GREATER LESS EQUAL NOTEQUAL IF THEN ELSE REPEAT UNTIL COMMA
 %token <iVal> INUM 
 %token <dVal> RNUM 
 %token <sVal> ID
@@ -36,6 +37,7 @@
 %type <ifVal> if
 %type <pcVal> proc
 %type <aVal> arglist
+%type <eapbVal> exprAndPredBin
 
 %%
 
@@ -64,19 +66,26 @@ proc	: ident LEFTBRACKET arglist RIGHTBRACKET { $$ = new ProcedureNode($1 as IdN
 		| ident { $$ = new ProcedureNode($1 as IdNode, null); }
 		;
 
-arglist	: expr { $$ = new ArgsNode($1); }
-		| arglist COMMA expr
+arglist	: exprAndPredBin { $$ = new ArgsNode($1); }
+		| arglist COMMA exprAndPredBin
 			{ 
 				$1.Add($3); 
 				$$ = $1; 
 			}
 		;
 
+exprAndPredBin : expr { $$ = $1; }
+		| prexpr { $$ = $1; }
+		;
+
 ident 	: ID { $$ = new IdNode($1); }	
 		;
 	
-assign 	: ident ASSIGN expr { $$ = new AssignNode($1 as IdNode, $3); }
-		| ident ASSIGN prexpr { $$ = new AssignNode($1 as IdNode, $3); }
+assign 	: ident ASSIGN exprAndPredBin { $$ = new AssignNode($1 as IdNode, $3, AssignType.Assign); }
+		| ident ASSIGNPLUS exprAndPredBin { $$ = new AssignNode($1 as IdNode, $3, AssignType.Assign); }
+		| ident ASSIGNMINUS exprAndPredBin { $$ = new AssignNode($1 as IdNode, $3, AssignType.AssignMinus); }
+		| ident ASSIGNMULT exprAndPredBin { $$ = new AssignNode($1 as IdNode, $3, AssignType.AssignMult); }
+		| ident ASSIGNDIVIDE exprAndPredBin { $$ = new AssignNode($1 as IdNode, $3, AssignType.AssignDivide); }
 		;
 
 prexpr	: expr GREATER expr { $$ = new PredicateBinaryNode($1, $3, PredicateOperationType.Greater); }
@@ -104,12 +113,12 @@ f		: ident { $$ = $1 as IdNode; }
 block	: BEGIN stlist END { $$ = $2; }
 		;
 
-while	: WHILE prexpr DO statement { $$ = new WhileNode($2, $4, CycleType.WhileDo); }
-		| REPEAT statement UNTIL prexpr { $$ = new WhileNode($4, $2, CycleType.DoUntil); }
+while	: WHILE exprAndPredBin DO statement { $$ = new WhileNode($2, $4, CycleType.WhileDo); }
+		| REPEAT statement UNTIL exprAndPredBin { $$ = new WhileNode($4, $2, CycleType.DoUntil); }
 		;
 
-if		: IF prexpr THEN statement { $$ = new IfNode($2, $4); }
-		| IF prexpr THEN statement ELSE statement { $$ = new IfNode($2, $4, $6); }
+if		: IF exprAndPredBin THEN statement { $$ = new IfNode($2, $4); }
+		| IF exprAndPredBin THEN statement ELSE statement { $$ = new IfNode($2, $4, $6); }
 		;
 	
 %%

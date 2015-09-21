@@ -32,6 +32,10 @@ ID {Alpha}{AlphaDigit}*
 }
 
 ":=" { return (int)Tokens.ASSIGN; }
+"+=" { return (int)Tokens.ASSIGNPLUS; }
+"-=" { return (int)Tokens.ASSIGNMINUS; }
+"*=" { return (int)Tokens.ASSIGNMULT; }
+"/=" { return (int)Tokens.ASSIGNDIVIDE; }
 ";" { return (int)Tokens.SEMICOLON; }
 "+" { return (int)Tokens.PLUS; }
 "-" { return (int)Tokens.MINUS; }
@@ -41,8 +45,8 @@ ID {Alpha}{AlphaDigit}*
 ")" { return (int)Tokens.RIGHTBRACKET; }
 ">" { return (int)Tokens.GREATER; }
 "<" { return (int)Tokens.LESS; }
-"==" { return (int)Tokens.EQUAL; }
-"!=" { return (int)Tokens.NOTEQUAL; }
+"=" { return (int)Tokens.EQUAL; }
+"<>" { return (int)Tokens.NOTEQUAL; }
 "," { return (int)Tokens.COMMA; }
 
 [^ \r\n] {
