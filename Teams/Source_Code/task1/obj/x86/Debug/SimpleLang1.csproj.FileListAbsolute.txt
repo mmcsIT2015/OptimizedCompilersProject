@@ -1,0 +1,20 @@
+D:\My Downloads\_Google Chrome\SimpleLanguage1\bin\Debug\SimpleLang.exe
+D:\My Downloads\_Google Chrome\SimpleLanguage1\bin\Debug\SimpleLang.pdb
+D:\My Downloads\_Google Chrome\SimpleLanguage1\obj\x86\Debug\SimpleLang1.csprojResolveAssemblyReference.cache
+D:\My Downloads\_Google Chrome\SimpleLanguage1\obj\x86\Debug\SimpleLang.exe
+D:\My Downloads\_Google Chrome\SimpleLanguage1\obj\x86\Debug\SimpleLang.pdb
+D:\Файлы\Учеба\МехМат\маг 2 курс\Разработка оптимизирующих компиляторов\Задание 1\task3\obj\x86\Debug\SimpleLang.exe
+D:\Файлы\Учеба\МехМат\маг 2 курс\Разработка оптимизирующих компиляторов\Задание 1\task3\obj\x86\Debug\SimpleLang.pdb
+D:\Файлы\Учеба\МехМат\маг 2 курс\Разработка оптимизирующих компиляторов\Задание 1\task3\bin\Debug\SimpleLang.exe
+D:\Файлы\Учеба\МехМат\маг 2 курс\Разработка оптимизирующих компиляторов\Задание 1\task3\bin\Debug\SimpleLang.pdb
+D:\Файлы\Учеба\МехМат\маг 2 курс\Разработка оптимизирующих компиляторов\Задание 1\task3\obj\x86\Debug\SimpleLang1.csprojResolveAssemblyReference.cache
+C:\Users\Vladislav\Downloads\Разработка оптимизирующих компиляторов\task1\obj\x86\Debug\SimpleLang.exe
+C:\Users\Vladislav\Downloads\Разработка оптимизирующих компиляторов\task1\obj\x86\Debug\SimpleLang.pdb
+C:\Users\Vladislav\Downloads\Разработка оптимизирующих компиляторов\task1\obj\x86\Debug\SimpleLang1.csprojResolveAssemblyReference.cache
+C:\Users\Vladislav\Downloads\Разработка оптимизирующих компиляторов\task1\bin\Debug\SimpleLang.exe
+C:\Users\Vladislav\Downloads\Разработка оптимизирующих компиляторов\task1\bin\Debug\SimpleLang.pdb
+C:\Users\Vladislav\Documents\Repos\OptimizedCompilersProject\Teams\Source_Code\task1\obj\x86\Debug\SimpleLang.exe
+C:\Users\Vladislav\Documents\Repos\OptimizedCompilersProject\Teams\Source_Code\task1\obj\x86\Debug\SimpleLang.pdb
+C:\Users\Vladislav\Documents\Repos\OptimizedCompilersProject\Teams\Source_Code\task1\obj\x86\Debug\SimpleLang1.csprojResolveAssemblyReference.cache
+C:\Users\Vladislav\Documents\Repos\OptimizedCompilersProject\Teams\Source_Code\task1\bin\Debug\SimpleLang.exe
+C:\Users\Vladislav\Documents\Repos\OptimizedCompilersProject\Teams\Source_Code\task1\bin\Debug\SimpleLang.pdb
