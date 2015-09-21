@@ -1,0 +1,9 @@
+# Folders
+.vs/
+bin/
+obj/
+
+# Visual studio files.
+*.sdf
+*.pdb
+*.suo
