@@ -43,6 +43,7 @@ ID {Alpha}{AlphaDigit}*
 "<" { return (int)Tokens.LESS; }
 "==" { return (int)Tokens.EQUAL; }
 "!=" { return (int)Tokens.NOTEQUAL; }
+"," { return (int)Tokens.COMMA; }
 
 [^ \r\n] {
 	LexError();

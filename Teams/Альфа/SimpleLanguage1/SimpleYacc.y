@@ -16,13 +16,14 @@
 			public BlockNode blVal;
 			public PredicateBinaryNode prVal;
 			public IfNode ifVal;
+			public ProcedureNode pcVal;
        }
 
 %using ProgramTree;
 
 %namespace SimpleParser
 
-%token BEGIN END WHILE DO ASSIGN SEMICOLON PLUS MINUS MULT DIV LEFTBRACKET RIGHTBRACKET GREATER LESS EQUAL NOTEQUAL IF THEN ELSE REPEAT UNTIL
+%token BEGIN END WHILE DO ASSIGN SEMICOLON PLUS MINUS MULT DIV LEFTBRACKET RIGHTBRACKET GREATER LESS EQUAL NOTEQUAL IF THEN ELSE REPEAT UNTIL COMMA
 %token <iVal> INUM 
 %token <dVal> RNUM 
 %token <sVal> ID
@@ -32,6 +33,7 @@
 %type <blVal> stlist block
 %type <prVal> prexpr
 %type <ifVal> if
+%type <pcVal> proc
 
 %%
 
@@ -53,7 +55,11 @@ statement: assign { $$ = $1; }
 		| block   { $$ = $1; }
 		| while   { $$ = $1; }
 		| if { $$ = $1; }
-	;
+		| proc { $$ = $1; }
+		;
+
+proc	: ID LEFTBRACKET RIGHTBRACKET { $$ = new ProcedureNode($1); }
+		;
 
 ident 	: ID { $$ = new IdNode($1); }	
 		;

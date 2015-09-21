@@ -112,4 +112,19 @@ namespace ProgramTree
             this.ElseStat = ElseStat;
         }
     }
+    public class ProcedureNode : StatementNode
+    {
+        public string id { get; set; }
+        public List<ExprNode> exprs = new List<ExprNode>();
+        public void Add(ExprNode expr)
+        {
+            if (expr != null)
+                 exprs.Add(expr);
+        }
+        public ProcedureNode(string id, ExprNode expr = null)
+        {
+            this.id = id;
+            Add(expr);
+        }
+    }
 }
