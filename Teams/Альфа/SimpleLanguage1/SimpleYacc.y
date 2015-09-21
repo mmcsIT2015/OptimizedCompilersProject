@@ -17,6 +17,7 @@
 			public PredicateBinaryNode prVal;
 			public IfNode ifVal;
 			public ProcedureNode pcVal;
+			public ArgsNode aVal;
        }
 
 %using ProgramTree;
@@ -34,6 +35,7 @@
 %type <prVal> prexpr
 %type <ifVal> if
 %type <pcVal> proc
+%type <aVal> arglist
 
 %%
 
@@ -58,7 +60,16 @@ statement: assign { $$ = $1; }
 		| proc { $$ = $1; }
 		;
 
-proc	: ID LEFTBRACKET RIGHTBRACKET { $$ = new ProcedureNode($1); }
+proc	: ident LEFTBRACKET arglist RIGHTBRACKET { $$ = new ProcedureNode($1 as IdNode, $3); }
+		| ident { $$ = new ProcedureNode($1 as IdNode, null); }
+		;
+
+arglist	: expr { $$ = new ArgsNode($1); }
+		| arglist COMMA expr
+			{ 
+				$1.Add($3); 
+				$$ = $1; 
+			}
 		;
 
 ident 	: ID { $$ = new IdNode($1); }	

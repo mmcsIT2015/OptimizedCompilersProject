@@ -18,6 +18,8 @@ begin
   repeat
     a := a + 1
   until a < b;
-  write();
-  exit()
+  write(a, b, 2, a - b);
+  write(x);
+  readln;
+  exit
 end

@@ -114,16 +114,23 @@ namespace ProgramTree
     }
     public class ProcedureNode : StatementNode
     {
-        public string id { get; set; }
+        public IdNode id { get; set; }
+        public ArgsNode args {get; set;}
+        public ProcedureNode(IdNode id, ArgsNode args)
+        {
+            this.id = id;
+            this.args = args;
+        }
+    }
+    public class ArgsNode : Node
+    {
         public List<ExprNode> exprs = new List<ExprNode>();
         public void Add(ExprNode expr)
         {
-            if (expr != null)
-                 exprs.Add(expr);
+            exprs.Add(expr);
         }
-        public ProcedureNode(string id, ExprNode expr = null)
+        public ArgsNode(ExprNode expr)
         {
-            this.id = id;
             Add(expr);
         }
     }
