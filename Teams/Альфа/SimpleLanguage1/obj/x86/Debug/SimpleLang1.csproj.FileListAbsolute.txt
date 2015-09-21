@@ -1,0 +1,10 @@
+C:\Users\Антон\Desktop\Методы разработки оптимизирующих компиляторов\SimpleLanguage1\bin\Debug\SimpleLang.exe
+C:\Users\Антон\Desktop\Методы разработки оптимизирующих компиляторов\SimpleLanguage1\bin\Debug\SimpleLang.pdb
+C:\Users\Антон\Desktop\Методы разработки оптимизирующих компиляторов\SimpleLanguage1\obj\x86\Debug\SimpleLang1.csprojResolveAssemblyReference.cache
+C:\Users\Антон\Desktop\Методы разработки оптимизирующих компиляторов\SimpleLanguage1\obj\x86\Debug\SimpleLang.exe
+C:\Users\Антон\Desktop\Методы разработки оптимизирующих компиляторов\SimpleLanguage1\obj\x86\Debug\SimpleLang.pdb
+C:\Users\Антон\Desktop\Методы разработки оптимизирующих компиляторов\Тема 6. Семантические действия при синтаксическом разборе. Построение синтаксического дерева программы\SimpleLanguage1\obj\x86\Debug\SimpleLang.exe
+C:\Users\Антон\Desktop\Методы разработки оптимизирующих компиляторов\Тема 6. Семантические действия при синтаксическом разборе. Построение синтаксического дерева программы\SimpleLanguage1\obj\x86\Debug\SimpleLang.pdb
+C:\Users\Антон\Desktop\Методы разработки оптимизирующих компиляторов\Тема 6. Семантические действия при синтаксическом разборе. Построение синтаксического дерева программы\SimpleLanguage1\obj\x86\Debug\SimpleLang1.csprojResolveAssemblyReference.cache
+C:\Users\Антон\Desktop\Методы разработки оптимизирующих компиляторов\Тема 6. Семантические действия при синтаксическом разборе. Построение синтаксического дерева программы\SimpleLanguage1\bin\Debug\SimpleLang.exe
+C:\Users\Антон\Desktop\Методы разработки оптимизирующих компиляторов\Тема 6. Семантические действия при синтаксическом разборе. Построение синтаксического дерева программы\SimpleLanguage1\bin\Debug\SimpleLang.pdb
