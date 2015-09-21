@@ -5,6 +5,7 @@ namespace ProgramTree
     public enum AssignType { Assign, AssignPlus, AssignMinus, AssignMult, AssignDivide };
     public enum OperationType { Plus, Minus, Mult, Div};
     public enum PredicateOperationType { Greater, Less, Equal, Notequal };
+    public enum CycleType { WhileDo, DoUntil };
 
     public class Node // базовый класс для всех узлов    
     {
@@ -66,10 +67,12 @@ namespace ProgramTree
     {
         public PredicateBinaryNode PrExpr { get; set; }
         public StatementNode Stat { get; set; }
-        public WhileNode(PredicateBinaryNode prexpr, StatementNode stat)
+        public CycleType cycle { get; set; }
+        public WhileNode(PredicateBinaryNode prexpr, StatementNode stat, CycleType cycle)
         {
             PrExpr = prexpr;
             Stat = stat;
+            this.cycle = cycle;
         }
     }
 

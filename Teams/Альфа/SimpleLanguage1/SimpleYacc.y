@@ -22,7 +22,7 @@
 
 %namespace SimpleParser
 
-%token BEGIN END WHILE DO ASSIGN SEMICOLON PLUS MINUS MULT DIV LEFTBRACKET RIGHTBRACKET GREATER LESS EQUAL NOTEQUAL IF THEN ELSE
+%token BEGIN END WHILE DO ASSIGN SEMICOLON PLUS MINUS MULT DIV LEFTBRACKET RIGHTBRACKET GREATER LESS EQUAL NOTEQUAL IF THEN ELSE REPEAT UNTIL
 %token <iVal> INUM 
 %token <dVal> RNUM 
 %token <sVal> ID
@@ -87,7 +87,8 @@ f		: ident { $$ = $1 as IdNode; }
 block	: BEGIN stlist END { $$ = $2; }
 		;
 
-while	: WHILE prexpr DO statement { $$ = new WhileNode($2, $4); }
+while	: WHILE prexpr DO statement { $$ = new WhileNode($2, $4, CycleType.WhileDo); }
+		| REPEAT statement UNTIL prexpr { $$ = new WhileNode($4, $2, CycleType.DoUntil); }
 		;
 
 if		: IF prexpr THEN statement { $$ = new IfNode($2, $4); }

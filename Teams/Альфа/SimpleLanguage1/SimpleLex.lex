@@ -81,6 +81,8 @@ class ScannerHelper
 	keywords.Add("if",(int)Tokens.IF);
 	keywords.Add("then",(int)Tokens.THEN);
 	keywords.Add("else",(int)Tokens.ELSE);
+	keywords.Add("repeat",(int)Tokens.REPEAT);
+	keywords.Add("until",(int)Tokens.UNTIL);
   }
   public static int GetIDToken(string s)
   {
