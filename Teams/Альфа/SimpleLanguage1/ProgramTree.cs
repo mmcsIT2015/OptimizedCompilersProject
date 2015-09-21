@@ -62,13 +62,13 @@ namespace ProgramTree
         }
     }
 
-    public class CycleNode : StatementNode
+    public class WhileNode : StatementNode
     {
-        public ExprNode Expr { get; set; }
+        public PredicateBinaryNode PrExpr { get; set; }
         public StatementNode Stat { get; set; }
-        public CycleNode(ExprNode expr, StatementNode stat)
+        public WhileNode(PredicateBinaryNode prexpr, StatementNode stat)
         {
-            Expr = expr;
+            PrExpr = prexpr;
             Stat = stat;
         }
     }

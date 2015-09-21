@@ -22,13 +22,13 @@
 
 %namespace SimpleParser
 
-%token BEGIN END CYCLE ASSIGN SEMICOLON PLUS MINUS MULT DIV LEFTBRACKET RIGHTBRACKET GREATER LESS EQUAL NOTEQUAL IF THEN ELSE
+%token BEGIN END WHILE DO ASSIGN SEMICOLON PLUS MINUS MULT DIV LEFTBRACKET RIGHTBRACKET GREATER LESS EQUAL NOTEQUAL IF THEN ELSE
 %token <iVal> INUM 
 %token <dVal> RNUM 
 %token <sVal> ID
 
 %type <eVal> expr ident t f
-%type <stVal> assign statement cycle 
+%type <stVal> assign statement while 
 %type <blVal> stlist block
 %type <prVal> prexpr
 %type <ifVal> if
@@ -51,7 +51,7 @@ stlist	: statement
 
 statement: assign { $$ = $1; }
 		| block   { $$ = $1; }
-		| cycle   { $$ = $1; }
+		| while   { $$ = $1; }
 		| if { $$ = $1; }
 	;
 
@@ -87,7 +87,7 @@ f		: ident { $$ = $1 as IdNode; }
 block	: BEGIN stlist END { $$ = $2; }
 		;
 
-cycle	: CYCLE expr statement { $$ = new CycleNode($2, $3); }
+while	: WHILE prexpr DO statement { $$ = new WhileNode($2, $4); }
 		;
 
 if		: IF prexpr THEN statement { $$ = new IfNode($2, $4); }

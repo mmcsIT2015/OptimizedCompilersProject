@@ -2,7 +2,9 @@ begin
   b := -2.3;
   a := 3;
   a := 3 + b1 * 2 / (a - c4 );
-  cycle 3
+  while 3 > 3 do
+    if 3 < 3 then
+       a := 3;
   begin
     a := c;
     c := 1.1
