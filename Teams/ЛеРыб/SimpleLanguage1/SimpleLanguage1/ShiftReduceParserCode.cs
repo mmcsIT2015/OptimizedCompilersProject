@@ -451,7 +451,9 @@ namespace QUT.Gppg
                     return true;
 
 #if TRACE_ACTIONS
-					Console.Error.WriteLine("Error: popping state {0}", StateStack.Top().number);
+                    var p = StateStack.Pop();
+					Console.Error.WriteLine("Error: popping state {0}", p.number);
+                    StateStack.Push(p);
 #endif
                 StateStack.Pop();
                 valueStack.Pop();
@@ -584,7 +586,10 @@ namespace QUT.Gppg
         private void DisplayRule(int ruleNumber)
         {
             Console.Error.Write("Reducing stack by rule {0}, ", ruleNumber);
-            DisplayProduction(rules[ruleNumber]);
+            if (ruleNumber >= 0 && ruleNumber < rules.Length)
+                DisplayProduction(rules[ruleNumber]);
+            else
+                Console.Error.Write("No such rule!");
         }
 
         private void DisplayProduction(Rule rule)
@@ -593,7 +598,7 @@ namespace QUT.Gppg
                 Console.Error.Write("/* empty */ ");
             else
                 foreach (int symbol in rule.RightHandSide)
-                    Console.Error.Write("{0} ", SymbolToString(symbol));
+                    Console.Error.Write("{0} ", SymbolToString(symbol));            
 
             Console.Error.WriteLine("-> {0}", SymbolToString(rule.LeftHandSide));
         }
@@ -608,9 +613,13 @@ namespace QUT.Gppg
         protected abstract string TerminalToString(int terminal);
 
         private string SymbolToString(int symbol)
-        {
+        {            
             if (symbol < 0)
-                return nonTerminals[-symbol];
+            {
+                if (-symbol < nonTerminals.Length)
+                    return nonTerminals[-symbol];
+                else return "";
+            }
             else
                 return TerminalToString(symbol);
         }

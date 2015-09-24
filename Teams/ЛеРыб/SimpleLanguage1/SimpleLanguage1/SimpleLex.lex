@@ -44,6 +44,8 @@ ID {Alpha}{AlphaDigit}*
 "<=" { return (int)Tokens.LESS_EQUAL; }
 ">" { return (int)Tokens.MORE; }
 ">=" { return (int)Tokens.MORE_EQUAL; }
+"<<" { return (int)Tokens.SHIFT_LEFT; }
+">>" { return (int)Tokens.SHIFT_RIGHT; }
 
 [^ \r\n] {
 	LexError();
@@ -79,6 +81,10 @@ class ScannerHelper
     keywords.Add("if", (int)Tokens.IF);
     keywords.Add("else", (int)Tokens.ELSE);
     keywords.Add("for", (int)Tokens.FOR);
+    keywords.Add("cout", (int)Tokens.COUT);
+    keywords.Add("cin", (int)Tokens.CIN);
+    keywords.Add("endl", (int)Tokens.ENDL);
+    keywords.Add("do", (int)Tokens.DO);
   }
   public static int GetIDToken(string s)
   {

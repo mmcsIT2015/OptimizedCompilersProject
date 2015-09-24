@@ -3,7 +3,7 @@
 namespace ProgramTree
 {
     public enum AssignType { Assign, AssignPlus, AssignMinus, AssignMult, AssignDivide };
-    public enum OperationType { Plus, Minus, Mult, Div, More, Less, MoreEqual, LessEqual };
+    public enum OperationType { Plus, Minus, Mult, Div, More, Less, MoreEqual, LessEqual, Endl };
 
     public class Node // базовый класс для всех узлов    
     {
@@ -54,6 +54,17 @@ namespace ProgramTree
             AssOp = assop;
         }
     }
+    
+    public class PrintNode : StatementNode
+    {
+        public ExprListNode Expressions { get; set; }
+        public bool IsEndl { get; set; }
+        public PrintNode(ExprListNode Expressions, bool isEndl)
+        {
+            this.Expressions = Expressions;
+            this.IsEndl = isEndl;
+        }
+    }
 
     public class ConditionNode : StatementNode
     {
@@ -73,10 +84,12 @@ namespace ProgramTree
     {
         public ExprNode Expr { get; set; }
         public StatementNode Stat { get; set; }
-        public CycleNode(ExprNode expr, StatementNode stat)
+        public bool IsForward { get; set; }
+        public CycleNode(ExprNode expr, StatementNode stat, bool isForward)
         {
             Expr = expr;
             Stat = stat;
+            IsForward = isForward;
         }
     }
 
@@ -94,13 +107,23 @@ namespace ProgramTree
             this.AssignSt = AssignSt;
         }
     }
+    
+    public class ExprListNode : StatementNode
+    {
+      public List<ExprNode> ExprList = new List<ExprNode>();
+      public void Add(ExprNode expr)
+      {
+        ExprList.Add(expr);
+      }
+    }
 
     public class BlockNode : StatementNode
     {
         public List<StatementNode> StList = new List<StatementNode>();
-        public BlockNode(StatementNode stat)
+        public BlockNode(StatementNode stat = null)
         {
-            Add(stat);
+            if (stat != null)
+              Add(stat);
         }
         public void Add(StatementNode stat)
         {
