@@ -13,3 +13,5 @@ C:\Documents\GitHub\OptimizedCompilersProject\Teams\Альфа\SimpleLanguage1\o
 C:\Documents\GitHub\OptimizedCompilersProject\Teams\Альфа\SimpleLanguage1\bin\Debug\SimpleLang.exe
 C:\Documents\GitHub\OptimizedCompilersProject\Teams\Альфа\SimpleLanguage1\bin\Debug\SimpleLang.pdb
 C:\Documents\GitHub\OptimizedCompilersProject\Teams\Альфа\SimpleLanguage1\obj\x86\Debug\SimpleLang1.csprojResolveAssemblyReference.cache
+C:\Users\Антон\Documents\GitHub\OptimizedCompilersProject\Teams\Альфа\SimpleLanguage1\obj\x86\Debug\SimpleLang.exe
+C:\Users\Антон\Documents\GitHub\OptimizedCompilersProject\Teams\Альфа\SimpleLanguage1\obj\x86\Debug\SimpleLang.pdb
