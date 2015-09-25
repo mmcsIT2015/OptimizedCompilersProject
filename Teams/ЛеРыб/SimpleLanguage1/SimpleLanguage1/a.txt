@@ -24,5 +24,5 @@
         c = c - 1;
   }
   cout << a << 3 << 5 - 7 << endl << 3;
-  cout << a << 3 << 5 - 7 << endl;  
+  cout << a << 3 << 5 - 7 << a - 1 << endl;  
 }
