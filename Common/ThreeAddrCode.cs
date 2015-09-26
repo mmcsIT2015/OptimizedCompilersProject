@@ -48,10 +48,11 @@ namespace SimpleLang
             labels = new Dictionary<string, Label>();
         }
 
-        // функция в будущем будет возвращать СВОБОДНУЮ временную переменную
-        public string GetTempVariable()
+        private static int tempaVarUID = 0;
+        public static string GetTempVariable()
         {
-            return "t";
+            // TODO variables must have such names
+            return "t" + (tempaVarUID++).ToString();
         }
 
         public void NewBlock()

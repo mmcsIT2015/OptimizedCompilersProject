@@ -30,6 +30,12 @@ namespace SimpleCompiler
                     //foreach (var st in parser.root.StList)
                     //Console.WriteLine(st);
                 }
+
+                Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+                codeGenerator.Visit(parser.root);
+
+                // DEBUG Can watch result here
+                string debugGeneratedCode = codeGenerator.Code.ToString();
             }
             catch (FileNotFoundException)
             {
