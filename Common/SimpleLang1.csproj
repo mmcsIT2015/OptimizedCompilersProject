@@ -46,6 +46,7 @@
     <Compile Include="Gen3AddrCodeVisitor.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Optimization\IOptimizator.cs" />
     <Compile Include="ParserHelper.cs" />
     <Compile Include="ProgramTree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

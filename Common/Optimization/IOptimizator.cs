@@ -5,8 +5,8 @@ using System.Text;
 
 namespace SimpleLang.Optimization
 {
-    interface IOptimizator
+    public interface IOptimizator
     {
-        public void Optimize();
+        void Optimize();
     }
 }
