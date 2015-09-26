@@ -48,6 +48,12 @@ namespace SimpleLang
             labels = new Dictionary<string, Label>();
         }
 
+        // функция в будущем будет возвращать СВОБОДНУЮ временную переменную
+        public string GetTempVariable()
+        {
+            return "t";
+        }
+
         public void NewBlock()
         {
             // смысла в пустых блоках нет - поэтому, если мы пытаемся добавить еще один очередной пустой, ничего не делаем

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using SimpleLang;
 
 namespace ProgramTree
 {
@@ -7,12 +8,14 @@ namespace ProgramTree
 
     public enum BinaryType { Plus, Minus, Mult, Div, Less, More, Equal, NotEqual, LessEqual, MoreEqual };
 
-    public enum CycleType { While, DoWhile };
-
     public enum VarType { Int, Bool };
 
     public class Node // базовый класс для всех узлов    
     {
+        public virtual void Accept(IVisitor visitor)
+        {
+            
+        }
     }
 
     public class ExprNode : Node // базовый класс для всех выражений
@@ -37,10 +40,16 @@ namespace ProgramTree
         public ExprNode RightOperand { get; set; }
         public BinaryType Operation { get; set; }
 
-        public BinaryNode(ExprNode lhs, ExprNode rhs, BinaryType operation) {
-          LeftOperand = lhs;
-          RightOperand = rhs;
-          Operation = operation;
+        public BinaryNode(ExprNode lhs, ExprNode rhs, BinaryType operation)
+        {
+            LeftOperand = lhs;
+            RightOperand = rhs;
+            Operation = operation;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 
@@ -54,10 +63,16 @@ namespace ProgramTree
         public ExprNode Expr { get; set; }
         public AssignType AssOp { get; set; }
 
-        public AssignNode(IdNode id, ExprNode expr, AssignType assop = AssignType.Assign) {
+        public AssignNode(IdNode id, ExprNode expr, AssignType assop = AssignType.Assign)
+        {
             Id = id;
             Expr = expr;
             AssOp = assop;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 
@@ -66,9 +81,10 @@ namespace ProgramTree
         public VarType Type { get; set; }
         public IdNode Id { get; set; }
 
-        public VarNode(VarType type, IdNode id) {
-          Type = type;
-          Id = id;
+        public VarNode(VarType type, IdNode id)
+        {
+            Type = type;
+            Id = id;
         }
     }
 
@@ -78,23 +94,50 @@ namespace ProgramTree
         public StatementNode Stat { get; set; }
         public StatementNode StatElse { get; set; }
 
-        public IfNode(ExprNode expr, StatementNode stat, StatementNode statelse = null) {
-          Expr = expr;
-          Stat = stat;
-          StatElse = statelse;
+        public IfNode(ExprNode expr, StatementNode stat, StatementNode statelse = null)
+        {
+            Expr = expr;
+            Stat = stat;
+            StatElse = statelse;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 
-    public class CycleNode : StatementNode
+    public class WhileNode : StatementNode
     {
-        public CycleType Type { get; set; }
         public ExprNode Expr { get; set; }
         public StatementNode Stat { get; set; }
 
-        public CycleNode(CycleType type, ExprNode expr, StatementNode stat) {
-            Type = type;
+        public WhileNode(ExprNode expr, StatementNode stat)
+        {
             Expr = expr;
             Stat = stat;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
+    public class DoWhileNode : StatementNode
+    {
+        public ExprNode Expr { get; set; }
+        public StatementNode Stat { get; set; }
+
+        public DoWhileNode(ExprNode expr, StatementNode stat)
+        {
+            Expr = expr;
+            Stat = stat;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 
@@ -102,12 +145,19 @@ namespace ProgramTree
     {
         public List<ExprNode> ExprList = new List<ExprNode>();
 
-        public CoutNode(ExprNode expr) {
+        public CoutNode(ExprNode expr)
+        {
             Add(expr);
         }
 
-        public void Add(ExprNode expr) {
+        public void Add(ExprNode expr)
+        {
             ExprList.Add(expr);
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 
@@ -115,12 +165,19 @@ namespace ProgramTree
     {
         public List<StatementNode> StList = new List<StatementNode>();
 
-        public BlockNode(StatementNode stat) {
+        public BlockNode(StatementNode stat)
+        {
             Add(stat);
         }
 
-        public void Add(StatementNode stat) {
+        public void Add(StatementNode stat)
+        {
             StList.Add(stat);
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 
