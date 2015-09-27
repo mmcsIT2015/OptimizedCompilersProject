@@ -23,4 +23,7 @@ del /q gplex.exe
 del /q gppg.exe
 
 cd %current%
+
+call collectTests.bat %target%
+
 echo on

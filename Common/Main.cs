@@ -11,37 +11,52 @@ namespace SimpleCompiler
     {
         public static void Main()
         {
-            string FileName = @"..\..\a.txt";
-            try
+            List<string> files = new List<string>();
+            if (File.Exists(@"..\..\tests.txt"))
             {
-                string Text = File.ReadAllText(FileName);
-
-                Scanner scanner = new Scanner();
-                scanner.SetSource(Text, 0);
-
-                Parser parser = new Parser(scanner);
-
-                var b = parser.Parse();
-                if (!b)
-                    Console.WriteLine("Ошибка");
-                else
+                foreach (var file in File.ReadAllLines(@"..\..\tests.txt"))
                 {
-                    Console.WriteLine("Синтаксическое дерево построено");
-                    //foreach (var st in parser.root.StList)
-                    //Console.WriteLine(st);
+                    files.Add(file);
                 }
             }
-            catch (FileNotFoundException)
+
+            if (files.Count == 0)
             {
-                Console.WriteLine("Файл {0} не найден", FileName);
+                files.Add(@"..\..\a.txt");
             }
-            catch (LexException e)
+
+            foreach (var file in files)
             {
-                Console.WriteLine("Лексическая ошибка. " + e.Message);
-            }
-            catch (SyntaxException e)
-            {
-                Console.WriteLine("Синтаксическая ошибка. " + e.Message);
+                try
+                {
+                    string content = File.ReadAllText(file);
+                    Console.Write("File ...\\" + file.Substring(file.LastIndexOf('\\')) + "... ");
+
+                    Scanner scanner = new Scanner();
+                    scanner.SetSource(content, 0);
+
+                    Parser parser = new Parser(scanner);
+
+                    if (parser.Parse()) 
+                    {
+                        Console.WriteLine("Синтаксическое дерево построено");
+                        //foreach (var st in parser.root.StList)
+                        //Console.WriteLine(st);
+                    }
+                    else Console.WriteLine("Ошибка");
+                }
+                catch (FileNotFoundException)
+                {
+                    Console.WriteLine("Файл {0} не найден", file);
+                }
+                catch (LexException e)
+                {
+                    Console.WriteLine("Лексическая ошибка. " + e.Message);
+                }
+                catch (SyntaxException e)
+                {
+                    Console.WriteLine("Синтаксическая ошибка. " + e.Message);
+                }
             }
 
             Console.ReadLine();
