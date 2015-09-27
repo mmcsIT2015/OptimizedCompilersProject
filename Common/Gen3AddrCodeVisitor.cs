@@ -13,12 +13,38 @@ namespace SimpleLang
     {
         public ThreeAddrCode Code { get; set; }
 
-        private Stack<string> exprStack = new Stack<string>();
+        private Stack<string> stack = new Stack<string>();
+        private Dictionary<BinaryType, string> operators = new Dictionary<BinaryType, string>();
+        private Dictionary<AssignType, string> assigns = new Dictionary<AssignType, string>();
+        private UniqueIdsGenerator labelsGenerator = new UniqueIdsGenerator("L");
+        private UniqueIdsGenerator tempVarsGenerator = new UniqueIdsGenerator("t");
 
         public Gen3AddrCodeVisitor()
         {
+            CreateDictionaries();
+
             Code = new ThreeAddrCode();
             Code.NewBlock();
+        }
+
+        private void CreateDictionaries()
+        {
+            operators.Add(BinaryType.Plus, "+");
+            operators.Add(BinaryType.Minus, "-");
+            operators.Add(BinaryType.Mult, "*");
+            operators.Add(BinaryType.Div, "/");
+            operators.Add(BinaryType.Less, "<");
+            operators.Add(BinaryType.More, ">");
+            operators.Add(BinaryType.Equal, "==");
+            operators.Add(BinaryType.NotEqual, "!=");
+            operators.Add(BinaryType.LessEqual, "<=");
+            operators.Add(BinaryType.MoreEqual, ">=");
+
+            assigns.Add(AssignType.Assign, "=");
+            assigns.Add(AssignType.AssignPlus, "+");
+            assigns.Add(AssignType.AssignMinus, "-");
+            assigns.Add(AssignType.AssignMult, "*");
+            assigns.Add(AssignType.AssignDivide, "/");
         }
 
         public void Visit(BlockNode node)
@@ -36,13 +62,13 @@ namespace SimpleLang
 
         public void Visit(AssignNode node)
         {
-            Debug.Assert(exprStack.Count() == 0, "Expression stack is not empty");
+            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
 
             node.Id.Accept(this);
             node.Expr.Accept(this);
 
-            string expression = exprStack.Pop();
-            string variable = exprStack.Pop();
+            string expression = stack.Pop();
+            string variable = stack.Pop();
 
             if (node.AssOp != AssignType.Assign)
             {
@@ -50,31 +76,40 @@ namespace SimpleLang
             }
             else if (node.Expr is BinaryNode)
             {
-                Code.blocks.Last().Last().left = variable;                
+                Code.blocks.Last().Last().left = variable;
             }
             else
             {
                 Code.AddLine(new ThreeAddrCode.Line(variable, "", expression));
             }
 
-            Debug.Assert(exprStack.Count() == 0, "Expression stack is not empty");
+            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
         }
 
         public void Visit(IfNode node)
         {
             node.Expr.Accept(this);
-            string ifExpression = exprStack.Pop();
-            Code.AddLine(new ThreeAddrCode.Line(ifExpression, "", "if", ""));
-            Label ifGotoLabel = Code.GetLastLabel();
+            string ifExpression = stack.Pop();
+            var labelForTrue = labelsGenerator.Get();
+            var labelForFalse = labelsGenerator.Get();
+
+            Code.AddLine(new ThreeAddrCode.Line(ifExpression, labelForTrue, "if", ""));
+            Label ifPosition = Code.GetLastPosition();
             if (node.StatElse != null)
             {
-                node.StatElse.Accept(this);
+                node.StatElse.Accept(this); //тело для false/else
             }
+
             Code.AddLine(new ThreeAddrCode.Line("", "", "goto", ""));
-            Label afterIfGotoLabel = Code.GetLastLabel();
-            Code.GetLine(ifGotoLabel).first = ThreeAddrCode.Line.GetNextLabel();
-            node.Stat.Accept(this);
-            Code.GetLine(afterIfGotoLabel).left = ThreeAddrCode.Line.GetNextLabel();
+            Label gotoPosition = Code.GetLastPosition();
+
+            node.Stat.Accept(this); //тело для true
+            Code.GetLine(gotoPosition.Key, gotoPosition.Value + 1).label = labelForTrue;
+
+            Code.GetLine(gotoPosition).left = labelForFalse;
+
+            Code.AddLine(ThreeAddrCode.Line.CreateEmpty());
+            Code.GetLine(Code.GetLastPosition()).label = labelForFalse;
         }
 
         public void Visit(CoutNode node)
@@ -97,114 +132,55 @@ namespace SimpleLang
             node.LeftOperand.Accept(this);
             node.RightOperand.Accept(this);
 
-            string rightOperand = exprStack.Pop();
-            string leftOperand = exprStack.Pop();
+            string rightOperand = stack.Pop();
+            string leftOperand = stack.Pop();
 
-            string varTempName = ThreeAddrCode.GetTempVariable();
-            exprStack.Push(varTempName);
+            string temp = tempVarsGenerator.Get();
+            stack.Push(temp);
 
-            Code.AddLine(new ThreeAddrCode.Line(varTempName, leftOperand, OperatorToString(node.Operation), rightOperand));
+            Code.AddLine(new ThreeAddrCode.Line(temp, leftOperand, OperatorToString(node.Operation), rightOperand));
         }
 
         public void Visit(IdNode node)
         {
-            exprStack.Push(node.Name);
+            stack.Push(node.Name);
         }
 
         public void Visit(IntNumNode node)
         {
-            exprStack.Push(node.Num.ToString());
+            stack.Push(node.Num.ToString());
         }
 
         public void Visit(FloatNumNode node)
         {
-            exprStack.Push(node.Num.ToString());
+            stack.Push(node.Num.ToString());
         }
 
-
-        static private string OperatorToString(BinaryType op)
+        private string OperatorToString(BinaryType op)
         {
-            switch(op)
+            if (operators.ContainsKey(op))
             {
-                case BinaryType.Plus:
-                    {
-                        return "+";
-                    }
-                case BinaryType.Minus:
-                    {
-                        return "-";
-                    }
-                case BinaryType.Mult:
-                    {
-                        return "*";
-                    }
-                case BinaryType.Div:
-                    {
-                        return "/";
-                    }
-                case BinaryType.Less:
-                    {
-                        return "<";
-                    }
-                case BinaryType.More:
-                    {
-                        return ">";
-                    }
-                case BinaryType.Equal:
-                    {
-                        return "==";
-                    }
-                case BinaryType.NotEqual:
-                    {
-                        return "!=";
-                    }
-                case BinaryType.LessEqual:
-                    {
-                        return "<=";
-                    }
-                case BinaryType.MoreEqual:
-                    {
-                        return "<=";
-                    }
-                default:
-                    {
-                        Debug.Assert(false, "Not implemented conversion");
-                        return "";
-                    }
+                return operators[op];
             }
+
+            Debug.Assert(false, "Not implemented conversion");
+            return "";
         }
 
-        static private string AssignToString(AssignType assign)
+        private string AssignToString(AssignType assign)
         {
-            switch (assign)
+            if (assigns.ContainsKey(assign))
             {
-                case AssignType.Assign:
-                    {
-                        Debug.Assert(false, "Not expected behaviour");
-                        return "=";
-                    }
-                case AssignType.AssignPlus:
-                    {
-                        return "+";
-                    }
-                case AssignType.AssignMinus:
-                    {
-                        return "-";
-                    }
-                case AssignType.AssignMult:
-                    {
-                        return "*";
-                    }
-                case AssignType.AssignDivide:
-                    {
-                        return "/";
-                    }
-                default:
-                    {
-                        Debug.Assert(false, "Not implemented conversion");
-                        return "";
-                    }
+                if (assign == AssignType.Assign)
+                {
+                    Debug.Assert(false, "Not expected behaviour");
+                }
+
+                return assigns[assign];
             }
+
+            Debug.Assert(false, "Not implemented conversion");
+            return "";
         }
 
     }

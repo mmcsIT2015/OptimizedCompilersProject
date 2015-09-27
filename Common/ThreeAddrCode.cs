@@ -18,16 +18,10 @@ namespace SimpleLang
             public string first; // первый операнд из  правой части выражения
             public string second; // второй операнд из  правой части выражения
 
-            private static int LineUID = 0;
-            public static string GetNextLabel()
-            {
-                return "L" + (LineUID).ToString();
-            }
-
             // Конструктор для строк вида x =  y `op` z
             public Line(string dst, string lhs, string cmd, string rhs) 
             {
-                label = "L" + (LineUID++).ToString();
+                label = "";
                 left = dst;
                 first = lhs;
                 command = cmd;
@@ -37,11 +31,21 @@ namespace SimpleLang
             // Конструктор для строк вида x = `op` y, т.е. левый операнд - отсутствует
             public Line(string dst, string cmd, string rhs)
             {
-                label = "L" + (LineUID++).ToString();
+                label = "";
                 left = dst;
                 first = "";
                 command = cmd;
                 second = rhs;
+            }
+
+            public bool IsEmpty()
+            {
+                return left == "" && first == "" && command == "" && second == "";
+            }
+
+            public static Line CreateEmpty()
+            {
+                return new Line("", "", "");
             }
         }
 
@@ -50,15 +54,8 @@ namespace SimpleLang
 
         public ThreeAddrCode()
         {
-            blocks = new List<Block>() {new Block() };
+            blocks = new List<Block>() { new Block() };
             labels = new Dictionary<string, Label>();
-        }
-
-        private static int tempaVarUID = 0;
-        public static string GetTempVariable()
-        {
-            // TODO variables must have such names
-            return "t" + (tempaVarUID++).ToString();
         }
 
         public void NewBlock()
@@ -76,7 +73,7 @@ namespace SimpleLang
             return line;
         }
 
-        public Label GetLastLabel()
+        public Label GetLastPosition()
         {
             return new Label(blocks.Count() - 1, blocks.Last().Count() - 1);
         }
@@ -84,6 +81,11 @@ namespace SimpleLang
         public Line GetLine(Label label)
         {
             return blocks[label.Key][label.Value];
+        }
+
+        public Line GetLine(int block, int line)
+        {
+            return blocks[block][line];
         }
 
         public override string ToString()
@@ -95,20 +97,29 @@ namespace SimpleLang
                 {
                     if (line.label.Length > 0) builder.Append(line.label + ": ");
 
-                    if (line.command != "if" && line.command != "goto")
-                    {
-                        builder.Append(line.left + " = ");
-                        builder.Append(line.first + " " + line.command + " " + line.second + "\n");
-                    }
-                    else if (line.command == "if")
+                    if (line.command == "if")
                     {
                         builder.Append("if " + line.left + " goto " + line.first + "\n");
-                    } else if (line.command == "goto")
+                    }
+                    else if (line.command == "goto")
                     {
                         builder.Append("goto " + line.left + "\n");
                     }
+                    else
+                    {
+                        if (line.IsEmpty())
+                        {
+                            builder.Append("<empty statement>\n");
+                        }
+                        else
+                        {
+                            builder.Append(line.left + " = " + line.first + " ");
+                            builder.Append((line.command == "" ? "" : line.command + " ") + line.second + "\n");
+                        }
+                    }
                 }
 
+                builder.Replace("  ", " ");
                 builder.Append("\n");
             }
 

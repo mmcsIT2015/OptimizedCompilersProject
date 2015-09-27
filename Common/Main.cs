@@ -35,7 +35,7 @@ namespace SimpleCompiler
                 codeGenerator.Visit(parser.root);
 
                 // DEBUG Can watch result here
-                string debugGeneratedCode = codeGenerator.Code.ToString();
+                Console.WriteLine(codeGenerator.Code);
             }
             catch (FileNotFoundException)
             {
