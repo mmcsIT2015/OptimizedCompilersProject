@@ -1,0 +1,16 @@
+begin
+  a := 2;
+  b := 3 * a + 4;
+  write(a,b);
+  if a > 5 then
+  begin
+    c := -2;
+    a := c + 1
+  end
+  else c := 3;
+  while a do
+    a := a - 1;
+  repeat
+    a := a + 1
+  until a = 5
+end.
