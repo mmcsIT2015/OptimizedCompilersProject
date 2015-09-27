@@ -24,3 +24,5 @@ del /q gppg.exe
 
 cd %current%
 echo on
+
+pause

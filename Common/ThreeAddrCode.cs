@@ -18,10 +18,16 @@ namespace SimpleLang
             public string first; // первый операнд из  правой части выражения
             public string second; // второй операнд из  правой части выражения
 
+            private static int LineUID = 0;
+            public static string GetNextLabel()
+            {
+                return "L" + (LineUID).ToString();
+            }
+
             // Конструктор для строк вида x =  y `op` z
             public Line(string dst, string lhs, string cmd, string rhs) 
             {
-                label = "";
+                label = "L" + (LineUID++).ToString();
                 left = dst;
                 first = lhs;
                 command = cmd;
@@ -31,7 +37,7 @@ namespace SimpleLang
             // Конструктор для строк вида x = `op` y, т.е. левый операнд - отсутствует
             public Line(string dst, string cmd, string rhs)
             {
-                label = "";
+                label = "L" + (LineUID++).ToString();
                 left = dst;
                 first = "";
                 command = cmd;
@@ -70,6 +76,16 @@ namespace SimpleLang
             return line;
         }
 
+        public Label GetLastLabel()
+        {
+            return new Label(blocks.Count() - 1, blocks.Last().Count() - 1);
+        }
+
+        public Line GetLine(Label label)
+        {
+            return blocks[label.Key][label.Value];
+        }
+
         public override string ToString()
         {
             var builder = new StringBuilder();
@@ -79,8 +95,18 @@ namespace SimpleLang
                 {
                     if (line.label.Length > 0) builder.Append(line.label + ": ");
 
-                    builder.Append(line.left + " = ");
-                    builder.Append(line.first + " " + line.command + " " + line.second + "\n");
+                    if (line.command != "if" && line.command != "goto")
+                    {
+                        builder.Append(line.left + " = ");
+                        builder.Append(line.first + " " + line.command + " " + line.second + "\n");
+                    }
+                    else if (line.command == "if")
+                    {
+                        builder.Append("if " + line.left + " goto " + line.first + "\n");
+                    } else if (line.command == "goto")
+                    {
+                        builder.Append("goto " + line.left + "\n");
+                    }
                 }
 
                 builder.Append("\n");

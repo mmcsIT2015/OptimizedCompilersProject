@@ -5,6 +5,8 @@ using System.Text;
 using ProgramTree;
 using System.Diagnostics;
 
+using Label = System.Collections.Generic.KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
+
 namespace SimpleLang
 {
     class Gen3AddrCodeVisitor : IVisitor
@@ -42,15 +44,17 @@ namespace SimpleLang
             string expression = exprStack.Pop();
             string variable = exprStack.Pop();
 
-            if (node.AssOp == AssignType.Assign)
+            if (node.AssOp != AssignType.Assign)
             {
-                // TODO change only reference if the last expression was binary
-                // Code.blocks.Last().Last().left = variable;
-                Code.AddLine(new ThreeAddrCode.Line(variable, "", expression));
+                Code.AddLine(new ThreeAddrCode.Line(variable, variable, AssignToString(node.AssOp), expression));
+            }
+            else if (node.Expr is BinaryNode)
+            {
+                Code.blocks.Last().Last().left = variable;                
             }
             else
             {
-                Code.AddLine(new ThreeAddrCode.Line(variable, variable, AssignToString(node.AssOp), expression));
+                Code.AddLine(new ThreeAddrCode.Line(variable, "", expression));
             }
 
             Debug.Assert(exprStack.Count() == 0, "Expression stack is not empty");
@@ -58,7 +62,19 @@ namespace SimpleLang
 
         public void Visit(IfNode node)
         {
-            // TODO
+            node.Expr.Accept(this);
+            string ifExpression = exprStack.Pop();
+            Code.AddLine(new ThreeAddrCode.Line(ifExpression, "", "if", ""));
+            Label ifGotoLabel = Code.GetLastLabel();
+            if (node.StatElse != null)
+            {
+                node.StatElse.Accept(this);
+            }
+            Code.AddLine(new ThreeAddrCode.Line("", "", "goto", ""));
+            Label afterIfGotoLabel = Code.GetLastLabel();
+            Code.GetLine(ifGotoLabel).first = ThreeAddrCode.Line.GetNextLabel();
+            node.Stat.Accept(this);
+            Code.GetLine(afterIfGotoLabel).left = ThreeAddrCode.Line.GetNextLabel();
         }
 
         public void Visit(CoutNode node)
@@ -164,6 +180,7 @@ namespace SimpleLang
             {
                 case AssignType.Assign:
                     {
+                        Debug.Assert(false, "Not expected behaviour");
                         return "=";
                     }
                 case AssignType.AssignPlus:
