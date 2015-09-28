@@ -72,7 +72,7 @@ namespace SimpleLang
 
             if (node.AssOp != AssignType.Assign)
             {
-                Code.AddLine(new ThreeAddrCode.Line(variable, variable, AssignToString(node.AssOp), expression));
+                Code.AddLine(new ThreeAddrCode.Line(variable, variable, AssignToOperation(node.AssOp), expression));
             }
             else if (node.Expr is BinaryNode)
             {
@@ -88,6 +88,8 @@ namespace SimpleLang
 
         public void Visit(IfNode node)
         {
+            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
+
             node.Expr.Accept(this);
             string ifExpression = stack.Pop();
             var labelForTrue = labelsGenerator.Get();
@@ -100,16 +102,18 @@ namespace SimpleLang
                 node.StatElse.Accept(this); //тело для false/else
             }
 
-            Code.AddLine(new ThreeAddrCode.Line("", "", "goto", ""));
+            Code.AddLine(new ThreeAddrCode.Line(labelForFalse, "", "goto", ""));
             Label gotoPosition = Code.GetLastPosition();
 
             node.Stat.Accept(this); //тело для true
+            Debug.Assert(Code.GetLastPosition().Key != gotoPosition.Key 
+                || Code.GetLastPosition().Value != gotoPosition.Value, "Empty if block");
             Code.GetLine(gotoPosition.Key, gotoPosition.Value + 1).label = labelForTrue;
-
-            Code.GetLine(gotoPosition).left = labelForFalse;
 
             Code.AddLine(ThreeAddrCode.Line.CreateEmpty());
             Code.GetLine(Code.GetLastPosition()).label = labelForFalse;
+
+            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
         }
 
         public void Visit(CoutNode node)
@@ -124,7 +128,20 @@ namespace SimpleLang
 
         public void Visit(DoWhileNode node)
         {
-            // TODO
+            Label firstStPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
+            string firstStLabel = labelsGenerator.Get();
+
+            node.Stat.Accept(this);
+            Debug.Assert(Code.GetLastPosition().Key != firstStPosition.Key 
+                || Code.GetLastPosition().Value != firstStPosition.Value - 1, "Empty do while block");
+
+            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
+            node.Expr.Accept(this);
+            string ifExpression = stack.Pop();
+            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
+
+            Code.GetLine(firstStPosition).label = firstStLabel;
+            Code.AddLine(new ThreeAddrCode.Line(ifExpression, firstStLabel, "if", ""));
         }
 
         public void Visit(BinaryNode node)
@@ -167,7 +184,7 @@ namespace SimpleLang
             return "";
         }
 
-        private string AssignToString(AssignType assign)
+        private string AssignToOperation(AssignType assign)
         {
             if (assigns.ContainsKey(assign))
             {

@@ -90,12 +90,14 @@ namespace SimpleLang
 
         public override string ToString()
         {
+            const int indent = 1; // количество отступов
             var builder = new StringBuilder();
             foreach (var block in blocks)
             {
                 foreach (var line in block)
                 {
-                    if (line.label.Length > 0) builder.Append(line.label + ": ");
+                    if (line.label.Length > 0) builder.Append(line.label + ":");
+                    builder.Append('\t', indent);
 
                     if (line.command == "if")
                     {
