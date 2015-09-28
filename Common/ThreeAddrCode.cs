@@ -107,6 +107,14 @@ namespace SimpleLang
                     {
                         builder.Append("goto " + line.left + "\n");
                     }
+                    else if (line.command == "param")
+                    {
+                        builder.Append("param " + line.left + "\n");
+                    }
+                    else if (line.command == "call")
+                    {
+                        builder.Append("call " + line.left + ", " + line .second + "\n");
+                    }
                     else
                     {
                         if (line.IsEmpty())

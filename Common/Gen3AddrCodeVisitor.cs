@@ -118,7 +118,20 @@ namespace SimpleLang
 
         public void Visit(CoutNode node)
         {
-            // TODO
+            List<string> parameters = new List<string>();
+            foreach (var expr in node.ExprList)
+            {
+                expr.Accept(this);
+                var variable = stack.Pop();
+                parameters.Add(variable);
+            }
+
+            foreach (var param in parameters)
+            {
+                Code.AddLine(new ThreeAddrCode.Line(param, "", "param", ""));
+            }
+
+            Code.AddLine(new ThreeAddrCode.Line("cout", "", "call", parameters.Count.ToString()));
         }
 
         public void Visit(WhileNode node)
@@ -132,13 +145,8 @@ namespace SimpleLang
             string firstStLabel = labelsGenerator.Get();
 
             node.Stat.Accept(this);
-            Debug.Assert(Code.GetLastPosition().Key != firstStPosition.Key 
-                || Code.GetLastPosition().Value != firstStPosition.Value - 1, "Empty do while block");
-
-            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
             node.Expr.Accept(this);
             string ifExpression = stack.Pop();
-            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
 
             Code.GetLine(firstStPosition).label = firstStLabel;
             Code.AddLine(new ThreeAddrCode.Line(ifExpression, firstStLabel, "if", ""));
