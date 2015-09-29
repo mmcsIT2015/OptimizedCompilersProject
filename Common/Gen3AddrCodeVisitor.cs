@@ -136,7 +136,26 @@ namespace SimpleLang
 
         public void Visit(WhileNode node)
         {
-            // TODO
+            string gotoLabel = labelsGenerator.Get();
+            string labelForTrue = labelsGenerator.Get();
+            string labelForFalse = labelsGenerator.Get();
+
+            Label gotoPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
+            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
+            node.Expr.Accept(this);
+            string ifExpression = stack.Pop();
+            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
+            Code.AddLine(new ThreeAddrCode.Line(ifExpression, labelForTrue, "if", ""));
+            Code.GetLine(gotoPosition).label = gotoLabel;
+
+            Code.AddLine(new ThreeAddrCode.Line(labelForFalse, "", "goto", ""));
+            Label truePosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
+            node.Stat.Accept(this);
+            Code.AddLine(new ThreeAddrCode.Line(gotoLabel, "", "goto", ""));
+            Code.GetLine(truePosition).label = labelForTrue;
+
+            Code.AddLine(ThreeAddrCode.Line.CreateEmpty());
+            Code.GetLine(Code.GetLastPosition()).label = labelForFalse;
         }
 
         public void Visit(DoWhileNode node)
