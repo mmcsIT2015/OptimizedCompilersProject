@@ -18,12 +18,6 @@ namespace SimpleCompiler
                 {
                     files.Add(file);
                 }
-
-                Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
-                codeGenerator.Visit(parser.root);
-
-                // DEBUG Can watch result here
-                Console.WriteLine(codeGenerator.Code);
             }
 
             if (files.Count == 0)
@@ -46,8 +40,12 @@ namespace SimpleCompiler
                     if (parser.Parse()) 
                     {
                         Console.WriteLine("Синтаксическое дерево построено");
-                        //foreach (var st in parser.root.StList)
-                        //Console.WriteLine(st);
+
+                        Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+                        codeGenerator.Visit(parser.root);
+
+                        // DEBUG Can watch result here
+                        // Console.WriteLine(codeGenerator.Code);
                     }
                     else Console.WriteLine("Ошибка");
                 }
