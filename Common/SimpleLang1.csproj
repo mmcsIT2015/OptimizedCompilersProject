@@ -54,6 +54,7 @@
     <Compile Include="SimpleLex.cs" />
     <Compile Include="SimpleYacc.cs" />
     <Compile Include="ThreeAddrCode.cs" />
+    <Compile Include="UniqueIdsGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Optimization\task-1\" />

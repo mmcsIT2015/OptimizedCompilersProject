@@ -37,6 +37,16 @@ namespace SimpleLang
                 command = cmd;
                 second = rhs;
             }
+
+            public bool IsEmpty()
+            {
+                return left == "" && first == "" && command == "" && second == "";
+            }
+
+            public static Line CreateEmpty()
+            {
+                return new Line("", "", "");
+            }
         }
 
         public Dictionary<string, Label> labels; // содержит список меток и адресом этих меток в blocks
@@ -44,14 +54,8 @@ namespace SimpleLang
 
         public ThreeAddrCode()
         {
-            blocks = new List<Block>() {new Block() };
+            blocks = new List<Block>() { new Block() };
             labels = new Dictionary<string, Label>();
-        }
-
-        // функция в будущем будет возвращать СВОБОДНУЮ временную переменную
-        public string GetTempVariable()
-        {
-            return "t";
         }
 
         public void NewBlock()
@@ -69,19 +73,63 @@ namespace SimpleLang
             return line;
         }
 
+        public Label GetLastPosition()
+        {
+            return new Label(blocks.Count() - 1, blocks.Last().Count() - 1);
+        }
+
+        public Line GetLine(Label label)
+        {
+            return blocks[label.Key][label.Value];
+        }
+
+        public Line GetLine(int block, int line)
+        {
+            return blocks[block][line];
+        }
+
         public override string ToString()
         {
+            const int indent = 1; // количество отступов
             var builder = new StringBuilder();
             foreach (var block in blocks)
             {
                 foreach (var line in block)
                 {
-                    if (line.label.Length > 0) builder.Append(line.label + ": ");
+                    if (line.label.Length > 0) builder.Append(line.label + ":");
+                    builder.Append('\t', indent);
 
-                    builder.Append(line.left + " = ");
-                    builder.Append(line.first + " " + line.command + " " + line.second + "\n");
+                    if (line.command == "if")
+                    {
+                        builder.Append("if " + line.left + " goto " + line.first + "\n");
+                    }
+                    else if (line.command == "goto")
+                    {
+                        builder.Append("goto " + line.left + "\n");
+                    }
+                    else if (line.command == "param")
+                    {
+                        builder.Append("param " + line.left + "\n");
+                    }
+                    else if (line.command == "call")
+                    {
+                        builder.Append("call " + line.left + ", " + line .second + "\n");
+                    }
+                    else
+                    {
+                        if (line.IsEmpty())
+                        {
+                            builder.Append("<empty statement>\n");
+                        }
+                        else
+                        {
+                            builder.Append(line.left + " = " + line.first + " ");
+                            builder.Append((line.command == "" ? "" : line.command + " ") + line.second + "\n");
+                        }
+                    }
                 }
 
+                builder.Replace("  ", " ");
                 builder.Append("\n");
             }
 

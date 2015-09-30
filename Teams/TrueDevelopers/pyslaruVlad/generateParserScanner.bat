@@ -27,3 +27,5 @@ cd %current%
 call collectTests.bat %target%
 
 echo on
+
+pause

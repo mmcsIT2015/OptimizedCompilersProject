@@ -18,6 +18,12 @@ namespace SimpleCompiler
                 {
                     files.Add(file);
                 }
+
+                Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+                codeGenerator.Visit(parser.root);
+
+                // DEBUG Can watch result here
+                Console.WriteLine(codeGenerator.Code);
             }
 
             if (files.Count == 0)

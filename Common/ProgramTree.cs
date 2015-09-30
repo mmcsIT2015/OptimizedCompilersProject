@@ -8,7 +8,7 @@ namespace ProgramTree
 
     public enum BinaryType { Plus, Minus, Mult, Div, Less, More, Equal, NotEqual, LessEqual, MoreEqual };
 
-    public enum VarType { Int, Bool };
+    public enum VarType { Int, Bool, Double };
 
     public class Node // базовый класс для всех узлов    
     {
@@ -26,12 +26,33 @@ namespace ProgramTree
     {
         public string Name { get; set; }
         public IdNode(string name) { Name = name; }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 
     public class IntNumNode : ExprNode
     {
         public int Num { get; set; }
         public IntNumNode(int num) { Num = num; }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
+    public class FloatNumNode : ExprNode
+    {
+        public double Num { get; set; }
+        public FloatNumNode(double num) { Num = num; }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 
     public class BinaryNode : ExprNode
@@ -85,6 +106,11 @@ namespace ProgramTree
         {
             Type = type;
             Id = id;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 
