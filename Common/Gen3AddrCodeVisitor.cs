@@ -62,8 +62,6 @@ namespace SimpleLang
 
         public void Visit(AssignNode node)
         {
-            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
-
             node.Id.Accept(this);
             node.Expr.Accept(this);
 
@@ -82,14 +80,10 @@ namespace SimpleLang
             {
                 Code.AddLine(new ThreeAddrCode.Line(variable, "", expression));
             }
-
-            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
         }
 
         public void Visit(IfNode node)
         {
-            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
-
             node.Expr.Accept(this);
             string ifExpression = stack.Pop();
             var labelForTrue = labelsGenerator.Get();
@@ -106,14 +100,10 @@ namespace SimpleLang
             Label gotoPosition = Code.GetLastPosition();
 
             node.Stat.Accept(this); //тело для true
-            Debug.Assert(Code.GetLastPosition().Key != gotoPosition.Key 
-                || Code.GetLastPosition().Value != gotoPosition.Value, "Empty if block");
             Code.GetLine(gotoPosition.Key, gotoPosition.Value + 1).label = labelForTrue;
 
             Code.AddLine(ThreeAddrCode.Line.CreateEmpty());
             Code.GetLine(Code.GetLastPosition()).label = labelForFalse;
-
-            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
         }
 
         public void Visit(CoutNode node)
@@ -141,10 +131,8 @@ namespace SimpleLang
             string labelForFalse = labelsGenerator.Get();
 
             Label gotoPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
-            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
             node.Expr.Accept(this);
             string ifExpression = stack.Pop();
-            Debug.Assert(stack.Count() == 0, "Expression stack is not empty");
             Code.AddLine(new ThreeAddrCode.Line(ifExpression, labelForTrue, "if", ""));
             Code.GetLine(gotoPosition).label = gotoLabel;
 
@@ -207,7 +195,6 @@ namespace SimpleLang
                 return operators[op];
             }
 
-            Debug.Assert(false, "Not implemented conversion");
             return "";
         }
 
@@ -223,7 +210,6 @@ namespace SimpleLang
                 return assigns[assign];
             }
 
-            Debug.Assert(false, "Not implemented conversion");
             return "";
         }
 
