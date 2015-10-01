@@ -11,7 +11,27 @@ namespace SimpleLang
     {
         readonly List<Block> blocks; //список базовых блоков
 
-        readonly Dictionary<int, List<int>> graph; //граф переходов между безовыми блоками (по индексам в массиве)
+        readonly Dictionary<int, List<int>> graph; //граф переходов между базовыми блоками (по индексам в массиве)
+
+        //обратный граф переходов между базовыми блоками
+        public Dictionary<int, List<int>> GetReversedGraph()
+        {
+            bool[,] graphTable = new bool[blocks.Count(), blocks.Count()];
+            graphTable.Initialize();
+            for (int i = 0; i < blocks.Count(); i++)
+            {
+                foreach (int j in graph[i])
+                    graphTable[i, j] = true;
+            }
+            Dictionary<int, List<int>> reversedGraph = new Dictionary<int, List<int>>();
+            for (int i = 0; i < blocks.Count(); i++)
+                reversedGraph[i] = new List<int>(2);
+            for (int i = 0; i < blocks.Count(); i++)
+                for (int j = 0; j < blocks.Count(); j++)
+                    if (graphTable[i, j])
+                        reversedGraph[j].Add(i);
+            return reversedGraph;
+        }
 
         public BaseBlocksPartition(ThreeAddrCode threeAddrCode)
         {
@@ -56,11 +76,11 @@ namespace SimpleLang
                     graph[i].Add(labelsToBlocksIndexes[l.left]);
                 else if (l.command == "if")
                 {
-                    //if (i < blocks.Count() - 1)
+                    if (i < blocks.Count() - 1)
                         graph[i].Add(i + 1);
                     graph[i].Add(labelsToBlocksIndexes[l.first]);
                 }
-                else //if (i < blocks.Count() - 1)
+                else if (i < blocks.Count() - 1)
                 {
                     graph[i].Add(i + 1);
                 }

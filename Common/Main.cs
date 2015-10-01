@@ -48,10 +48,11 @@ namespace SimpleCompiler
                         // Console.WriteLine(codeGenerator.Code);
 
                         //Разбиение на базовые блоки
-                        //Результат : поля blocks и graph
+                        //Результат : поля blocks и graph, и метод GetReversedGraph()
                         BaseBlocksPartition baseBlocksPartition = new BaseBlocksPartition(codeGenerator.Code);
                         // DEBUG Can watch result here
                         // Console.WriteLine(baseBlocksPartition);
+                        // var reversedGraph = baseBlocksPartition.GetReversedGraph();
                     }
                     else Console.WriteLine("Ошибка");
                 }
