@@ -5,11 +5,20 @@ using System.Text;
 
 namespace SimpleLang
 {
-    using Block = List<ThreeAddrCode.Line>;
-
+    /// <summary>
+    /// Класс изменяет входящий threeAddrCode - на выходе этот код будет разбит на блоки
+    /// Example:
+    /// ====
+    ///     Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+    ///     codeGenerator.Visit(parser.root);
+    ///     
+    ///     BaseBlocksPartition baseBlocksPartition = new BaseBlocksPartition(codeGenerator.Code);
+    ///     Console.WriteLine(codeGenerator.Code);
+    ///     
+    /// </summary>
     class BaseBlocksPartition
     {
-        readonly List<Block> blocks; //список базовых блоков
+        private List<Block> blocks; //список базовых блоков
 
         readonly Dictionary<int, List<int>> graph; //граф переходов между базовыми блоками (по индексам в массиве)
 
@@ -38,6 +47,8 @@ namespace SimpleLang
             graph = new Dictionary<int, List<int>>();
             blocks = new List<Block>();
             Partition(threeAddrCode);
+
+            threeAddrCode.blocks = blocks;
         }
 
         private void Partition(ThreeAddrCode threeAddrCode)
@@ -89,52 +100,21 @@ namespace SimpleLang
 
         public override string ToString()
         {
-            const int indent = 1; // количество отступов
             var builder = new StringBuilder();
             for (int i = 0; i < blocks.Count(); i++)
             {
                 builder.Append("BLOCK " + i + "\n");
-                foreach (var line in blocks[i])
-                {
-                    if (line.label.Length > 0) builder.Append(line.label + ":");
-                    builder.Append('\t', indent);
 
-                    if (line.command == "if")
-                    {
-                        builder.Append("if " + line.left + " goto " + line.first + "\n");
-                    }
-                    else if (line.command == "goto")
-                    {
-                        builder.Append("goto " + line.left + "\n");
-                    }
-                    else if (line.command == "param")
-                    {
-                        builder.Append("param " + line.left + "\n");
-                    }
-                    else if (line.command == "call")
-                    {
-                        builder.Append("call " + line.left + ", " + line.second + "\n");
-                    }
-                    else
-                    {
-                        if (line.IsEmpty())
-                        {
-                            builder.Append("<empty statement>\n");
-                        }
-                        else
-                        {
-                            builder.Append(line.left + " = " + line.first + " ");
-                            builder.Append((line.command == "" ? "" : line.command + " ") + line.second + "\n");
-                        }
-                    }
-                }
+                builder.Append(blocks[i].ToString());
+
                 builder.Append("TRANSITION TO BLOCKS: ");
                 foreach (int index in graph[i])
+                {
                     builder.Append(" " + index);
+                }
                 builder.Append("\n\n");
-
-                builder.Replace("  ", " ");
             }
+
             return builder.ToString();
         }
     }

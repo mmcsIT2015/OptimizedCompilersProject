@@ -5,8 +5,53 @@ using System.Text;
 
 namespace SimpleLang
 {
-    using Block = List<ThreeAddrCode.Line>;
     using Label = KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
+
+    class Block: List<ThreeAddrCode.Line> {
+        public override string ToString()
+        {
+            const int indent = 1; // количество отступов
+            var builder = new StringBuilder();
+            foreach (var line in this)
+            {
+                if (line.label.Length > 0) builder.Append(line.label + ":");
+                builder.Append('\t', indent);
+
+                if (line.command == "if")
+                {
+                    builder.Append("if " + line.left + " goto " + line.first + "\n");
+                }
+                else if (line.command == "goto")
+                {
+                    builder.Append("goto " + line.left + "\n");
+                }
+                else if (line.command == "param")
+                {
+                    builder.Append("param " + line.left + "\n");
+                }
+                else if (line.command == "call")
+                {
+                    builder.Append("call " + line.left + ", " + line.second + "\n");
+                }
+                else
+                {
+                    if (line.IsEmpty())
+                    {
+                        builder.Append("<empty statement>\n");
+                    }
+                    else
+                    {
+                        builder.Append(line.left + " = " + line.first + " ");
+                        builder.Append((line.command == "" ? "" : line.command + " ") + line.second + "\n");
+                    }
+                }
+            }
+
+            builder.Replace("  ", " ");
+
+            return builder.ToString();
+        }
+    };
 
     class ThreeAddrCode
     {
@@ -90,47 +135,11 @@ namespace SimpleLang
 
         public override string ToString()
         {
-            const int indent = 1; // количество отступов
             var builder = new StringBuilder();
             foreach (var block in blocks)
             {
-                foreach (var line in block)
-                {
-                    if (line.label.Length > 0) builder.Append(line.label + ":");
-                    builder.Append('\t', indent);
-
-                    if (line.command == "if")
-                    {
-                        builder.Append("if " + line.left + " goto " + line.first + "\n");
-                    }
-                    else if (line.command == "goto")
-                    {
-                        builder.Append("goto " + line.left + "\n");
-                    }
-                    else if (line.command == "param")
-                    {
-                        builder.Append("param " + line.left + "\n");
-                    }
-                    else if (line.command == "call")
-                    {
-                        builder.Append("call " + line.left + ", " + line .second + "\n");
-                    }
-                    else
-                    {
-                        if (line.IsEmpty())
-                        {
-                            builder.Append("<empty statement>\n");
-                        }
-                        else
-                        {
-                            builder.Append(line.left + " = " + line.first + " ");
-                            builder.Append((line.command == "" ? "" : line.command + " ") + line.second + "\n");
-                        }
-                    }
-                }
-
-                builder.Replace("  ", " ");
-                builder.Append("\n");
+                builder.Append(block.ToString());
+                builder.Append("\n\n");
             }
 
             return builder.ToString();

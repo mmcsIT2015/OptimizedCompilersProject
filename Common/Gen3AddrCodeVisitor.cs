@@ -9,6 +9,16 @@ using Label = System.Collections.Generic.KeyValuePair<int, int>; // хранит
 
 namespace SimpleLang
 {
+    /// <summary>
+    /// Выполняет обход дерева и возвращает полученный трехадресный код
+    /// Example:
+    /// ====
+    ///     Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+    ///     codeGenerator.Visit(parser.root);
+    /// 
+    ///     Console.WriteLine(codeGenerator.Code);
+    ///     
+    /// </summary>
     class Gen3AddrCodeVisitor : IVisitor
     {
         public ThreeAddrCode Code { get; set; }
