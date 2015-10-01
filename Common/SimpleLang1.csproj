@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseBlocksPartition.cs" />
     <Compile Include="Gen3AddrCodeVisitor.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="Main.cs" />

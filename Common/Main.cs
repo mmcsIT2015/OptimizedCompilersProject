@@ -46,6 +46,12 @@ namespace SimpleCompiler
 
                         // DEBUG Can watch result here
                         // Console.WriteLine(codeGenerator.Code);
+
+                        //Разбиение на базовые блоки
+                        //Результат : поля blocks и graph
+                        BaseBlocksPartition baseBlocksPartition = new BaseBlocksPartition(codeGenerator.Code);
+                        // DEBUG Can watch result here
+                        // Console.WriteLine(baseBlocksPartition);
                     }
                     else Console.WriteLine("Ошибка");
                 }
