@@ -7,6 +7,7 @@ namespace SimpleLang
 {
     /// <summary>
     /// Класс удаляет "мертвый" код из трехадресного кода в пределах одного базового блока
+
     /// Example:
     /// ====
     ///     Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
