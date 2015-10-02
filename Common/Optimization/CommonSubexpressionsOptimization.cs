@@ -11,7 +11,7 @@ namespace SimpleLang.Optimization
     /// Оптимизация: Устранение общих подвыражений
     /// Примечание: Использовать после разбиения на внутренние блоки
     /// </summary>
-    class CommonSubexpressionsOptimization : IOptimizator
+    class CommonSubexpressionsOptimization : IOptimizer
     {
         class RightExpr
         {

@@ -47,6 +47,7 @@
     <Compile Include="Gen3AddrCodeVisitor.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Optimization\CommonSubexpressionsOptimization.cs" />
     <Compile Include="Optimization\IOptimizer.cs" />
     <Compile Include="ParserHelper.cs" />
     <Compile Include="ProgramTree.cs" />

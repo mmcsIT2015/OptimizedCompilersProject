@@ -23,6 +23,7 @@ namespace SimpleCompiler
             if (files.Count == 0)
             {
                 files.Add(@"..\..\a.txt");
+                files.Add(@"..\..\test_cso.txt");
             }
 
             foreach (var file in files)
@@ -44,9 +45,18 @@ namespace SimpleCompiler
                         Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
                         codeGenerator.Visit(parser.root);
 
+                        // DEBUG Разбиение на внутренние блоки
+                        BaseBlocksPartition bbp = new BaseBlocksPartition(codeGenerator.Code);
+
                         // DEBUG Can watch result here
                         Console.WriteLine(codeGenerator.Code);
-                        
+
+                        // DEBUG Оптимизация: Устранение общих выражений
+                        /*
+                        SimpleLang.Optimization.CommonSubexpressionsOptimization cso = new SimpleLang.Optimization.CommonSubexpressionsOptimization(codeGenerator.Code);
+                        cso.Optimize();
+                        Console.WriteLine("Optimization:\n" + codeGenerator.Code);
+                        */
 
                         //DEBUG def-use data view
                         /*               
