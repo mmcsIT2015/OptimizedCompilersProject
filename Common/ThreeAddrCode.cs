@@ -13,13 +13,12 @@ namespace SimpleLang
 
         public override string ToString()
         {
-            const int indent = 1; // количество отступов
             var builder = new StringBuilder();            
 
             foreach (var line in this)
             {
                 if (line.label.Length > 0) builder.Append(line.label + ":");
-                builder.Append('\t', indent);
+                builder.Append('\t', 1);
 
                 if (line.command == "if")
                 {
@@ -55,6 +54,7 @@ namespace SimpleLang
 
             return builder.ToString();
         }
+
         public void CalculateDefUseData()
         {
             defUseData.Clear();
@@ -185,11 +185,6 @@ namespace SimpleLang
             public static Line CreateEmpty()
             {
                 return new Line("", "", "");
-            }
-
-            public override string ToString()
-            {
-                return String.Format("{0,10}|{1,10}|{2,10}|{3,10}|{4,10}", this.label, this.left, this.first, this.command, this.second);
             }
         }
 
