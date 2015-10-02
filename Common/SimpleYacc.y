@@ -1,6 +1,5 @@
 %{
-// ��� ���������� ����������� � ����� GPPGParser, �������������� ����� ������, ������������ �������� gppg
-    public BlockNode root; // �������� ���� ��������������� ������
+    public BlockNode root;
     public Parser(AbstractScanner<ValueType, LexLocation> scanner) : base(scanner) { }
 %}
 
@@ -37,9 +36,9 @@ progr   : block { root = $1; }
 		;
 
 stlist	: statement { $$ = new BlockNode($1);	}
-		| stlist SEMICOLON statement
+		| stlist statement
 			{
-				$1.Add($3);
+				$1.Add($2);
 				$$ = $1;
 			}
 		;
@@ -52,11 +51,11 @@ cout	: COUT LSHIFT expr { $$ = new CoutNode($3); }
     	}
     ;
 
-statement: assign { $$ = $1; }
+statement: assign SEMICOLON { $$ = $1; }
     | block { $$ = $1; }
-		| do_while { $$ = $1; }
+		| do_while SEMICOLON { $$ = $1; }
 		| while { $$ = $1; }
-		| cout { $$ = $1; }
+		| cout SEMICOLON { $$ = $1; }
     | if { $$ = $1; }
     ;
 
@@ -95,7 +94,7 @@ if	: IF LBRACKET expr RBRACKET statement { $$ = new IfNode($3, $5); }
 block	: BEGIN stlist END { $$ = $2; }
 		;
 
-do_while	: DO statement WHILE LBRACKET expr RBRACKET SEMICOLON { $$ = new DoWhileNode($5, $2); }
+do_while	: DO statement WHILE LBRACKET expr RBRACKET { $$ = new DoWhileNode($5, $2); }
 		;
 
 while	: WHILE LBRACKET expr RBRACKET statement { $$ = new WhileNode($3, $5); }

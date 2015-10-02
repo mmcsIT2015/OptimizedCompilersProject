@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SimpleLang.Optimization
+namespace SimpleLang
 {
-    public interface IOptimizator
+    public interface IOptimizer
     {
         void Optimize();
     }
