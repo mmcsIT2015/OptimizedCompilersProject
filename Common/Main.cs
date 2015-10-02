@@ -45,7 +45,31 @@ namespace SimpleCompiler
                         codeGenerator.Visit(parser.root);
 
                         // DEBUG Can watch result here
-                        // Console.WriteLine(codeGenerator.Code);
+                        //Console.WriteLine(codeGenerator.Code);
+                        
+                        //DEBUG 3-addr code table view
+                        
+                        /*
+                        Console.WriteLine(String.Format("{0,10}|{1,10}|{2,10}|{3,10}|{4,10}", "label", "left", "first", "command", "second"));
+                        foreach (var line in codeGenerator.Code.blocks[0])
+                        {
+                            Console.WriteLine(line);
+                        }
+                        */
+
+                        //DEBUG def-use data view
+                        /*               
+                        codeGenerator.Code.blocks[0].CalculateDefUseData();
+                        for (int i = 0; i < codeGenerator.Code.blocks[0].Count; i++)
+                        {
+                            foreach (string variable in codeGenerator.Code.blocks[0].GetAliveVariables(i))
+                            {
+                                Console.Write(variable + " ");
+                            }
+                            Console.WriteLine();
+                        }
+                        */
+
                     }
                     else Console.WriteLine("Ошибка");
                 }

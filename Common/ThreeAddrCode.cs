@@ -8,10 +8,14 @@ namespace SimpleLang
     using Label = KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
 
     class Block: List<ThreeAddrCode.Line> {
+
+        private List<HashSet<string>> defUseData = new List<HashSet<string>>();                
+
         public override string ToString()
         {
             const int indent = 1; // количество отступов
-            var builder = new StringBuilder();
+            var builder = new StringBuilder();            
+
             foreach (var line in this)
             {
                 if (line.label.Length > 0) builder.Append(line.label + ":");
@@ -51,7 +55,97 @@ namespace SimpleLang
 
             return builder.ToString();
         }
+        public void CalculateDefUseData()
+        {
+            defUseData.Clear();
+            HashSet<string> currentlyAlive = new HashSet<string>();
+
+            for (int i = this.Count - 1; i >= 0; --i)
+            {
+                
+                switch(this[i].command)
+                {
+                    case "goto":                        
+                            break;
+                    case "call":
+                            break;
+                    case "param":
+                        {
+                            if (this[i].left == "")
+                                throw new ArgumentException("Critical error! Empty LEFT operand for PARAM command in " + i + " line.");
+                            if (!Char.IsDigit(this[i].left[0]))
+                            {
+                                if (!currentlyAlive.Contains(this[i].left))
+                                    currentlyAlive.Add(this[i].left);
+                            }
+                            break;
+                        }
+                                            
+                    case "if":
+                        {
+                            if (this[i].left == "")
+                                throw new ArgumentException("Critical error! Empty LEFT operand for IF command in " + i + " line.");
+                            if (!Char.IsDigit(this[i].left[0]))
+                            {
+                                if (!currentlyAlive.Contains(this[i].left))
+                                    currentlyAlive.Add(this[i].left);
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            if (this[i].left != "")
+                            {
+                                if (currentlyAlive.Contains(this[i].left))
+                                    currentlyAlive.Remove(this[i].left);
+                            }
+
+                            if (this[i].first != "")
+                            {
+                                if (!Char.IsDigit(this[i].first[0]))
+                                {
+                                    if (!currentlyAlive.Contains(this[i].first))
+                                        currentlyAlive.Add(this[i].first);
+                                }
+                            }
+
+                            if (this[i].second != "")
+                            {
+                                if (!Char.IsDigit(this[i].second[0]))
+                                {
+                                    if (!currentlyAlive.Contains(this[i].second))
+                                        currentlyAlive.Add(this[i].second);
+                                }
+                            }
+                            break;
+                        }                
+                }                                                
+
+                defUseData.Add(new HashSet<string>(currentlyAlive.Clone()));
+            }
+
+            defUseData.Reverse();
+        }
+
+        public bool IsVariableAlive(string variable, int step)
+        {
+            return defUseData[step].Contains(variable);
+        }
+
+        public HashSet<string> GetAliveVariables(int step)
+        {
+            return defUseData[step];
+        }
     };
+
+    static class Extensions
+    {
+        public static IEnumerable<T> Clone<T>(this IEnumerable<T> containerToClone) where T : ICloneable
+        {
+            return containerToClone.Select(item => (T)item.Clone());
+        }
+
+    }
 
     class ThreeAddrCode
     {
@@ -91,6 +185,11 @@ namespace SimpleLang
             public static Line CreateEmpty()
             {
                 return new Line("", "", "");
+            }
+
+            public override string ToString()
+            {
+                return String.Format("{0,10}|{1,10}|{2,10}|{3,10}|{4,10}", this.label, this.left, this.first, this.command, this.second);
             }
         }
 

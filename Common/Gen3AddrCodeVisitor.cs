@@ -84,7 +84,7 @@ namespace SimpleLang
             }
             else if (node.Expr is BinaryNode)
             {
-                Code.blocks.Last().Last().left = variable;
+                Code.blocks.Last().Last().left = variable;                
             }
             else
             {
