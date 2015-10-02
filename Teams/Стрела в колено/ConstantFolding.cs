@@ -19,8 +19,8 @@ namespace SimpleLang
         
         public void Optimize()
         {
-            FoldConstants(tac);
-            ApplyAlgebraicEqualities(tac);
+            FoldConstants(this.tac);
+            ApplyAlgebraicEqualities(this.tac);
         }
 
         static void FoldConstants(ThreeAddrCode tac)
