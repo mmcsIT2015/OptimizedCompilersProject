@@ -45,7 +45,7 @@ namespace SimpleCompiler
                         codeGenerator.Visit(parser.root);
 
                         // DEBUG Can watch result here
-                        //Console.WriteLine(codeGenerator.Code);
+                        Console.WriteLine(codeGenerator.Code);
                         
 
                         //DEBUG def-use data view
