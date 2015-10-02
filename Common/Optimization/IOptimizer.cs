@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SimpleLang.Optimization
 {
-    public interface IOptimizator
+    public interface IOptimizer
     {
         void Optimize();
     }
