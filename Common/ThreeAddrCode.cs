@@ -8,8 +8,8 @@ namespace SimpleLang
     using Label = KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
 
     class Block: List<ThreeAddrCode.Line> {
-
-        private List<HashSet<string>> defUseData = new List<HashSet<string>>();                
+        
+        private List<HashSet<string>> defUseData;        
 
         public override string ToString()
         {
@@ -55,9 +55,13 @@ namespace SimpleLang
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Должна быть вызвана перед любыми вызовами IsVariableAlive, GetAliveVariables.
+        /// Если блок был изменен, нужно вызвать еще раз, в противном случае возвращаемые данные бессмысленны.
+        /// </summary>
         public void CalculateDefUseData()
         {
-            defUseData.Clear();
+            defUseData = new List<HashSet<string>>();
             HashSet<string> currentlyAlive = new HashSet<string>();
 
             for (int i = this.Count - 1; i >= 0; --i)
@@ -126,12 +130,22 @@ namespace SimpleLang
 
             defUseData.Reverse();
         }
-
+        /// <summary>
+        /// Проверяет, жива ли переменная на некотором шаге
+        /// </summary>
+        /// <param name="variable">Имя переменной</param>
+        /// <param name="step">Номер шага</param>
+        /// <returns>Истина, если жива</returns>
         public bool IsVariableAlive(string variable, int step)
         {
             return defUseData[step].Contains(variable);
         }
 
+        /// <summary>
+        /// Возвращает множество живых переменных для заданного шага
+        /// </summary>
+        /// <param name="step">Номер шага</param>
+        /// <returns>HashSet, содержащий все живые переменные в строковом виде</string></returns>
         public HashSet<string> GetAliveVariables(int step)
         {
             return defUseData[step];
@@ -140,6 +154,12 @@ namespace SimpleLang
 
     static class Extensions
     {
+        /// <summary>
+        /// Deep copy for IEnumerable containers, which is not implemented in the standard library by default
+        /// </summary>
+        /// <typeparam name="T">Type of data within container</typeparam>
+        /// <param name="containerToClone">Container to copy</param>
+        /// <returns>New container, fully copied</returns>
         public static IEnumerable<T> Clone<T>(this IEnumerable<T> containerToClone) where T : ICloneable
         {
             return containerToClone.Select(item => (T)item.Clone());
