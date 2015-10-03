@@ -211,10 +211,38 @@ namespace SimpleLang
         public Dictionary<string, Label> labels; // содержит список меток и адресом этих меток в blocks
         public List<Block> blocks; // содержит массив с блоками
 
+        //граф переходов между базовыми блоками (по индексам в массиве)
+        //Пример: получить список всех дуг (переходов) из 5-ого блока
+        //  List<int> d = graph[5];
+        public Dictionary<int, List<int>> graph; 
+
+        //получить обратный граф переходов между базовыми блоками
+        //Пример: получить список всех дуг (переходов) в 5-ый блок
+        //  List<int> d = graph[5];
+        public Dictionary<int, List<int>> GetReversedGraph()
+        {
+            bool[,] graphTable = new bool[blocks.Count(), blocks.Count()];
+            graphTable.Initialize();
+            for (int i = 0; i < blocks.Count(); i++)
+            {
+                foreach (int j in graph[i])
+                    graphTable[i, j] = true;
+            }
+            Dictionary<int, List<int>> reversedGraph = new Dictionary<int, List<int>>();
+            for (int i = 0; i < blocks.Count(); i++)
+                reversedGraph[i] = new List<int>(2);
+            for (int i = 0; i < blocks.Count(); i++)
+                for (int j = 0; j < blocks.Count(); j++)
+                    if (graphTable[i, j])
+                        reversedGraph[j].Add(i);
+            return reversedGraph;
+        }
+
         public ThreeAddrCode()
         {
             blocks = new List<Block>() { new Block() };
             labels = new Dictionary<string, Label>();
+            graph = null;
         }
 
         public void NewBlock()
@@ -250,12 +278,30 @@ namespace SimpleLang
         public override string ToString()
         {
             var builder = new StringBuilder();
-            foreach (var block in blocks)
+            if (graph == null)
             {
-                builder.Append(block.ToString());
-                builder.Append("\n\n");
+                foreach (var block in blocks)
+                {
+                    builder.Append(block.ToString());
+                    builder.Append("\n\n");
+                }
             }
+            else
+            {
+                for (int i = 0; i < blocks.Count(); i++)
+                {
+                    builder.Append("BLOCK " + i + "\n");
 
+                    builder.Append(blocks[i].ToString());
+
+                    builder.Append("TRANSITION TO BLOCKS: ");
+                    foreach (int index in graph[i])
+                    {
+                        builder.Append(" " + index);
+                    }
+                    builder.Append("\n\n");
+                }
+            }
             return builder.ToString();
         }
     }

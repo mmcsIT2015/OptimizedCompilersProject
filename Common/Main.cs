@@ -45,8 +45,10 @@ namespace SimpleCompiler
                         Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
                         codeGenerator.Visit(parser.root);
 
-                        // DEBUG Разбиение на внутренние блоки
-                        BaseBlocksPartition bbp = new BaseBlocksPartition(codeGenerator.Code);
+                        // DEBUG Разбиение на внутренние блоки + построение графа переходов
+                        BaseBlocksPartition.Partition(codeGenerator.Code);
+                        // DEBUG Получить обратный граф переходов
+                        // codeGenerator.Code.graph = codeGenerator.Code.GetReversedGraph();
 
                         // DEBUG Can watch result here
                         Console.WriteLine(codeGenerator.Code);
