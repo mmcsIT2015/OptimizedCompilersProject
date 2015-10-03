@@ -26,8 +26,10 @@ namespace SimpleLang
         private Stack<string> stack = new Stack<string>();
         private Dictionary<BinaryType, string> operators = new Dictionary<BinaryType, string>();
         private Dictionary<AssignType, string> assigns = new Dictionary<AssignType, string>();
-        private UniqueIdsGenerator labelsGenerator = new UniqueIdsGenerator("L");
-        private UniqueIdsGenerator tempVarsGenerator = new UniqueIdsGenerator("t");
+        private UniqueIdsGenerator labelsGenerator = UniqueIdsGenerator.Instance();
+        private UniqueIdsGenerator tempVarsGenerator = UniqueIdsGenerator.Instance();
+
+        public int randomPartLength = 3;
 
         public Gen3AddrCodeVisitor()
         {
@@ -96,8 +98,8 @@ namespace SimpleLang
         {
             node.Expr.Accept(this);
             string ifExpression = stack.Pop();
-            var labelForTrue = labelsGenerator.Get();
-            var labelForFalse = labelsGenerator.Get();
+            var labelForTrue = labelsGenerator.Get(randomPartLength);
+            var labelForFalse = labelsGenerator.Get(randomPartLength);
 
             Code.AddLine(new ThreeAddrCode.Line(ifExpression, labelForTrue, "if", ""));
             Label ifPosition = Code.GetLastPosition();
@@ -136,9 +138,9 @@ namespace SimpleLang
 
         public void Visit(WhileNode node)
         {
-            string gotoLabel = labelsGenerator.Get();
-            string labelForTrue = labelsGenerator.Get();
-            string labelForFalse = labelsGenerator.Get();
+            string gotoLabel = labelsGenerator.Get(randomPartLength);
+            string labelForTrue = labelsGenerator.Get(randomPartLength);
+            string labelForFalse = labelsGenerator.Get(randomPartLength);
 
             Label gotoPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
             node.Expr.Accept(this);
@@ -159,7 +161,7 @@ namespace SimpleLang
         public void Visit(DoWhileNode node)
         {
             Label firstStPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
-            string firstStLabel = labelsGenerator.Get();
+            string firstStLabel = labelsGenerator.Get(randomPartLength);
 
             node.Stat.Accept(this);
             node.Expr.Accept(this);
@@ -177,7 +179,7 @@ namespace SimpleLang
             string rightOperand = stack.Pop();
             string leftOperand = stack.Pop();
 
-            string temp = tempVarsGenerator.Get();
+            string temp = tempVarsGenerator.Get(randomPartLength);
             stack.Push(temp);
 
             Code.AddLine(new ThreeAddrCode.Line(temp, leftOperand, OperatorToString(node.Operation), rightOperand));
