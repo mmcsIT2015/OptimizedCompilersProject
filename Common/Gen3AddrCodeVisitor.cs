@@ -29,7 +29,7 @@ namespace SimpleLang
         private UniqueIdsGenerator labelsGenerator = UniqueIdsGenerator.Instance();
         private UniqueIdsGenerator tempVarsGenerator = UniqueIdsGenerator.Instance();
 
-        public int randomPartLength = 3;
+        public int labelRandomPartLength = 10;
 
         public Gen3AddrCodeVisitor()
         {
@@ -98,8 +98,8 @@ namespace SimpleLang
         {
             node.Expr.Accept(this);
             string ifExpression = stack.Pop();
-            var labelForTrue = labelsGenerator.Get(randomPartLength);
-            var labelForFalse = labelsGenerator.Get(randomPartLength);
+            var labelForTrue = labelsGenerator.Get(labelRandomPartLength);
+            var labelForFalse = labelsGenerator.Get(labelRandomPartLength);
 
             Code.AddLine(new ThreeAddrCode.Line(ifExpression, labelForTrue, "if", ""));
             Label ifPosition = Code.GetLastPosition();
@@ -138,9 +138,9 @@ namespace SimpleLang
 
         public void Visit(WhileNode node)
         {
-            string gotoLabel = labelsGenerator.Get(randomPartLength);
-            string labelForTrue = labelsGenerator.Get(randomPartLength);
-            string labelForFalse = labelsGenerator.Get(randomPartLength);
+            string gotoLabel = labelsGenerator.Get(labelRandomPartLength);
+            string labelForTrue = labelsGenerator.Get(labelRandomPartLength);
+            string labelForFalse = labelsGenerator.Get(labelRandomPartLength);
 
             Label gotoPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
             node.Expr.Accept(this);
@@ -161,7 +161,7 @@ namespace SimpleLang
         public void Visit(DoWhileNode node)
         {
             Label firstStPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
-            string firstStLabel = labelsGenerator.Get(randomPartLength);
+            string firstStLabel = labelsGenerator.Get(labelRandomPartLength);
 
             node.Stat.Accept(this);
             node.Expr.Accept(this);
@@ -179,7 +179,7 @@ namespace SimpleLang
             string rightOperand = stack.Pop();
             string leftOperand = stack.Pop();
 
-            string temp = tempVarsGenerator.Get(randomPartLength);
+            string temp = tempVarsGenerator.Get(labelRandomPartLength);
             stack.Push(temp);
 
             Code.AddLine(new ThreeAddrCode.Line(temp, leftOperand, OperatorToString(node.Operation), rightOperand));
