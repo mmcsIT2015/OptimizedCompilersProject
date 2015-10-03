@@ -11,7 +11,7 @@ namespace SimpleLang
 {
     /// <summary>
     /// Выполняет обход дерева и возвращает полученный трехадресный код
-    /// Example:
+    /// Пример использования:
     /// ====
     ///     Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
     ///     codeGenerator.Visit(parser.root);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -7,57 +8,45 @@ namespace SimpleLang
 {
     /// <summary>
     /// Класс удаляет "мертвый" код из трехадресного кода в пределах одного базового блока
-
-    /// Example:
+    /// Пример использования:
     /// ====
     ///     Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
     ///     codeGenerator.Visit(parser.root);
     ///     
     ///     BaseBlocksPartition baseBlocksPartition = new BaseBlocksPartition(codeGenerator.Code);
     ///
-    ///     DeadCodeElimination deadCodeElimination = new DeadCodeElimination(codeGenerator.Code, 1);
+    ///     DeadCodeElimination deadCodeElimination = new DeadCodeElimination(codeGenerator.Code/*, 1*/);
+    ///     deadCodeElimination.Optimize();
+    ///     
     ///     Console.WriteLine(codeGenerator.Code);
-    ///  
     /// </summary>
-    class DeadCodeElimination
+    class DeadCodeElimination: IOptimizer
     {
-        private Block mBlock; //нужный нам базовый блок
-        //private string strBlock;
-        
+        private int mBlockNumber;
+        private ThreeAddrCode mCode;
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="threeAddrCode">Трехадресный код</param>
-        /// <param name="blockNumber">Номер нужного нам базового блока, нумерация с 1</param>
-        public DeadCodeElimination(ThreeAddrCode threeAddrCode, int blockNumber = 1)
+        /// <param name="blockNumber">Номер нужного нам базового блока, нумерация с 1; Если -1 - то для всех блоков</param>
+        public DeadCodeElimination(ThreeAddrCode threeAddrCode, int blockNumber = -1)
         {
-            mBlock = new Block();
-            //если выход за границы
-            if (blockNumber < 1 || blockNumber > threeAddrCode.blocks.Count)
-                Console.WriteLine("Wrong number of blocks");
-            //иначе
-            else
-            {
-                DCEAlgorithm(threeAddrCode, blockNumber);
-                threeAddrCode.blocks[blockNumber - 1] = mBlock;
-            }
+            mCode = threeAddrCode;
+            mBlockNumber = blockNumber;
         }
 
-        /// <summary>
-        /// Алгоритм удаления "мертвого" кода
-        /// </summary>
-        private void DCEAlgorithm(ThreeAddrCode threeAddrCode, int blockNumber)
+        private Block DCEAlgorithm(ThreeAddrCode threeAddrCode, int blockNumber)
         {
-            mBlock = threeAddrCode.blocks[blockNumber - 1];//берем блок из листа блоков трехадресного кода
-            List<ThreeAddrCode.Line> listThreeAddrCodeDotLine = mBlock;
-            int listSize = listThreeAddrCodeDotLine.Count;//количество строк в блоке
+            var block = threeAddrCode.blocks[blockNumber - 1]; //берем блок из листа блоков трехадресного кода
+            List<ThreeAddrCode.Line> listThreeAddrCodeDotLine = block;
+            int listSize = listThreeAddrCodeDotLine.Count; //количество строк в блоке
 
             //цикл с конца блока до начала
             for (int i = listSize - 1; i >= 0; i--)
             {
-                ThreeAddrCode.Line threeAddrCodeDotLineI = listThreeAddrCodeDotLine[i];//берем i-ю строку
-                bool isAlive1, isAlive2;//"живучесть"
+                ThreeAddrCode.Line threeAddrCodeDotLineI = listThreeAddrCodeDotLine[i]; //берем i-ю строку
+                bool isAlive1, isAlive2; //"живучесть"
                 isAlive1 = threeAddrCodeDotLineI.first != "";
                 isAlive2 = threeAddrCodeDotLineI.second != "";
                 //цикл с i-го элемента до начала блока
@@ -71,11 +60,11 @@ namespace SimpleLang
                         if (isAlive1 == false)
                         {
                             i--;
-                            listThreeAddrCodeDotLine.RemoveAt(j);//удаляем j-ю строку с этой переменной
+                            listThreeAddrCodeDotLine.RemoveAt(j); //удаляем j-ю строку с этой переменной
                         }
                         //иначе
                         else
-                            isAlive1 = false;//делаем ее "мертвой"
+                            isAlive1 = false; //делаем ее "мертвой"
                     }
 
                     //если второй операнд i-ой строки равен левому значению j-й строки
@@ -85,32 +74,38 @@ namespace SimpleLang
                         if (isAlive2 == false)
                         {
                             i--;
-                            listThreeAddrCodeDotLine.RemoveAt(j);//удаляем j-ю строку с этой переменной
+                            listThreeAddrCodeDotLine.RemoveAt(j); //удаляем j-ю строку с этой переменной
                         }
                         //иначе
                         else
-                            isAlive2 = false;//делаем ее "мертвой"
+                            isAlive2 = false; //делаем ее "мертвой"
                     }
 
                     //если левое значение i-ой строки равно левому значению j-й строки
                     if (threeAddrCodeDotLineI.left == threeAddrCodeDotLineJ.left)
                     {
                         i--;
-                        listThreeAddrCodeDotLine.RemoveAt(j);//удаляем j-ю строку с этой переменной
+                        listThreeAddrCodeDotLine.RemoveAt(j); //удаляем j-ю строку с этой переменной
                     }
                 }
             }
 
-            mBlock = listThreeAddrCodeDotLine as Block;//возвращаем измененный базовый блок
+            return listThreeAddrCodeDotLine as Block; //возвращаем измененный базовый блок
         }
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.Append(mBlock.ToString());
-            builder.Append("\n\n");
-
-            return builder.ToString();
+        public void Optimize() {
+            if (mBlockNumber < 0)
+            {
+                for (int i = 0; i < mCode.blocks.Count; ++i)
+                {
+                    mCode.blocks[i] = DCEAlgorithm(mCode, i + 1);
+                }
+            }
+            else
+            {
+                Debug.Assert(mBlockNumber >= 1 && mBlockNumber <= mCode.blocks.Count);
+                mCode.blocks[mBlockNumber - 1] = DCEAlgorithm(mCode, mBlockNumber);
+            }
         }
     }
 }

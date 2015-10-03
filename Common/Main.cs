@@ -51,6 +51,10 @@ namespace SimpleCompiler
                         // codeGenerator.Code.graph = codeGenerator.Code.GetReversedGraph();
 
                         // DEBUG Can watch result here
+                        //Console.WriteLine(codeGenerator.Code);
+
+                        DeadCodeElimination deadCodeElimination = new DeadCodeElimination(codeGenerator.Code, 1);
+                        deadCodeElimination.Optimize();
                         Console.WriteLine(codeGenerator.Code);
 
                         // DEBUG Оптимизация: Устранение общих выражений

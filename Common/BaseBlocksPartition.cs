@@ -7,7 +7,7 @@ namespace SimpleLang
 {
     /// <summary>
     /// Класс изменяет входящий threeAddrCode - на выходе этот код будет разбит на блоки и будет построен граф переходов между блоками
-    /// Example:
+    /// Пример использования:
     /// ====
     ///     Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
     ///     codeGenerator.Visit(parser.root);
