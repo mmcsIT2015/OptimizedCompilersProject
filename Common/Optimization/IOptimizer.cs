@@ -22,6 +22,6 @@ namespace SimpleLang
     /// </summary>
     public interface IOptimizer
     {
-        void Optimize();
+        void Optimize(params Object[] values);
     }
 }

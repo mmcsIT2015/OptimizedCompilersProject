@@ -93,7 +93,8 @@ namespace SimpleLang
             return listThreeAddrCodeDotLine as Block; //возвращаем измененный базовый блок
         }
 
-        public void Optimize() {
+        public void Optimize(params Object[] values)
+        {
             if (mBlockNumber < 0)
             {
                 for (int i = 0; i < mCode.blocks.Count; ++i)

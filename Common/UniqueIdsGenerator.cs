@@ -48,9 +48,15 @@ namespace SimpleLang
         /// <returns>Строка</returns>
         public string Get(int length)
         {
+            if (length > 64)
+            {
+                // На всякий случай, меру надо знать в длине идентификаторов...
+                throw new ArgumentException("Too long name ID: " + length + ". Maximum length - 64");
+            }
+
             int attempt = 0;
             StringBuilder builder;
-            int limit = (int)Math.Pow(mAlphabet.Length, length);
+            double limit = Math.Pow(mAlphabet.Length, length);
             do
             {
                 // @ - Такого символа точно быть в программе не могло
