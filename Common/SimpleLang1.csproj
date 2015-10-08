@@ -50,6 +50,7 @@
     <Compile Include="Optimization\CommonSubexpressionsOptimization.cs" />
     <Compile Include="Optimization\ConstantFolding.cs" />
     <Compile Include="Optimization\DeadCodeElimination.cs" />
+    <Compile Include="Optimization\DraggingConstantsOptimization.cs" />
     <Compile Include="Optimization\IOptimizer.cs" />
     <Compile Include="ParserHelper.cs" />
     <Compile Include="ProgramTree.cs" />
