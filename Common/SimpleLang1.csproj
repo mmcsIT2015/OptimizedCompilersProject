@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseBlocksPartition.cs" />
+    <Compile Include="DataFlow.cs" />
     <Compile Include="Gen3AddrCodeVisitor.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="Main.cs" />
