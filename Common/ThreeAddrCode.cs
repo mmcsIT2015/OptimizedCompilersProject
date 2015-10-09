@@ -171,8 +171,29 @@ namespace SimpleLang
     {
         public class Index
         {
+            public class IndexVariableNameComparer : IEqualityComparer<Index>
+            {
+                public bool Equals(Index obj1, Index obj2)
+                {
+                    return obj1.mVariableName == obj2.mVariableName;
+                }
+
+                public int GetHashCode(Index obj)
+                {
+                    return obj.mVariableName.GetHashCode();
+                }
+            }
+
             public int mBlockInd { get; set; }
             public int mInternalInd { get; set; }
+            public string mVariableName { get; set; }
+
+            public Index (int blockInd, int internalInd, string variableName)
+            {
+                mBlockInd = blockInd;
+                mInternalInd = internalInd;
+                mVariableName = variableName;
+            }
 
             public override int GetHashCode()
             {
@@ -192,8 +213,8 @@ namespace SimpleLang
 
         public class GenKillInfo
         {
-            HashSet<Index> Gen;
-            HashSet<Index> Kill;
+            public HashSet<Index> Gen = new HashSet<Index>();
+            public HashSet<Index> Kill = new HashSet<Index>();
         }
 
         public class Line
@@ -334,7 +355,41 @@ namespace SimpleLang
 
         public List<GenKillInfo> GetGenKillInfoData()
         {
-            throw new NotImplementedException(" SCREW YOU BIG BLACK CUNT! ");
+            List<GenKillInfo> genKillInfoList = new List<GenKillInfo>();
+            for(int i = 0; i < blocks.Count; i++)
+            {
+                genKillInfoList[i] = new GenKillInfo();
+                for(int j = 0; j < blocks[i].Count; j++)
+                {
+                    Line line = blocks[i][j];
+                    if (line.command == "param" || line.command == "goto" || line.command == "if" || line.command == "call")
+                        continue;
+                    Index currentInd = new Index(i, j, line.left);
+                    if (genKillInfoList[i].Gen.Contains(currentInd, new Index.IndexVariableNameComparer()))
+                        genKillInfoList[i].Gen.Remove(currentInd);
+                    genKillInfoList[i].Gen.Add(new Index(i, j, line.left));                     
+                }
+            }
+
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                for (int j = 0; j < blocks.Count; j++)
+                {
+                    if (i == j)
+                        continue;
+                    foreach (Index ind_i in genKillInfoList[i].Gen)
+                    {
+                        foreach (Index ind_j in genKillInfoList[j].Gen)
+                        {
+                            //intersection
+                        }
+                    }
+                    
+                }
+            }
+
+
+            return genKillInfoList;
         }
     }
 }
