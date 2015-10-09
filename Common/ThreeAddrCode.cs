@@ -169,6 +169,33 @@ namespace SimpleLang
 
     class ThreeAddrCode
     {
+        public class Index
+        {
+            public int mBlockInd { get; set; }
+            public int mInternalInd { get; set; }
+
+            public override int GetHashCode()
+            {
+ 	            return mBlockInd * 65536 + mInternalInd;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj == null)
+                    return false;
+ 	            if (obj.GetType() != this.GetType())
+                    return false;
+                Index o = obj as Index;
+                return (this.mInternalInd == o.mInternalInd) && (this.mBlockInd == o.mBlockInd);
+            }
+        }
+
+        public class GenKillInfo
+        {
+            HashSet<Index> Gen;
+            HashSet<Index> Kill;
+        }
+
         public class Line
         {
             public string label;
@@ -303,6 +330,11 @@ namespace SimpleLang
                 }
             }
             return builder.ToString();
+        }
+
+        public List<GenKillInfo> GetGenKillInfoData()
+        {
+            throw new NotImplementedException(" SCREW YOU BIG BLACK CUNT! ");
         }
     }
 }
