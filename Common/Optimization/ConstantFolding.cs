@@ -11,15 +11,14 @@ namespace SimpleLang
     /// </summary>
     class ConstantFolding : IOptimizer
     {
-        ThreeAddrCode tac;
+        private ThreeAddrCode tac;
 
         public ConstantFolding(ThreeAddrCode tac)
         {
             this.tac = tac;
         }
 
-        //static HashSet<string> ops1 = new HashSet<string> { "+=", "-=", "*=", "/=" };
-        static HashSet<string> ops2 = new HashSet<string> { "+", "-", "*", "/" };
+        private static HashSet<string> ops = new HashSet<string> { "+", "-", "*", "/" };
 
         public void Optimize(params Object[] values)
         {
@@ -27,7 +26,7 @@ namespace SimpleLang
             ApplyAlgebraicEqualities(this.tac);
         }
 
-        static void FoldConstants(ThreeAddrCode tac)
+        private static void FoldConstants(ThreeAddrCode tac)
         {
             foreach (Block bl in tac.blocks)
             {
@@ -35,7 +34,7 @@ namespace SimpleLang
                 {
                     string cmd = ln.command.Trim();
 
-                    if (ops2.Contains(cmd))
+                    if (ops.Contains(cmd))
                     {
                         double fst, snd;
                         if (!double.TryParse(ln.first, out fst))
@@ -63,7 +62,7 @@ namespace SimpleLang
             }
         }
 
-        static void ApplyAlgebraicEqualities(ThreeAddrCode tac)
+        private static void ApplyAlgebraicEqualities(ThreeAddrCode tac)
         {
             foreach (Block bl in tac.blocks)
             {
@@ -71,7 +70,7 @@ namespace SimpleLang
                 {
                     string cmd = ln.command.Trim();
 
-                    if (ops2.Contains(cmd))
+                    if (ops.Contains(cmd))
                     {
                         double fst, snd;
                         bool b1 = double.TryParse(ln.first, out fst);
