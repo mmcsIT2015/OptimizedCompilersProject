@@ -5,37 +5,43 @@ using System.Text;
 
 namespace SimpleLang
 {
+
+    /// <summary>
+    /// Оптимизация: Свертка констант и применение алгебраических тождеств
+    /// </summary>
     class ConstantFolding : IOptimizer
     {
-        private ThreeAddrCode mCode;
-
-        //static HashSet<string> ops1 = new HashSet<string> { "+=", "-=", "*=", "/=" };
-        static HashSet<string> mOperations = new HashSet<string> { "+", "-", "*", "/" };
+        ThreeAddrCode tac;
 
         public ConstantFolding(ThreeAddrCode tac)
         {
-            this.mCode = tac;
+            this.tac = tac;
         }
+
+        //static HashSet<string> ops1 = new HashSet<string> { "+=", "-=", "*=", "/=" };
+        static HashSet<string> ops2 = new HashSet<string> { "+", "-", "*", "/" };
 
         public void Optimize(params Object[] values)
         {
-            FoldConstants();
-            ApplyAlgebraicEqualities();
+            FoldConstants(this.tac);
+            ApplyAlgebraicEqualities(this.tac);
         }
 
-        private void FoldConstants()
+        static void FoldConstants(ThreeAddrCode tac)
         {
-            foreach (Block bl in mCode.blocks)
+            foreach (Block bl in tac.blocks)
             {
                 foreach (ThreeAddrCode.Line ln in bl)
                 {
                     string cmd = ln.command.Trim();
 
-                    if (mOperations.Contains(cmd))
+                    if (ops2.Contains(cmd))
                     {
                         double fst, snd;
-                        if (!double.TryParse(ln.first, out fst)) continue;
-                        if (!double.TryParse(ln.second, out snd)) continue;
+                        if (!double.TryParse(ln.first, out fst))
+                            continue;
+                        if (!double.TryParse(ln.second, out snd))
+                            continue;
                         switch (cmd)
                         {
                             case "+":
@@ -57,15 +63,15 @@ namespace SimpleLang
             }
         }
 
-        private void ApplyAlgebraicEqualities()
+        static void ApplyAlgebraicEqualities(ThreeAddrCode tac)
         {
-            foreach (Block bl in mCode.blocks)
+            foreach (Block bl in tac.blocks)
             {
                 foreach (ThreeAddrCode.Line ln in bl)
                 {
                     string cmd = ln.command.Trim();
 
-                    if (mOperations.Contains(cmd))
+                    if (ops2.Contains(cmd))
                     {
                         double fst, snd;
                         bool b1 = double.TryParse(ln.first, out fst);
