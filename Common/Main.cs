@@ -59,7 +59,7 @@ namespace SimpleCompiler
 
                         // DEBUG Оптимизация: Устранение общих выражений
                         /*
-                        SimpleLang.Optimization.CommonSubexpressionsOptimization cso = new SimpleLang.Optimization.CommonSubexpressionsOptimization(codeGenerator.Code);
+                        SimpleLang.CommonSubexpressionsOptimization cso = new SimpleLang.CommonSubexpressionsOptimization(codeGenerator.Code);
                         cso.Optimize();
                         Console.WriteLine("Optimization:\n" + codeGenerator.Code);
                         */

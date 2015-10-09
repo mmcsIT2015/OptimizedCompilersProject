@@ -5,7 +5,7 @@ using System.Text;
 
 using SimpleLang;
 
-namespace SimpleLang.Optimization
+namespace SimpleLang
 {
     /// <summary>
     /// Оптимизация: Устранение общих подвыражений

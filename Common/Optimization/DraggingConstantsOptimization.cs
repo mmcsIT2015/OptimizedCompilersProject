@@ -5,10 +5,10 @@ using System.Text;
 
 
 
-namespace SimpleLang.Optimization
+namespace SimpleLang
 {
     //Пример применения:
-    //SimpleLang.Optimization.DraggingConstantsOptimization dco = new SimpleLang.Optimization.DraggingConstantsOptimization(codeGenerator.Code);
+    //SimpleLang.DraggingConstantsOptimization dco = new SimpleLang.DraggingConstantsOptimization(codeGenerator.Code);
     //dco.Optimize();
     //Console.WriteLine("Optimization:\n" + codeGenerator.Code);
 
