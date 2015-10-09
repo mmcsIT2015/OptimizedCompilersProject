@@ -53,6 +53,13 @@ namespace SimpleCompiler
                         // DEBUG Can watch result here
                         //Console.WriteLine(codeGenerator.Code);
 
+                        /* Constant folding usage
+                        ConstantFolding cf = new ConstantFolding(codeGenerator.Code);
+                        cf.Optimize();
+                        Console.WriteLine(codeGenerator.Code);
+                        */
+
+
                         DeadCodeElimination deadCodeElimination = new DeadCodeElimination(codeGenerator.Code, 1);
                         deadCodeElimination.Optimize();
                         Console.WriteLine(codeGenerator.Code);
