@@ -7,3 +7,7 @@ obj/
 *.sdf
 *.pdb
 *.suo
+
+# Generated files.
+Common/SimpleLex.cs
+Common/SimpleYacc.cs
