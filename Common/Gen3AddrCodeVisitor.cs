@@ -23,13 +23,14 @@ namespace SimpleLang
     {
         public ThreeAddrCode Code { get; set; }
 
-        private Stack<string> stack = new Stack<string>();
-        private Dictionary<BinaryType, string> operators = new Dictionary<BinaryType, string>();
-        private Dictionary<AssignType, string> assigns = new Dictionary<AssignType, string>();
-        private UniqueIdsGenerator labelsGenerator = UniqueIdsGenerator.Instance();
-        private UniqueIdsGenerator tempVarsGenerator = UniqueIdsGenerator.Instance();
+        private Stack<string> mStack = new Stack<string>();
+        private Dictionary<BinaryType, string> mOperators = new Dictionary<BinaryType, string>();
+        private Dictionary<AssignType, string> mAssigns = new Dictionary<AssignType, string>();
+        private UniqueIdsGenerator mLabelsGenerator = UniqueIdsGenerator.Instance();
+        private UniqueIdsGenerator mTempVarsGenerator = UniqueIdsGenerator.Instance();
 
-        public int labelRandomPartLength = 10;
+        public int mLabelRandomPartLength = 4;
+        public int mVarRandomPartLength = 8;
 
         public Gen3AddrCodeVisitor()
         {
@@ -41,22 +42,22 @@ namespace SimpleLang
 
         private void CreateDictionaries()
         {
-            operators.Add(BinaryType.Plus, "+");
-            operators.Add(BinaryType.Minus, "-");
-            operators.Add(BinaryType.Mult, "*");
-            operators.Add(BinaryType.Div, "/");
-            operators.Add(BinaryType.Less, "<");
-            operators.Add(BinaryType.More, ">");
-            operators.Add(BinaryType.Equal, "==");
-            operators.Add(BinaryType.NotEqual, "!=");
-            operators.Add(BinaryType.LessEqual, "<=");
-            operators.Add(BinaryType.MoreEqual, ">=");
+            mOperators.Add(BinaryType.Plus, "+");
+            mOperators.Add(BinaryType.Minus, "-");
+            mOperators.Add(BinaryType.Mult, "*");
+            mOperators.Add(BinaryType.Div, "/");
+            mOperators.Add(BinaryType.Less, "<");
+            mOperators.Add(BinaryType.More, ">");
+            mOperators.Add(BinaryType.Equal, "==");
+            mOperators.Add(BinaryType.NotEqual, "!=");
+            mOperators.Add(BinaryType.LessEqual, "<=");
+            mOperators.Add(BinaryType.MoreEqual, ">=");
 
-            assigns.Add(AssignType.Assign, "=");
-            assigns.Add(AssignType.AssignPlus, "+");
-            assigns.Add(AssignType.AssignMinus, "-");
-            assigns.Add(AssignType.AssignMult, "*");
-            assigns.Add(AssignType.AssignDivide, "/");
+            mAssigns.Add(AssignType.Assign, "=");
+            mAssigns.Add(AssignType.AssignPlus, "+");
+            mAssigns.Add(AssignType.AssignMinus, "-");
+            mAssigns.Add(AssignType.AssignMult, "*");
+            mAssigns.Add(AssignType.AssignDivide, "/");
         }
 
         public void Visit(BlockNode node)
@@ -77,8 +78,8 @@ namespace SimpleLang
             node.Id.Accept(this);
             node.Expr.Accept(this);
 
-            string expression = stack.Pop();
-            string variable = stack.Pop();
+            string expression = mStack.Pop();
+            string variable = mStack.Pop();
 
             if (node.AssOp != AssignType.Assign)
             {
@@ -97,9 +98,9 @@ namespace SimpleLang
         public void Visit(IfNode node)
         {
             node.Expr.Accept(this);
-            string ifExpression = stack.Pop();
-            var labelForTrue = labelsGenerator.Get(labelRandomPartLength);
-            var labelForFalse = labelsGenerator.Get(labelRandomPartLength);
+            string ifExpression = mStack.Pop();
+            var labelForTrue = mLabelsGenerator.Get(mLabelRandomPartLength);
+            var labelForFalse = mLabelsGenerator.Get(mLabelRandomPartLength);
 
             Code.AddLine(new ThreeAddrCode.Line(ifExpression, labelForTrue, "if", ""));
             Label ifPosition = Code.GetLastPosition();
@@ -124,7 +125,7 @@ namespace SimpleLang
             foreach (var expr in node.ExprList)
             {
                 expr.Accept(this);
-                var variable = stack.Pop();
+                var variable = mStack.Pop();
                 parameters.Add(variable);
             }
 
@@ -138,13 +139,13 @@ namespace SimpleLang
 
         public void Visit(WhileNode node)
         {
-            string gotoLabel = labelsGenerator.Get(labelRandomPartLength);
-            string labelForTrue = labelsGenerator.Get(labelRandomPartLength);
-            string labelForFalse = labelsGenerator.Get(labelRandomPartLength);
+            string gotoLabel = mLabelsGenerator.Get(mLabelRandomPartLength);
+            string labelForTrue = mLabelsGenerator.Get(mLabelRandomPartLength);
+            string labelForFalse = mLabelsGenerator.Get(mLabelRandomPartLength);
 
             Label gotoPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
             node.Expr.Accept(this);
-            string ifExpression = stack.Pop();
+            string ifExpression = mStack.Pop();
             Code.AddLine(new ThreeAddrCode.Line(ifExpression, labelForTrue, "if", ""));
             Code.GetLine(gotoPosition).label = gotoLabel;
 
@@ -161,11 +162,11 @@ namespace SimpleLang
         public void Visit(DoWhileNode node)
         {
             Label firstStPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
-            string firstStLabel = labelsGenerator.Get(labelRandomPartLength);
+            string firstStLabel = mLabelsGenerator.Get(mLabelRandomPartLength);
 
             node.Stat.Accept(this);
             node.Expr.Accept(this);
-            string ifExpression = stack.Pop();
+            string ifExpression = mStack.Pop();
 
             Code.GetLine(firstStPosition).label = firstStLabel;
             Code.AddLine(new ThreeAddrCode.Line(ifExpression, firstStLabel, "if", ""));
@@ -176,35 +177,35 @@ namespace SimpleLang
             node.LeftOperand.Accept(this);
             node.RightOperand.Accept(this);
 
-            string rightOperand = stack.Pop();
-            string leftOperand = stack.Pop();
+            string rightOperand = mStack.Pop();
+            string leftOperand = mStack.Pop();
 
-            string temp = tempVarsGenerator.Get(labelRandomPartLength);
-            stack.Push(temp);
+            string temp = mTempVarsGenerator.Get(mVarRandomPartLength);
+            mStack.Push(temp);
 
             Code.AddLine(new ThreeAddrCode.Line(temp, leftOperand, OperatorToString(node.Operation), rightOperand));
         }
 
         public void Visit(IdNode node)
         {
-            stack.Push(node.Name);
+            mStack.Push(node.Name);
         }
 
         public void Visit(IntNumNode node)
         {
-            stack.Push(node.Num.ToString());
+            mStack.Push(node.Num.ToString());
         }
 
         public void Visit(FloatNumNode node)
         {
-            stack.Push(node.Num.ToString());
+            mStack.Push(node.Num.ToString());
         }
 
         private string OperatorToString(BinaryType op)
         {
-            if (operators.ContainsKey(op))
+            if (mOperators.ContainsKey(op))
             {
-                return operators[op];
+                return mOperators[op];
             }
 
             return "";
@@ -212,14 +213,14 @@ namespace SimpleLang
 
         private string AssignToOperation(AssignType assign)
         {
-            if (assigns.ContainsKey(assign))
+            if (mAssigns.ContainsKey(assign))
             {
                 if (assign == AssignType.Assign)
                 {
                     Debug.Assert(false, "Not expected behaviour");
                 }
 
-                return assigns[assign];
+                return mAssigns[assign];
             }
 
             return "";

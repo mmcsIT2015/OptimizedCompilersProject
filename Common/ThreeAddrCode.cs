@@ -259,6 +259,8 @@ namespace SimpleLang
         public Dictionary<string, Label> labels; // содержит список меток и адресом этих меток в blocks
         public List<Block> blocks; // содержит массив с блоками
 
+        public bool Verbose { get; set; }
+
         //граф переходов между базовыми блоками (по индексам в массиве)
         //Пример: получить список всех дуг (переходов) из 5-ого блока
         //  List<int> d = graph[5];
@@ -288,6 +290,8 @@ namespace SimpleLang
 
         public ThreeAddrCode()
         {
+            Verbose = false;
+
             blocks = new List<Block>() { new Block() };
             labels = new Dictionary<string, Label>();
             graph = null;
@@ -338,16 +342,19 @@ namespace SimpleLang
             {
                 for (int i = 0; i < blocks.Count(); i++)
                 {
-                    builder.Append("BLOCK " + i + "\n");
+                    if (Verbose) builder.Append("BLOCK " + i + "\n");
 
                     builder.Append(blocks[i].ToString());
 
-                    builder.Append("TRANSITION TO BLOCKS: ");
-                    foreach (int index in graph[i])
+                    if (Verbose)
                     {
-                        builder.Append(" " + index);
+                        builder.Append("TRANSITION TO BLOCKS: ");
+                        foreach (int index in graph[i])
+                        {
+                            builder.Append(" " + index);
+                        }
+                        builder.Append("\n\n");
                     }
-                    builder.Append("\n\n");
                 }
             }
             return builder.ToString();
