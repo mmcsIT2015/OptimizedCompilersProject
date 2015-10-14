@@ -51,7 +51,7 @@ namespace SimpleCompiler
                         // codeGenerator.Code.graph = codeGenerator.Code.GetReversedGraph();
 
                         // DEBUG Can watch result here
-                        //Console.WriteLine(codeGenerator.Code);
+                        Console.WriteLine(codeGenerator.Code);
 
                         /* Constant folding usage
                         ConstantFolding cf = new ConstantFolding(codeGenerator.Code);
@@ -59,11 +59,23 @@ namespace SimpleCompiler
                         Console.WriteLine(codeGenerator.Code);
                         */
 
+                        var a = codeGenerator.Code.GetGenKillInfoData();
+                        foreach (ThreeAddrCode.GenKillInfo info in a)
+                        {
+                            foreach(ThreeAddrCode.Index ind in info.Gen)
+                                Console.Write(ind + " ");
+                            Console.WriteLine();
+                            foreach (ThreeAddrCode.Index ind in info.Kill)
+                                Console.Write(ind + " ");
+                            Console.WriteLine();
+                            Console.WriteLine();
+                        }
 
+                        /*
                         DeadCodeElimination deadCodeElimination = new DeadCodeElimination(codeGenerator.Code, 1);
                         deadCodeElimination.Optimize();
                         Console.WriteLine(codeGenerator.Code);
-
+                        */
                         // DEBUG Оптимизация: Устранение общих выражений
                         /*
                         SimpleLang.CommonSubexpressionsOptimization cso = new SimpleLang.CommonSubexpressionsOptimization(codeGenerator.Code);

@@ -209,6 +209,11 @@ namespace SimpleLang
                 Index o = obj as Index;
                 return (this.mInternalInd == o.mInternalInd) && (this.mBlockInd == o.mBlockInd);
             }
+
+            public override string ToString()
+            {
+                return this.mVariableName + "(" + this.mBlockInd + ":" + this.mInternalInd + ")";
+            }
         }
 
         public class GenKillInfo
@@ -365,7 +370,7 @@ namespace SimpleLang
             List<GenKillInfo> genKillInfoList = new List<GenKillInfo>();
             for(int i = 0; i < blocks.Count; i++)
             {
-                genKillInfoList[i] = new GenKillInfo();
+                genKillInfoList.Add(new GenKillInfo());
                 for(int j = 0; j < blocks[i].Count; j++)
                 {
                     Line line = blocks[i][j];
@@ -388,7 +393,8 @@ namespace SimpleLang
                     {
                         foreach (Index ind_j in genKillInfoList[j].Gen)
                         {
-                            //intersection
+                            if (ind_i.mVariableName == ind_j.mVariableName)
+                                genKillInfoList[i].Kill.Add(ind_j);
                         }
                     }
                     
