@@ -51,7 +51,7 @@ namespace SimpleCompiler
                         // codeGenerator.Code.graph = codeGenerator.Code.GetReversedGraph();
 
                         // DEBUG Can watch result here
-                        Console.WriteLine(codeGenerator.Code);
+                        //Console.WriteLine(codeGenerator.Code);
 
                         /* Constant folding usage
                         ConstantFolding cf = new ConstantFolding(codeGenerator.Code);
@@ -59,17 +59,23 @@ namespace SimpleCompiler
                         Console.WriteLine(codeGenerator.Code);
                         */
 
+                        //DEBUG Gen-Kill Test
+                        /*
+                        Console.WriteLine("GenKillInfo");
                         var a = codeGenerator.Code.GetGenKillInfoData();
-                        foreach (ThreeAddrCode.GenKillInfo info in a)
+                        for (int i = 0; i < a.Count; ++i)
                         {
-                            foreach(ThreeAddrCode.Index ind in info.Gen)
-                                Console.Write(ind + " ");
-                            Console.WriteLine();
-                            foreach (ThreeAddrCode.Index ind in info.Kill)
-                                Console.Write(ind + " ");
-                            Console.WriteLine();
+                            Console.WriteLine("Block: " + i);
+                            Console.WriteLine("Gen");
+                            foreach (ThreeAddrCode.Index ind in a[i].Gen)
+                                Console.WriteLine(ind.ToString());
+                            Console.WriteLine("Kill");
+                            foreach (ThreeAddrCode.Index ind in a[i].Kill)
+                                Console.WriteLine(ind.ToString());
                             Console.WriteLine();
                         }
+                        */
+
 
                         /*
                         DeadCodeElimination deadCodeElimination = new DeadCodeElimination(codeGenerator.Code, 1);

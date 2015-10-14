@@ -212,7 +212,7 @@ namespace SimpleLang
 
             public override string ToString()
             {
-                return this.mVariableName + "(" + this.mBlockInd + ":" + this.mInternalInd + ")";
+                return "Name: " + this.mVariableName + "; Block: " + this.mBlockInd + "; Line: " + this.mInternalInd;
             }
         }
 
