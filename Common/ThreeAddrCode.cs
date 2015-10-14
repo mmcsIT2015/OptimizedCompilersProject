@@ -374,6 +374,8 @@ namespace SimpleLang
                 for(int j = 0; j < blocks[i].Count; j++)
                 {
                     Line line = blocks[i][j];
+                    if (line.IsEmpty())
+                        continue;
                     if (line.command == "param" || line.command == "goto" || line.command == "if" || line.command == "call")
                         continue;
                     Index currentInd = new Index(i, j, line.left);
