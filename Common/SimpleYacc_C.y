@@ -14,13 +14,16 @@
 			public StatementNode stVal;
 			public BlockNode blVal;
 			public CoutNode ioVal;
+			public FunctionNode funVal;
+			public FunctionNodeSt funStVal;
+			public List<ExprNode> paramVal;
         }
 
 %using ProgramTree;
 
 %namespace SimpleParser
 
-%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT
+%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA
 %token <iVal> INUM
 %token <dVal> RNUM
 %token <sVal> ID
@@ -29,6 +32,9 @@
 %type <stVal> assign statement do_while while if
 %type <blVal> stlist block
 %type <ioVal> cout
+%type <funVal> funcall
+%type <funStVal> funcallst
+%type <paramVal> params
 
 %%
 
@@ -50,6 +56,14 @@ cout	: COUT LSHIFT expr { $$ = new CoutNode($3); }
     		$$ = $1;
     	}
     ;
+		
+params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
+			|	params COMMA expr
+				{
+					$1.Add($3);
+					$$ = $1;
+				}
+				;
 
 statement: assign SEMICOLON { $$ = $1; }
     | block { $$ = $1; }
@@ -57,8 +71,19 @@ statement: assign SEMICOLON { $$ = $1; }
 		| while { $$ = $1; }
 		| cout SEMICOLON { $$ = $1; }
     | if { $$ = $1; }
+		| funcallst SEMICOLON { $$ = $1; }
     ;
 
+funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }
+					;
+		
+funcall	: ID LBRACKET params RBRACKET 
+					{ 
+						$$ = new FunctionNode($1);
+						$$.Parameters = $3;
+					}
+					;					
+				
 ident 	: ID { $$ = new IdNode($1); }
 		;
 
@@ -85,6 +110,7 @@ T : F { $$ = $1; }
 F : ident { $$ = $1 as IdNode; }
     | INUM { $$ = new IntNumNode($1); }
     | LBRACKET expr RBRACKET { $$ = $2; }
+		| funcall { $$ = $1; }
     ;
 
 if	: IF LBRACKET expr RBRACKET statement { $$ = new IfNode($3, $5); }

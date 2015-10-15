@@ -45,6 +45,7 @@ ID {Alpha}{AlphaDigit}*
 ">" { return (int)Tokens.GREAT; }
 "==" { return (int)Tokens.EQUAL; }
 "!=" { return (int)Tokens.INEQUAL; }
+"," { return (int)Tokens.COMMA; }
 
 [^\t \r\n] {
 	LexError();

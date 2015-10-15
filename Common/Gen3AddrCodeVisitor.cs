@@ -137,6 +137,11 @@ namespace SimpleLang
             Code.AddLine(new ThreeAddrCode.Line("cout", "", "call", parameters.Count.ToString()));
         }
 
+        public void Visit(FunctionNodeSt node)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Visit(WhileNode node)
         {
             string gotoLabel = mLabelsGenerator.Get(mLabelRandomPartLength);

@@ -36,12 +36,12 @@ namespace SimpleCompiler
                         codeGenerator.Visit(parser.root);
 
                         // DEBUG Разбиение на внутренние блоки + построение графа переходов
-                        BaseBlocksPartition.Partition(codeGenerator.Code);
+                        //BaseBlocksPartition.Partition(codeGenerator.Code);
                         // DEBUG Получить обратный граф переходов
                         // codeGenerator.Code.graph = codeGenerator.Code.GetReversedGraph();
 
                         // DEBUG Can watch result here
-                        //Console.WriteLine(codeGenerator.Code);
+                        Console.WriteLine(codeGenerator.Code);
 
                         /* Constant folding usage
                         ConstantFolding cf = new ConstantFolding(codeGenerator.Code);

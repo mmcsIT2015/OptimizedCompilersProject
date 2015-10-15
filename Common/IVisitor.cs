@@ -19,5 +19,6 @@ namespace SimpleLang
         void Visit(IdNode node);
         void Visit(IntNumNode node);
         void Visit(FloatNumNode node);
+        void Visit(FunctionNodeSt node);
     }
 }

@@ -78,6 +78,33 @@ namespace ProgramTree
     {
     }
 
+    public class FunctionNode : IdNode
+    {
+        public List<ExprNode> Parameters = new List<ExprNode>();
+
+        public FunctionNode(string name):base(name) { }
+
+        public void AddParam(ExprNode expr)
+        {
+            Parameters.Add(expr);
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
+    public class FunctionNodeSt : StatementNode
+    {
+        public FunctionNode Function { get; set; }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
     public class AssignNode : StatementNode
     {
         public IdNode Id { get; set; }
