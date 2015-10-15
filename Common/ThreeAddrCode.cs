@@ -450,5 +450,52 @@ namespace SimpleLang
 
             return result;
         }
+
+        /// <summary>
+        /// Выполнение GetInOutInfoData() с другим порядком блоков
+        /// </summary>
+        /// <param name="ordering">Порядок блоков</param>
+        /// <param name="iters">Количество итераций</param>
+        /// <returns></returns>
+        public List<InOutInfo> GetInOutInfoData(List<int> ordering, out int iters)
+        {
+            List<GenKillInfo> gen_kill = GetGenKillInfoData();
+            Dictionary<int, List<int>> r_graph = GetReversedGraph();
+
+            List<InOutInfo> result = new List<InOutInfo>(blocks.Count);
+            iters = 0;
+
+            for (int i = 0; i < blocks.Count; ++i)
+                result.Add(new InOutInfo());
+
+            bool changed = true;
+            while (changed)
+            {
+                changed = false;
+
+                foreach (int i in ordering)
+                { 
+                    result[i].In.Clear();
+                    foreach (int j in r_graph[i])
+                        result[i].In.UnionWith(result[j].Out);
+
+                    HashSet<Index> prev_b = null;
+                    if (!changed)
+                        prev_b = new HashSet<Index>(result[i].Out);
+
+                    HashSet<Index> subs = new HashSet<Index>(result[i].In);
+                    subs.ExceptWith(gen_kill[i].Kill);
+                    result[i].Out = new HashSet<Index>(gen_kill[i].Gen);
+                    result[i].Out.UnionWith(subs);
+
+                    if (!changed)
+                        changed = !prev_b.SetEquals(result[i].Out);
+                }
+
+                ++iters;
+            }
+
+            return result;
+        }
     }
 }
