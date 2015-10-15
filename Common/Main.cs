@@ -12,19 +12,9 @@ namespace SimpleCompiler
         public static void Main()
         {
             List<string> files = new List<string>();
-            if (File.Exists(@"..\..\tests.txt"))
-            {
-                foreach (var file in File.ReadAllLines(@"..\..\tests.txt"))
-                {
-                    files.Add(file);
-                }
-            }
 
-            if (files.Count == 0)
-            {
-                files.Add(@"..\..\a.txt");
-                //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
-            }
+            files.Add(@"..\..\a.txt");
+            //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
 
             foreach (var file in files)
             {
