@@ -92,7 +92,7 @@ namespace SimpleCompiler
                             Console.WriteLine();
                         }
                         */
-
+                        /*
                         StreamWriter sw = new StreamWriter("InOutInfo.txt");
                         var a = codeGenerator.Code.GetInOutInfoData();
                         for (int i = 0; i < a.Count; ++i)
@@ -107,7 +107,7 @@ namespace SimpleCompiler
                             sw.WriteLine();
                         }
                         sw.Close();
-
+                        */
 
                         /*
                         DeadCodeElimination deadCodeElimination = new DeadCodeElimination(codeGenerator.Code, 1);
