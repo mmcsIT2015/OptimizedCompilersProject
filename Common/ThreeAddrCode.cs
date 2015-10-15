@@ -222,6 +222,12 @@ namespace SimpleLang
             public HashSet<Index> Kill = new HashSet<Index>();
         }
 
+        public class InOutInfo
+        {
+            public HashSet<Index> In = new HashSet<Index>();
+            public HashSet<Index> Out = new HashSet<Index>();
+        }
+
         public class Line
         {
             public string label;
@@ -405,6 +411,44 @@ namespace SimpleLang
 
 
             return genKillInfoList;
+        }
+
+        public List<InOutInfo> GetInOutInfoData()
+        {
+            List<GenKillInfo> gen_kill = GetGenKillInfoData();
+            Dictionary<int, List<int>> r_graph = GetReversedGraph();
+
+            List<InOutInfo> result = new List<InOutInfo>(blocks.Count);
+
+            for (int i = 0; i < blocks.Count; ++i)
+                result.Add(new InOutInfo());
+
+            bool changed = true;
+            while (changed)
+            {
+                changed = false;
+
+                for (int i = 0; i < blocks.Count; ++i)
+                {
+                    result[i].In.Clear();
+                    foreach (int j in r_graph[i])
+                        result[i].In.UnionWith(result[j].Out);
+
+                    HashSet<Index> prev_b = null;
+                    if (!changed)
+                        prev_b = new HashSet<Index>(result[i].Out);
+
+                    HashSet<Index> subs = new HashSet<Index>(result[i].In);
+                    subs.ExceptWith(gen_kill[i].Kill);
+                    result[i].Out = new HashSet<Index>(gen_kill[i].Gen);
+                    result[i].Out.UnionWith(subs);
+
+                    if (!changed)
+                        changed = !prev_b.SetEquals(result[i].Out);
+                }
+            }
+
+            return result;
         }
     }
 }

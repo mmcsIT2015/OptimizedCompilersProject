@@ -23,7 +23,7 @@ namespace SimpleCompiler
             if (files.Count == 0)
             {
                 files.Add(@"..\..\a.txt");
-                files.Add(@"..\..\test_cso.txt");
+                //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
             }
 
             foreach (var file in files)
@@ -75,6 +75,38 @@ namespace SimpleCompiler
                             Console.WriteLine();
                         }
                         */
+
+                        //DEBUG In-Out Test
+                        /*
+                        Console.WriteLine("InOutInfo");
+                        var a = codeGenerator.Code.GetInOutInfoData();
+                        for (int i = 0; i < a.Count; ++i)
+                        {
+                            Console.WriteLine("Block: " + i);
+                            Console.WriteLine("In");
+                            foreach (ThreeAddrCode.Index ind in a[i].In)
+                                Console.WriteLine(ind.ToString());
+                            Console.WriteLine("Out");
+                            foreach (ThreeAddrCode.Index ind in a[i].Out)
+                                Console.WriteLine(ind.ToString());
+                            Console.WriteLine();
+                        }
+                        */
+
+                        StreamWriter sw = new StreamWriter("InOutInfo.txt");
+                        var a = codeGenerator.Code.GetInOutInfoData();
+                        for (int i = 0; i < a.Count; ++i)
+                        {
+                            sw.WriteLine("Block: " + i);
+                            sw.WriteLine("In");
+                            foreach (ThreeAddrCode.Index ind in a[i].In)
+                                sw.WriteLine(ind.ToString());
+                            sw.WriteLine("Out");
+                            foreach (ThreeAddrCode.Index ind in a[i].Out)
+                                sw.WriteLine(ind.ToString());
+                            sw.WriteLine();
+                        }
+                        sw.Close();
 
 
                         /*
