@@ -139,7 +139,8 @@ namespace SimpleLang
 
         public void Visit(FunctionNodeSt node)
         {
-            throw new NotImplementedException();
+            //TODO
+            //throw new NotImplementedException();
         }
 
         public void Visit(WhileNode node)
