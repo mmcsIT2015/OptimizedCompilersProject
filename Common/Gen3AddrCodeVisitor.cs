@@ -99,8 +99,8 @@ namespace SimpleLang
         {
             node.Expr.Accept(this);
             string ifExpression = mStack.Pop();
-            var labelForTrue = mLabelsGenerator.Get(mLabelRandomPartLength);
-            var labelForFalse = mLabelsGenerator.Get(mLabelRandomPartLength);
+            var labelForTrue = mLabelsGenerator.Get("l");
+            var labelForFalse = mLabelsGenerator.Get("l");
 
             Code.AddLine(new ThreeAddrCode.Line(ifExpression, labelForTrue, "if", ""));
             Label ifPosition = Code.GetLastPosition();
@@ -145,9 +145,9 @@ namespace SimpleLang
 
         public void Visit(WhileNode node)
         {
-            string gotoLabel = mLabelsGenerator.Get(mLabelRandomPartLength);
-            string labelForTrue = mLabelsGenerator.Get(mLabelRandomPartLength);
-            string labelForFalse = mLabelsGenerator.Get(mLabelRandomPartLength);
+            string gotoLabel = mLabelsGenerator.Get("l");
+            string labelForTrue = mLabelsGenerator.Get("l");
+            string labelForFalse = mLabelsGenerator.Get("l");
 
             Label gotoPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
             node.Expr.Accept(this);
@@ -168,7 +168,7 @@ namespace SimpleLang
         public void Visit(DoWhileNode node)
         {
             Label firstStPosition = new Label(Code.GetLastPosition().Key, Code.GetLastPosition().Value + 1);
-            string firstStLabel = mLabelsGenerator.Get(mLabelRandomPartLength);
+            string firstStLabel = mLabelsGenerator.Get("l");
 
             node.Stat.Accept(this);
             node.Expr.Accept(this);
@@ -186,7 +186,7 @@ namespace SimpleLang
             string rightOperand = mStack.Pop();
             string leftOperand = mStack.Pop();
 
-            string temp = mTempVarsGenerator.Get(mVarRandomPartLength);
+            string temp = mTempVarsGenerator.Get("t");
             mStack.Push(temp);
 
             Code.AddLine(new ThreeAddrCode.Line(temp, leftOperand, OperatorToString(node.Operation), rightOperand));

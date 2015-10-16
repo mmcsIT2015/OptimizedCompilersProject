@@ -6,6 +6,8 @@ using System.Diagnostics;
 
 namespace SimpleLang
 {
+    using Prefix = String;
+
     class UniqueIdsGenerator
     {
         private static UniqueIdsGenerator mInstance;                
@@ -14,6 +16,9 @@ namespace SimpleLang
         //генерировалась одна и та же последовательность строк
         //полезно для дебага
         private const int mSeed = 1;
+
+        // Счетчики для генерации удобочитаемых переменных
+        private Dictionary<Prefix, int> mCounters = new Dictionary<Prefix, int>();
 
         //внутренний генератор случайных чисел
         private Random mRandomGenerator;
@@ -75,6 +80,12 @@ namespace SimpleLang
 
             mUsed.Add(builder.ToString());
             return builder.ToString();
+        }
+
+        public string Get(String prefix)
+        {
+            if (!mCounters.ContainsKey(prefix)) mCounters.Add(prefix, 0);
+            return "@" + prefix + (mCounters[prefix]++).ToString();
         }
     }
 }
