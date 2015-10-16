@@ -1,0 +1,26 @@
+﻿{
+  a1 = 1;
+  a2 = 2;
+  a3 = 3;
+  a4 = 4; 
+  a5 = 5;
+  if (a1 > 5)
+  {
+	patchVariable = 0;
+    do 
+	{
+	  c1 = 8 + a2;
+	  c2 = a2;	
+      c3 = c1 + a1;
+	} while (a1 > 5);
+  }
+  else 
+    while (a3 < 5)
+	{
+	  c1 = 8 + a2;
+	  c2 = a2;
+	  c3 = c1 + a1;
+      c2 = a5;
+	} 
+  a = 7;
+}
