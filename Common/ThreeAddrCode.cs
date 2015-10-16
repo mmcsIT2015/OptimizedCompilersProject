@@ -169,6 +169,9 @@ namespace SimpleLang
 
     class ThreeAddrCode
     {
+        /// <summary>
+        /// Класс идентифицирует строку трехадресного кода тройкой: (номер блока, номер в блоке, имя определяемой переменной)
+        /// </summary>
         public class Index
         {
             public class IndexVariableNameComparer : IEqualityComparer<Index>
@@ -216,6 +219,10 @@ namespace SimpleLang
             }
         }
 
+        /// <summary>
+        /// Класс связан с конкретным блоком и содержит множества Gen и Kill
+        /// для этого блока в виде набора объектов класса Index
+        /// </summary>
         public class GenKillInfo
         {
             public HashSet<Index> Gen = new HashSet<Index>();
@@ -371,9 +378,15 @@ namespace SimpleLang
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Функция возвращает список объектов GenKillInfo для каждого блока
+        /// </summary>
+        /// <returns>Список GenKillInfo</returns>
         public List<GenKillInfo> GetGenKillInfoData()
         {
             List<GenKillInfo> genKillInfoList = new List<GenKillInfo>();
+
+            //мн-во Gen
             for(int i = 0; i < blocks.Count; i++)
             {
                 genKillInfoList.Add(new GenKillInfo());
@@ -391,6 +404,9 @@ namespace SimpleLang
                 }
             }
 
+            //мн-во Kill
+            //стандартное пересечение просит большее количество костылей
+            //в виде компараторов и проч.
             for (int i = 0; i < blocks.Count; i++)
             {
                 for (int j = 0; j < blocks.Count; j++)
