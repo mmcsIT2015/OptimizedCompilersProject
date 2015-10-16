@@ -9,7 +9,8 @@ namespace ProgramTree
     public enum BinaryType { Plus, Minus, Mult, Div, Less, More, Equal, NotEqual, LessEqual, MoreEqual };
 
     public enum VarType { Int, Bool, Double };
-
+	public enum UnaryType { Not } ;
+	
     public class Node // базовый класс для всех узлов    
     {
         public virtual void Accept(IVisitor visitor)
@@ -141,6 +142,18 @@ namespace ProgramTree
         }
     }
 
+	public class UnaryNode : ExprNode
+    {
+        public ExprNode Expr { get; set; }
+        public UnaryType Op { get; set; }
+        public UnaryNode(ExprNode expr, UnaryType op)
+        {
+            Expr = expr;
+            Op = op;
+        }
+    }
+	
+		
     public class IfNode : StatementNode
     {
         public ExprNode Expr { get; set; }
@@ -160,6 +173,22 @@ namespace ProgramTree
         }
     }
 
+	public class WriteNode : StatementNode
+    {
+        public List<ExprNode> ExprList = new List<ExprNode>();
+
+        public WriteNode(ExprNode expr)
+        {
+            Add(expr);
+        }
+
+        public void Add(ExprNode expr)
+        {
+            ExprList.Add(expr);
+        }
+    }
+
+	
     public class WhileNode : StatementNode
     {
         public ExprNode Expr { get; set; }
