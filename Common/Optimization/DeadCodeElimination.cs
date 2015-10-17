@@ -41,56 +41,48 @@ namespace SimpleLang
             var block = threeAddrCode.blocks[blockNumber - 1]; //берем блок из листа блоков трехадресного кода
             List<ThreeAddrCode.Line> listThreeAddrCodeDotLine = block;
             int listSize = listThreeAddrCodeDotLine.Count; //количество строк в блоке
+            Dictionary<string, bool> idLife = new Dictionary<string, bool>();//ассоциативный массив "переменная - живучесть"
+            List<int> removeIndexList = new List<int>();//лист удаляемых номеров строк кода ББл
 
-            //цикл с конца блока до начала
-            for (int i = listSize - 1; i >= 0; i--)
+            bool isAlive;//временная переменная
+
+            //цикл по строкам кода ББл
+            for (int i = listSize - 1; i >= 0; --i)
             {
-                ThreeAddrCode.Line threeAddrCodeDotLineI = listThreeAddrCodeDotLine[i]; //берем i-ю строку
-                bool isAlive1, isAlive2; //"живучесть"
-                isAlive1 = threeAddrCodeDotLineI.first != "";
-                isAlive2 = threeAddrCodeDotLineI.second != "";
-                //цикл с i-го элемента до начала блока
-                for (int j = i - 1; j >= 0; j--)
+                ThreeAddrCode.Line threeAddrCodeDotLine = listThreeAddrCodeDotLine[i];//i-я строка
+
+                bool wonderful_flag = threeAddrCodeDotLine.left == threeAddrCodeDotLine.second && threeAddrCodeDotLine.first == "";//если строка вида "x = x"
+
+                if (!wonderful_flag)
                 {
-                    ThreeAddrCode.Line threeAddrCodeDotLineJ = listThreeAddrCodeDotLine[j];//берем j-ю строку
-                    //если первый операнд i-ой строки равен левому значению j-й строки
-                    if (threeAddrCodeDotLineI.first == threeAddrCodeDotLineJ.left)
-                    {
-                        //если переменная уже "мертва", то
-                        if (isAlive1 == false)
-                        {
-                            i--;
-                            listThreeAddrCodeDotLine.RemoveAt(j); //удаляем j-ю строку с этой переменной
-                        }
+                    idLife[threeAddrCodeDotLine.first] = true;//первый операнд правой части "живой"
+                    idLife[threeAddrCodeDotLine.second] = true;//второй операнд правой части "живой"
+
+                    //если для переменной в левой части есть значение "живучести"
+                    if (idLife.TryGetValue(threeAddrCodeDotLine.left, out isAlive))
+                        //если переменная в левой части "живая"
+                        if (isAlive)
+                            idLife[threeAddrCodeDotLine.left] = false;//делаем ее "мертвой"
                         //иначе
                         else
-                            isAlive1 = false; //делаем ее "мертвой"
-                    }
-
-                    //если второй операнд i-ой строки равен левому значению j-й строки
-                    if (threeAddrCodeDotLineI.second == threeAddrCodeDotLineJ.left)
-                    {
-                        //если переменная уже "мертва", то
-                        if (isAlive2 == false)
-                        {
-                            i--;
-                            listThreeAddrCodeDotLine.RemoveAt(j); //удаляем j-ю строку с этой переменной
-                        }
-                        //иначе
-                        else
-                            isAlive2 = false; //делаем ее "мертвой"
-                    }
-
-                    //если левое значение i-ой строки равно левому значению j-й строки
-                    if (threeAddrCodeDotLineI.left == threeAddrCodeDotLineJ.left)
-                    {
-                        i--;
-                        listThreeAddrCodeDotLine.RemoveAt(j); //удаляем j-ю строку с этой переменной
-                    }
+                            removeIndexList.Add(i);//добавляем номер текущей строки в лист для удаления
+                    //иначе
+                    else
+                        idLife[threeAddrCodeDotLine.left] = false;//делаем ее "мертвой"
+                }
+                else
+                {
+                    //idLife[threeAddrCodeDotLine.left] = false;//переменная в левой части "мертвая"
+                    removeIndexList.Add(i);//добавляем номер текущей строки в лист для удаления
                 }
             }
 
-            return listThreeAddrCodeDotLine as Block; //возвращаем измененный базовый блок
+            //удаление строк "мертвого" кода
+            for (int i = 0; i < removeIndexList.Count; i++)
+                listThreeAddrCodeDotLine.RemoveAt(removeIndexList[i]);
+
+            return listThreeAddrCodeDotLine as Block;//возвращаем измененный блок
+
         }
 
         public void Optimize(params Object[] values)
