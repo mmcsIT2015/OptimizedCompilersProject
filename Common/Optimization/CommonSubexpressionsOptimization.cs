@@ -64,16 +64,12 @@ namespace SimpleLang
             }
         }
 
-        private ThreeAddrCode mCode;
-
         public CommonSubexpressionsOptimization(ThreeAddrCode code)
         {
-            this.mCode = code;
+            Code = code;
         }
 
-        public ThreeAddrCode Code { get { return mCode; } }
-
-        public void Optimize(params Object[] values)
+        public override void Optimize(params Object[] values)
         {
             bool wo = true;
 
@@ -81,7 +77,7 @@ namespace SimpleLang
             {
                 wo = false;
 
-                foreach (Block b in mCode.blocks)
+                foreach (Block b in Code.blocks)
                 {
                     Dictionary<RightExpr, List<int>> dict = new Dictionary<RightExpr, List<int>>(),
                         dict_a = new Dictionary<RightExpr, List<int>>();

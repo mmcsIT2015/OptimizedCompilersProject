@@ -11,19 +11,17 @@ namespace SimpleLang
     /// </summary>
     class ConstantFolding : IOptimizer
     {
-        private ThreeAddrCode tac;
-
         public ConstantFolding(ThreeAddrCode tac)
         {
-            this.tac = tac;
+            Code = tac;
         }
 
         private static HashSet<string> ops = new HashSet<string> { "+", "-", "*", "/" };
 
-        public void Optimize(params Object[] values)
+        public override void Optimize(params Object[] values)
         {
-            FoldConstants(this.tac);
-            ApplyAlgebraicEqualities(this.tac);
+            FoldConstants(Code);
+            ApplyAlgebraicEqualities(Code);
         }
 
         private static void FoldConstants(ThreeAddrCode tac)

@@ -7,27 +7,27 @@ using System.Text;
 
 namespace SimpleLang
 {
-    //Пример применения:
-    //SimpleLang.DraggingConstantsOptimization dco = new SimpleLang.DraggingConstantsOptimization(codeGenerator.Code);
-    //dco.Optimize();
-    //Console.WriteLine("Optimization:\n" + codeGenerator.Code);
 
     /// <summary>
     /// Оптимизация: Протяжка констант
     /// Примечание: Использовать после разбиения на внутренние блоки
+    /// 
+    /// Пример применения:
+    /// SimpleLang.DraggingConstantsOptimization dco = new SimpleLang.DraggingConstantsOptimization(codeGenerator.Code);
+    // / dco.Optimize();
+    /// Console.WriteLine("Optimization:\n" + codeGenerator.Code);
+    /// 
     /// </summary>
     class DraggingConstantsOptimization : IOptimizer
     {
-        private ThreeAddrCode code;
-
         public DraggingConstantsOptimization(ThreeAddrCode code)
         {
-            this.code = code;
+            Code = code;
         }
 
-        public void Optimize(params Object[] values)
+        public override void Optimize(params Object[] values)
         {
-            foreach(Block b in code.blocks)
+            foreach(Block b in Code.blocks)
             {
                 b.CalculateDefUseData();
                 for(int i = 1; i < b.Count; ++i)
@@ -59,7 +59,5 @@ namespace SimpleLang
 
             }
         }
-
-        public ThreeAddrCode Code { get { return code; } }
     }
 }

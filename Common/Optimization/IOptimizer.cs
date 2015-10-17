@@ -9,10 +9,8 @@ namespace SimpleLang
     /// Пример:
     /// ===
     /// class Optimizer: IOptimizer {
-    ///     private ThreeAddrCode code;
-    ///     
     ///     public Optimizer(ThreeAddrCode input) {
-    ///         code = input;
+    ///         Code = input;
     ///     }
     ///     
     ///     public override void Optimize() {
@@ -20,8 +18,18 @@ namespace SimpleLang
     ///     }
     /// };
     /// </summary>
-    public interface IOptimizer
+    class IOptimizer
     {
-        void Optimize(params Object[] values);
+        public ThreeAddrCode Code { get; set; }
+
+        public virtual void Optimize(params Object[] values) { }
+
+        /// <summary>
+        /// Ф-я нужна для будущего класса, который будет заниматься применением набора оптимизаций.
+        /// </summary>
+        public virtual void Assign(ThreeAddrCode code)
+        {
+            Code = code;
+        }
     }
 }

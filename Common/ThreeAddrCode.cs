@@ -7,9 +7,9 @@ namespace SimpleLang
 {
     using Label = KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
 
-    class Block: List<ThreeAddrCode.Line> {
-        
-        private List<HashSet<string>> defUseData;        
+    class Block : List<ThreeAddrCode.Line>
+    {
+        private List<HashSet<string>> mDefUseData;        
 
         public override string ToString()
         {
@@ -61,7 +61,7 @@ namespace SimpleLang
         /// </summary>
         public void CalculateDefUseData()
         {
-            defUseData = new List<HashSet<string>>();
+            mDefUseData = new List<HashSet<string>>();
             HashSet<string> currentlyAlive = new HashSet<string>();
 
             for (int i = this.Count - 1; i >= 0; --i)
@@ -125,11 +125,12 @@ namespace SimpleLang
                         }                
                 }                                                
 
-                defUseData.Add(new HashSet<string>(currentlyAlive.Clone()));
+                mDefUseData.Add(new HashSet<string>(currentlyAlive.Clone()));
             }
 
-            defUseData.Reverse();
+            mDefUseData.Reverse();
         }
+        
         /// <summary>
         /// Проверяет, жива ли переменная на некотором шаге
         /// </summary>
@@ -138,7 +139,7 @@ namespace SimpleLang
         /// <returns>Истина, если жива</returns>
         public bool IsVariableAlive(string variable, int step)
         {
-            return defUseData[step].Contains(variable);
+            return mDefUseData[step].Contains(variable);
         }
 
         /// <summary>
@@ -148,7 +149,7 @@ namespace SimpleLang
         /// <returns>HashSet, содержащий все живые переменные в строковом виде</string></returns>
         public HashSet<string> GetAliveVariables(int step)
         {
-            return defUseData[step];
+            return mDefUseData[step];
         }
     };
 

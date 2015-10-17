@@ -20,10 +20,9 @@ namespace SimpleLang
     ///     
     ///     Console.WriteLine(codeGenerator.Code);
     /// </summary>
-    class DeadCodeElimination: IOptimizer
+    class DeadCodeElimination : IOptimizer
     {
         private int mBlockNumber;
-        private ThreeAddrCode mCode;
 
         /// <summary>
         ///
@@ -32,7 +31,7 @@ namespace SimpleLang
         /// <param name="blockNumber">Номер нужного нам базового блока, нумерация с 1; Если -1 - то для всех блоков</param>
         public DeadCodeElimination(ThreeAddrCode threeAddrCode, int blockNumber = -1)
         {
-            mCode = threeAddrCode;
+            Code = threeAddrCode;
             mBlockNumber = blockNumber;
         }
 
@@ -85,19 +84,19 @@ namespace SimpleLang
 
         }
 
-        public void Optimize(params Object[] values)
+        public override void Optimize(params Object[] values)
         {
             if (mBlockNumber < 0)
             {
-                for (int i = 0; i < mCode.blocks.Count; ++i)
+                for (int i = 0; i < Code.blocks.Count; ++i)
                 {
-                    mCode.blocks[i] = DCEAlgorithm(mCode, i + 1);
+                    Code.blocks[i] = DCEAlgorithm(Code, i + 1);
                 }
             }
             else
             {
-                Debug.Assert(mBlockNumber >= 1 && mBlockNumber <= mCode.blocks.Count);
-                mCode.blocks[mBlockNumber - 1] = DCEAlgorithm(mCode, mBlockNumber);
+                Debug.Assert(mBlockNumber >= 1 && mBlockNumber <= Code.blocks.Count);
+                Code.blocks[mBlockNumber - 1] = DCEAlgorithm(Code, mBlockNumber);
             }
         }
     }
