@@ -113,7 +113,12 @@ namespace SimpleLang
             Label gotoPosition = Code.GetLastPosition();
 
             node.Stat.Accept(this); //тело для true
-            Code.GetLine(gotoPosition.Key, gotoPosition.Value + 1).label = labelForTrue;
+            if (Code.GetLine(gotoPosition.Key, gotoPosition.Value + 1).label.Count() != 0)
+            {
+                string what = Code.GetLine(gotoPosition.Key, gotoPosition.Value + 1).label;
+                Code.replaceAllReferencesToLabel(what, labelForTrue);
+            }
+            else Code.GetLine(gotoPosition.Key, gotoPosition.Value + 1).label = labelForTrue;
 
             Code.AddLine(ThreeAddrCode.Line.CreateEmpty());
             Code.GetLine(Code.GetLastPosition()).label = labelForFalse;

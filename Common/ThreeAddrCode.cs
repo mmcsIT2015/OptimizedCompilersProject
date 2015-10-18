@@ -380,6 +380,22 @@ namespace SimpleLang
         }
 
         /// <summary>
+        /// Заменяет все упоминания метки на указанное (т.е. меняет имя метки)
+        /// </summary>
+        public void replaceAllReferencesToLabel(string what, string forWhat)
+        {
+            foreach (var block in blocks)
+            {
+                foreach (var line in block)
+                {
+                    if (line.label == what) line.label = forWhat;
+                    if (line.command == "goto" && line.left == what) line.left = forWhat;
+                    if (line.command == "if" && line.first == what) line.first = forWhat;
+                }
+            }
+        }
+
+        /// <summary>
         /// Функция возвращает список объектов GenKillInfo для каждого блока
         /// </summary>
         /// <returns>Список GenKillInfo</returns>
