@@ -56,14 +56,14 @@ cout	: COUT LSHIFT expr { $$ = new CoutNode($3); }
     		$$ = $1;
     	}
     ;
-		
+
 params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
-			|	params COMMA expr
-				{
-					$1.Add($3);
-					$$ = $1;
-				}
-				;
+		|	params COMMA expr
+      {
+        $1.Add($3);
+				$$ = $1;
+			}
+		;
 
 statement: assign SEMICOLON { $$ = $1; }
     | block { $$ = $1; }
@@ -75,15 +75,15 @@ statement: assign SEMICOLON { $$ = $1; }
     ;
 
 funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }
-					;
-		
-funcall	: ID LBRACKET params RBRACKET 
-					{ 
-						$$ = new FunctionNode($1);
-						$$.Parameters = $3;
-					}
-					;					
-				
+		;
+
+funcall	: ID LBRACKET params RBRACKET
+		{
+			$$ = new FunctionNode($1);
+			$$.Parameters = $3;
+		}
+		;
+
 ident 	: ID { $$ = new IdNode($1); }
 		;
 
