@@ -1,5 +1,0 @@
-F:\учеба\магистратура 2\Оптимизирующие компиляторы\SimpleLanguage1\bin\Debug\SimpleLang.exe
-F:\учеба\магистратура 2\Оптимизирующие компиляторы\SimpleLanguage1\bin\Debug\SimpleLang.pdb
-F:\учеба\магистратура 2\Оптимизирующие компиляторы\SimpleLanguage1\obj\x86\Debug\SimpleLang1.csprojResolveAssemblyReference.cache
-F:\учеба\магистратура 2\Оптимизирующие компиляторы\SimpleLanguage1\obj\x86\Debug\SimpleLang.exe
-F:\учеба\магистратура 2\Оптимизирующие компиляторы\SimpleLanguage1\obj\x86\Debug\SimpleLang.pdb
