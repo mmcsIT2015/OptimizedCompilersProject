@@ -83,7 +83,9 @@ namespace ProgramTree
     {
         public List<ExprNode> Parameters = new List<ExprNode>();
 
-        public FunctionNode(string name):base(name) { }
+        public FunctionNode(string name) : base(name) {
+
+        }
 
         public void AddParam(ExprNode expr)
         {

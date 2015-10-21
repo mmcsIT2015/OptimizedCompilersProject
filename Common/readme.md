@@ -105,7 +105,13 @@ public class Line
  ^ command    ^ left
 ```
 ```
-/* Вызов функции */
-`call`     `<func-name>` `<num-params>`
- ^ command    ^ left        ^ second
+/* Вызов функции-statement'а (`left` = "") */
+`call`      `<func-name>` `<num-params>`
+ ^ command    ^ first       ^ second
 ```
+```
+/* Вызов функции-expression'а */
+`<dest>` = `call`		`<func-name>`,   `<num-params>`
+ ^left	    ^ command     ^ first          ^ second
+```
+

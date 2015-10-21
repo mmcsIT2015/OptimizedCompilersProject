@@ -34,7 +34,8 @@ namespace SimpleLang
                 }
                 else if (line.command == "call")
                 {
-                    builder.Append("call " + line.left + ", " + line.second + "\n");
+                    if (line.left == "") builder.Append("call " + line.first + ", " + line.second + "\n");
+                    else builder.Append(line.left + " = call " + line.first + ", " + line.second + "\n");
                 }
                 else
                 {

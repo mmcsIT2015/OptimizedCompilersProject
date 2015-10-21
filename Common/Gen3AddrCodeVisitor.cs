@@ -139,13 +139,45 @@ namespace SimpleLang
                 Code.AddLine(new ThreeAddrCode.Line(param, "", "param", ""));
             }
 
-            Code.AddLine(new ThreeAddrCode.Line("cout", "", "call", parameters.Count.ToString()));
+            Code.AddLine(new ThreeAddrCode.Line("", "cout", "call", parameters.Count.ToString()));
+        }
+
+        public void Visit(FunctionNode node)
+        {
+            List<string> parameters = new List<string>();
+            foreach (var expr in node.Parameters)
+            {
+                expr.Accept(this);
+                var variable = mStack.Pop();
+                parameters.Add(variable);
+            }
+
+            foreach (var param in parameters)
+            {
+                Code.AddLine(new ThreeAddrCode.Line(param, "", "param", ""));
+            }
+
+            var temp = mLabelsGenerator.Get("t");
+            Code.AddLine(new ThreeAddrCode.Line(temp, node.Name, "call", parameters.Count.ToString()));
+            mStack.Push(temp);
         }
 
         public void Visit(FunctionNodeSt node)
         {
-            //TODO
-            //throw new NotImplementedException();
+            List<string> parameters = new List<string>();
+            foreach (var expr in node.Function.Parameters)
+            {
+                expr.Accept(this);
+                var variable = mStack.Pop();
+                parameters.Add(variable);
+            }
+
+            foreach (var param in parameters)
+            {
+                Code.AddLine(new ThreeAddrCode.Line(param, "", "param", ""));
+            }
+
+            Code.AddLine(new ThreeAddrCode.Line("", node.Function.Name, "call", parameters.Count.ToString()));
         }
 
         public void Visit(WhileNode node)

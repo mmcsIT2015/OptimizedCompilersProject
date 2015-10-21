@@ -42,12 +42,12 @@ progr   : block { root = $1; }
 		;
 
 stlist	: statement { $$ = new BlockNode($1);	}
-		| stlist statement
-			{
-				$1.Add($2);
-				$$ = $1;
-			}
-		;
+    | stlist statement
+		{
+			$1.Add($2);
+			$$ = $1;
+		}
+	 ;
 
 cout	: COUT LSHIFT expr { $$ = new CoutNode($3); }
     | cout LSHIFT expr
@@ -58,20 +58,20 @@ cout	: COUT LSHIFT expr { $$ = new CoutNode($3); }
     ;
 
 params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
-		|	params COMMA expr
+    |	params COMMA expr
       {
-        $1.Add($3);
-				$$ = $1;
-			}
-		;
+         $1.Add($3);
+			$$ = $1;
+		}
+    ;
 
 statement: assign SEMICOLON { $$ = $1; }
     | block { $$ = $1; }
-		| do_while SEMICOLON { $$ = $1; }
-		| while { $$ = $1; }
-		| cout SEMICOLON { $$ = $1; }
+    | do_while SEMICOLON { $$ = $1; }
+    | while { $$ = $1; }
+    | cout SEMICOLON { $$ = $1; }
     | if { $$ = $1; }
-		| funcallst SEMICOLON { $$ = $1; }
+    | funcallst SEMICOLON { $$ = $1; }
     ;
 
 funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }
@@ -110,7 +110,7 @@ T : F { $$ = $1; }
 F : ident { $$ = $1 as IdNode; }
     | INUM { $$ = new IntNumNode($1); }
     | LBRACKET expr RBRACKET { $$ = $2; }
-		| funcall { $$ = $1; }
+    | funcall { $$ = $1; }
     ;
 
 if	: IF LBRACKET expr RBRACKET statement { $$ = new IfNode($3, $5); }
