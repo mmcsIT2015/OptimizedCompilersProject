@@ -8,6 +8,13 @@ namespace SimpleLang
 
     /// <summary>
     /// Оптимизация: Свертка констант и применение алгебраических тождеств
+    ///                  
+    /// Пример: 
+    /// ConstantFolding cf = new ConstantFolding(codeGenerator.Code);
+    /// cf.Optimize();
+    ///                    
+    /// Console.WriteLine(codeGenerator.Code);
+    ///
     /// </summary>
     class ConstantFolding : IOptimizer
     {

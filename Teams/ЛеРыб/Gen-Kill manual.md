@@ -7,4 +7,20 @@
 Класс Index содержит информацию о переменной из множеств `Gen-Kill`, содержит поля `int mBlockInd` с номером блока,
 `int mInternalInd` - номер строки в блоке, `mVariableName` - имя переменной.
 
-Пример использования есть в `Main.cs`, см.  `//DEBUG Gen-Kill Test`
+Пример использования:
+```cs
+   Console.WriteLine("GenKillInfo");
+   var a = codeGenerator.Code.GetGenKillInfoData();
+   for (int i = 0; i < a.Count; ++i)
+   {
+		Console.WriteLine("Block: " + i);
+		Console.WriteLine("Gen");
+		foreach (ThreeAddrCode.Index ind in a[i].Gen)
+			Console.WriteLine(ind.ToString());
+			Console.WriteLine("Kill");
+			foreach (ThreeAddrCode.Index ind in a[i].Kill) {
+				Console.WriteLine(ind.ToString());
+			}
+			Console.WriteLine();
+   }
+```

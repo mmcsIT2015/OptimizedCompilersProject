@@ -8,4 +8,17 @@
 
 3. `HashSet<string> GetAliveVariables(int step)`, возвращает множество живых переменных для заданного шага.
 
+```cs
+codeGenerator.Code.blocks[0].CalculateDefUseData();
+for (int i = 0; i < codeGenerator.Code.blocks[0].Count; i++)
+{
+	foreach (string variable in codeGenerator.Code.blocks[0].GetAliveVariables(i))
+	{
+		Console.Write(variable + " ");
+	}
+        
+	Console.WriteLine();
+}
+```
+
 Пример использования есть в `Main.cs`, см.  `//DEBUG def-use data view` (где-то в районе 51-й строки)
