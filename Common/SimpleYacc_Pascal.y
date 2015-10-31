@@ -1,6 +1,6 @@
 %{
-// Эти объявления добавляются в класс GPPGParser, представляющий собой парсер, генерируемый системой gppg
-    public BlockNode root; // Корневой узел синтаксического дерева 
+// Р­С‚Рё РѕР±СЉСЏРІР»РµРЅРёСЏ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РІ РєР»Р°СЃСЃ GPPGParser, РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РёР№ СЃРѕР±РѕР№ РїР°СЂСЃРµСЂ, РіРµРЅРµСЂРёСЂСѓРµРјС‹Р№ СЃРёСЃС‚РµРјРѕР№ gppg
+    public BlockNode root; // РљРѕСЂРЅРµРІРѕР№ СѓР·РµР» СЃРёРЅС‚Р°РєСЃРёС‡РµСЃРєРѕРіРѕ РґРµСЂРµРІР° 
     public Parser(AbstractScanner<ValueType, LexLocation> scanner) : base(scanner) { }
 %}
 
@@ -13,14 +13,16 @@
 			public ExprNode eVal;
 			public StatementNode stVal;
 			public BlockNode blVal;
-			public WriteNode wVal;
+			public FunctionNode funVal;
+			public FunctionNodeSt funStVal;
+			public List<ExprNode> paramVal;
        }
 
 %using ProgramTree;
 
 %namespace SimpleParser
 
-%token BEGIN END ASSIGN SEMICOLON PLUS MINUS PROD DIV LB RB WRITE WRITELN COMMA IF ELSE THEN WHILE DO REPEAT UNTIL LESS MORE LESSEQUAL MOREEQUAL EQUAL NOTEQUAL NOT POINT
+%token BEGIN END ASSIGN SEMICOLON PLUS MINUS PROD DIV LB RB COMMA IF ELSE THEN WHILE DO REPEAT UNTIL LESS MORE LESSEQUAL MOREEQUAL EQUAL NOTEQUAL NOT POINT
 %token <iVal> INUM 
 %token <dVal> RNUM 
 %token <sVal> ID
@@ -28,7 +30,9 @@
 %type <eVal> expr ident T F U
 %type <stVal> assign statement if while repeatuntil
 %type <blVal> stlist block
-%type <wVal> exprlist write
+%type <funVal> funcall
+%type <funStVal> funcallst
+%type <paramVal> params
 
 %%
 
@@ -45,14 +49,32 @@ stlist	: statement
 				$$ = $1; 
 			}
 		;
-
+		
+params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
+    |	params COMMA expr
+      {
+         $1.Add($3);
+			$$ = $1;
+		}
+    ;
+		
 statement: assign { $$ = $1; }
 		| block   { $$ = $1; }
-		| write   { $$ = $1; }
 		| if   { $$ = $1; }
 		| while { $$ = $1; }
 		| repeatuntil { $$ = $1; }
+		| funcallst { $$ = $1; }
 	;
+	
+funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }
+		;
+
+funcall	: ID LB params RB
+		{
+			$$ = new FunctionNode($1);
+			$$.Parameters = $3;
+		}
+		;
 
 ident 	: ID { $$ = new IdNode($1); }	
 		;
@@ -84,24 +106,9 @@ F       : ident  { $$ = $1 as IdNode; }
 		| MINUS INUM { $$ = new IntNumNode($2); }
 		| INUM { $$ = new IntNumNode($1); }
 		| LB expr RB { $$ = $2; }
+		| funcall { $$ = $1; }
 		;
 				
-write	: WRITE LB exprlist RB { $$ = $3; }
-		| WRITELN LB exprlist RB { $$ = $3; }
-		;
-
-exprlist	: expr 
-			{ 
-				$$ = new WriteNode($1); 
-			}
-			| exprlist COMMA expr 
-				{ 
-					$1.Add($3); 
-					$$ = $1; 
-				}
-			;
-		
-	
 block	: BEGIN stlist END { $$ = $2; }
 		;
 
