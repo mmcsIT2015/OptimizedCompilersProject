@@ -57,16 +57,16 @@ ID {Alpha}{AlphaDigit}*
 
 %%
 
-public override void yyerror(string format, params object[] args) // обработка синтаксических ошибок
+public override void yyerror(string format, params object[] args) // РѕР±СЂР°Р±РѕС‚РєР° СЃРёРЅС‚Р°РєСЃРёС‡РµСЃРєРёС… РѕС€РёР±РѕРє
 {
   var ww = args.Skip(1).Cast<string>().ToArray();
-  string errorMsg = string.Format("({0},{1}): Встречено {2}, а ожидалось {3}", yyline, yycol, args[0], string.Join(" или ", ww));
+  string errorMsg = string.Format("({0},{1}): Р’СЃС‚СЂРµС‡РµРЅРѕ {2}, Р° РѕР¶РёРґР°Р»РѕСЃСЊ {3}", yyline, yycol, args[0], string.Join(" РёР»Рё ", ww));
   throw new SyntaxException(errorMsg);
 }
 
 public void LexError()
 {
-  string errorMsg = string.Format("({0},{1}): Неизвестный символ {2}", yyline, yycol, yytext);
+  string errorMsg = string.Format("({0},{1}): РќРµРёР·РІРµСЃС‚РЅС‹Р№ СЃРёРјРІРѕР» {2}", yyline, yycol, yytext);
   throw new LexException(errorMsg);
 }
 
@@ -79,8 +79,6 @@ class ScannerHelper
     keywords = new Dictionary<string,int>();
     keywords.Add("begin",(int)Tokens.BEGIN);
     keywords.Add("end",(int)Tokens.END);
-	keywords.Add("write",(int)Tokens.WRITE);
-	keywords.Add("writeln",(int)Tokens.WRITELN);
 	
 	keywords.Add("if",(int)Tokens.IF);
 	keywords.Add("else",(int)Tokens.ELSE);
