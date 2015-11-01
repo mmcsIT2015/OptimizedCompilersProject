@@ -19,7 +19,7 @@ namespace SimpleLang
     ///     Console.WriteLine(codeGenerator.Code);
     ///     
     /// </summary>
-    class Gen3AddrCodeVisitor : IVisitor
+    public class Gen3AddrCodeVisitor : IVisitor
     {
         public ThreeAddrCode Code { get; set; }
 

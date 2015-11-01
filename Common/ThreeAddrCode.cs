@@ -7,7 +7,7 @@ namespace SimpleLang
 {
     using Label = KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
 
-    class Block : List<ThreeAddrCode.Line>
+    public class Block : List<ThreeAddrCode.Line>
     {
         private List<HashSet<string>> mDefUseData;        
 
@@ -169,7 +169,7 @@ namespace SimpleLang
 
     }
 
-    class ThreeAddrCode
+    public class ThreeAddrCode
     {
         /// <summary>
         /// Класс идентифицирует строку трехадресного кода тройкой: (номер блока, номер в блоке, имя определяемой переменной)
