@@ -19,22 +19,31 @@ namespace SimpleLang
     ///     Console.WriteLine(codeGenerator.Code);
     ///     
     /// </summary>
-    class NewGen3AddrCodeVisitor : IVisitor
+    class Gen3AddrCodeVisitor : IVisitor
     {
-        public SimpleLang.New.ThreeAddrCode Code
+        public SimpleLang.ThreeAddrCode Code
         {
             get
             {
-                return new SimpleLang.New.ThreeAddrCode(mLines);
+                return new SimpleLang.ThreeAddrCode(mLines);
             }
         }
 
-        private SimpleLang.New.Block mLines = new SimpleLang.New.Block();
+        private SimpleLang.Block mLines = new SimpleLang.Block();
         private Stack<string> mStack = new Stack<string>();
 
-        public NewGen3AddrCodeVisitor()
+        public Gen3AddrCodeVisitor()
         {
 
+        }
+
+        private void replaceAllReferencesToLabel(string what, string forWhat)
+        {
+            foreach (var line in mLines)
+            {
+                if (line.label == what) line.label = forWhat;
+                if (line is Line.GoTo) line.ChangeTargetIfEqual(what, forWhat);
+            }
         }
 
         public void Visit(BlockNode node)
@@ -95,7 +104,7 @@ namespace SimpleLang
             if (mLines[gotoPosition + 1].label.Count() != 0)
             {
                 string what = mLines[gotoPosition + 1].label;
-                //Code.replaceAllReferencesToLabel(what, labelForTrue); //TODO
+                replaceAllReferencesToLabel(what, labelForTrue);
             }
             else mLines[gotoPosition + 1].label = labelForTrue;
 
@@ -105,20 +114,21 @@ namespace SimpleLang
 
         public void Visit(CoutNode node)
         {
-            //List<string> parameters = new List<string>();
-            //foreach (var expr in node.ExprList)
-            //{
-            //    expr.Accept(this);
-            //    var variable = mStack.Pop();
-            //    parameters.Add(variable);
-            //}
+            // TODO Представить cout как вызов функции в грамматике
+            List<string> parameters = new List<string>();
+            foreach (var expr in node.ExprList)
+            {
+                expr.Accept(this);
+                var variable = mStack.Pop();
+                parameters.Add(variable);
+            }
 
-            //foreach (var param in parameters)
-            //{
-            //    Code.AddLine(new ThreeAddrCode.Line(param, "", "param", ""));
-            //}
+            foreach (var param in parameters)
+            {
+                mLines.Add(new Line.FunctionParam(param));
+            }
 
-            //Code.AddLine(new ThreeAddrCode.Line("", "cout", "call", parameters.Count.ToString()));
+            mLines.Add(new Line.FunctionCall("cout", parameters.Count));
         }
 
         public void Visit(FunctionNode node)

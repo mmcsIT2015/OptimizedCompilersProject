@@ -7,59 +7,57 @@ namespace SimpleLang
 {
     /// <summary>
     /// Класс изменяет входящий threeAddrCode - на выходе этот код будет разбит на блоки и будет построен граф переходов между блоками
-    /// Пример использования:
-    /// ====
-    ///     Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
-    ///     codeGenerator.Visit(parser.root);
-    ///     
-    ///     BaseBlocksPartition.Partition(codeGenerator.Code);
-    ///     
-    ///     Console.WriteLine(codeGenerator.Code);
-    ///     
+    /// (!)
+    /// Вызывать вручную разбиение на блоки не требуется - оно происходит при конструировании трехадресного кода из List<Line.Line>.
     /// </summary>
     static class BaseBlocksPartition
     {
         public static void Partition(ThreeAddrCode threeAddrCode)
         {
-            if (threeAddrCode.blocks.Count() != 1)
-                return;
+            if (threeAddrCode.blocks.Count() != 1) return;
+
             List<Block> blocks = new List<Block>();
-            Block currentBlock = new Block();
-            foreach (ThreeAddrCode.Line line in threeAddrCode.blocks[0])
+            var currentBlock = new Block();
+            foreach (var line in threeAddrCode.blocks[0])
             {
-                if (line.label != "" && currentBlock.Count() > 0)
+                if (line.HasLabel() && currentBlock.Count() > 0)
                 {
                     blocks.Add(currentBlock);
                     currentBlock = new Block();
                 }
                 currentBlock.Add(line);
-                if (line.command == "goto" || line.command == "if")
+                if (line is Line.GoTo) // Line.ConditionalJump является GoTo
                 {
                     blocks.Add(currentBlock);
                     currentBlock = new Block();
                 }
             }
-            if (currentBlock.Count() > 0)
-                blocks.Add(currentBlock);
+
+            if (currentBlock.Count() > 0) blocks.Add(currentBlock);
 
             Dictionary<string, int> labelsToBlocksIndexes = new Dictionary<string, int>();
             for (int i = 0; i < blocks.Count(); i++)
-                if (blocks[i][0].label != "")
-                    labelsToBlocksIndexes[blocks[i][0].label] = i;
+            {
+                if (blocks[i][0].HasLabel()) labelsToBlocksIndexes[blocks[i][0].label] = i;
+            }
 
-            Dictionary<int, List<int>> graph = new Dictionary<int,List<int>>();
-            for (int i = 0; i < blocks.Count();i++ )
-                graph[i] = new List<int>(2);
+            var graph = new Dictionary<int, List<int>>();
             for (int i = 0; i < blocks.Count(); i++)
             {
-                ThreeAddrCode.Line l = blocks[i].Last();
-                if (l.command == "goto")
-                    graph[i].Add(labelsToBlocksIndexes[l.left]);
-                else if (l.command == "if")
+                graph[i] = new List<int>(2);
+            }
+                
+            for (int i = 0; i < blocks.Count(); i++)
+            {
+                var line = blocks[i].Last();
+                if (line is Line.GoTo)
                 {
-                    if (i < blocks.Count() - 1)
-                        graph[i].Add(i + 1);
-                    graph[i].Add(labelsToBlocksIndexes[l.first]);
+                    if (line is Line.СonditionalJump)
+                    {
+                        if (i < blocks.Count() - 1) graph[i].Add(i + 1);
+                    }
+
+                    graph[i].Add(labelsToBlocksIndexes[(line as Line.GoTo).target]);
                 }
                 else if (i < blocks.Count() - 1)
                 {
