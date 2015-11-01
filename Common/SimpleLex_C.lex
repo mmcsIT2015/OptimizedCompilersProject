@@ -85,7 +85,7 @@ class ScannerHelper
   }
   public static int GetIDToken(string s)
   {
-	if (keywords.ContainsKey(s.ToLower()))
+	if (keywords.ContainsKey(s))
 	  return keywords[s];
 	else
       return (int)Tokens.ID;

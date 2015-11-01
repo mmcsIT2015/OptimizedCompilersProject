@@ -17,6 +17,12 @@ namespace SimpleLang.Line
         public virtual bool HasLabel() {
             return label != "";
         }
+
+        // Меняет цель (для GoTo и If) на `forWhat`, если она равна `check`
+        public virtual void ChangeTargetIfEqual(string check, string forWhat)
+        {
+
+        }
     }
 
     class NonEmptyLine : Line
@@ -38,6 +44,11 @@ namespace SimpleLang.Line
 
          public GoTo(string target) {
              this.target = target;
+         }
+
+         public override void ChangeTargetIfEqual(string check, string forWhat)
+         {
+             if (target == check) target = forWhat;
          }
     }
 
