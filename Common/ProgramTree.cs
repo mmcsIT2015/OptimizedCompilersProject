@@ -6,10 +6,10 @@ namespace ProgramTree
 {
     public enum AssignType { Assign, AssignPlus, AssignMinus, AssignMult, AssignDivide };
 
-    public enum BinaryType { Plus, Minus, Mult, Div, Less, More, Equal, NotEqual, LessEqual, MoreEqual };
+    public enum BinaryOperation { None, Plus, Minus, Mult, Div, Less, Greater, Equal, NotEqual, LessEqual, GreaterEqual };
 
     public enum VarType { Int, Bool, Double };
-	public enum UnaryType { Not } ;
+	public enum UnaryType { Not, Minus } ;
 	
     public class Node // базовый класс для всех узлов    
     {
@@ -60,9 +60,9 @@ namespace ProgramTree
     {
         public ExprNode LeftOperand { get; set; }
         public ExprNode RightOperand { get; set; }
-        public BinaryType Operation { get; set; }
+        public BinaryOperation Operation { get; set; }
 
-        public BinaryNode(ExprNode lhs, ExprNode rhs, BinaryType operation)
+        public BinaryNode(ExprNode lhs, ExprNode rhs, BinaryOperation operation)
         {
             LeftOperand = lhs;
             RightOperand = rhs;

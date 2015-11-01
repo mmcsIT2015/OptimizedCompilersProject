@@ -24,7 +24,7 @@ namespace SimpleLang
         public ThreeAddrCode Code { get; set; }
 
         private Stack<string> mStack = new Stack<string>();
-        private Dictionary<BinaryType, string> mOperators = new Dictionary<BinaryType, string>();
+        private Dictionary<BinaryOperation, string> mOperators = new Dictionary<BinaryOperation, string>();
         private Dictionary<AssignType, string> mAssigns = new Dictionary<AssignType, string>();
         private UniqueIdsGenerator mLabelsGenerator = UniqueIdsGenerator.Instance();
         private UniqueIdsGenerator mTempVarsGenerator = UniqueIdsGenerator.Instance();
@@ -42,16 +42,16 @@ namespace SimpleLang
 
         private void CreateDictionaries()
         {
-            mOperators.Add(BinaryType.Plus, "+");
-            mOperators.Add(BinaryType.Minus, "-");
-            mOperators.Add(BinaryType.Mult, "*");
-            mOperators.Add(BinaryType.Div, "/");
-            mOperators.Add(BinaryType.Less, "<");
-            mOperators.Add(BinaryType.More, ">");
-            mOperators.Add(BinaryType.Equal, "==");
-            mOperators.Add(BinaryType.NotEqual, "!=");
-            mOperators.Add(BinaryType.LessEqual, "<=");
-            mOperators.Add(BinaryType.MoreEqual, ">=");
+            mOperators.Add(BinaryOperation.Plus, "+");
+            mOperators.Add(BinaryOperation.Minus, "-");
+            mOperators.Add(BinaryOperation.Mult, "*");
+            mOperators.Add(BinaryOperation.Div, "/");
+            mOperators.Add(BinaryOperation.Less, "<");
+            mOperators.Add(BinaryOperation.Greater, ">");
+            mOperators.Add(BinaryOperation.Equal, "==");
+            mOperators.Add(BinaryOperation.NotEqual, "!=");
+            mOperators.Add(BinaryOperation.LessEqual, "<=");
+            mOperators.Add(BinaryOperation.GreaterEqual, ">=");
 
             mAssigns.Add(AssignType.Assign, "=");
             mAssigns.Add(AssignType.AssignPlus, "+");
@@ -244,7 +244,7 @@ namespace SimpleLang
             mStack.Push(node.Num.ToString());
         }
 
-        private string OperatorToString(BinaryType op)
+        private string OperatorToString(BinaryOperation op)
         {
             if (mOperators.ContainsKey(op))
             {
