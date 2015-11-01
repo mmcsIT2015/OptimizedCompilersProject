@@ -32,7 +32,7 @@ namespace SimpleCompiler
                     {
                         Console.WriteLine("Синтаксическое дерево построено");
 
-                        Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+                        NewGen3AddrCodeVisitor codeGenerator = new NewGen3AddrCodeVisitor();
                         codeGenerator.Visit(parser.root);
 
                         // DEBUG Can watch result here

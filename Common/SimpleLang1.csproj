@@ -44,9 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseBlocksPartition.cs" />
+    <Compile Include="Code\Block.cs" />
     <Compile Include="DataFlow.cs" />
+    <Compile Include="NewGen3AddrCodeVisitor.cs" />
     <Compile Include="Gen3AddrCodeVisitor.cs" />
     <Compile Include="IVisitor.cs" />
+    <Compile Include="Code\Line.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Optimization\CommonSubexpressionsOptimization.cs" />
     <Compile Include="Optimization\ConstantFolding.cs" />
@@ -59,6 +62,7 @@
     <Compile Include="ShiftReduceParserCode.cs" />
     <Compile Include="SimpleLex.cs" />
     <Compile Include="SimpleYacc.cs" />
+    <Compile Include="Code\NewThreeAddrCode.cs" />
     <Compile Include="ThreeAddrCode.cs" />
     <Compile Include="UniqueIdsGenerator.cs" />
   </ItemGroup>

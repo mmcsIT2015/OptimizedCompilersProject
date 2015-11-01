@@ -91,20 +91,20 @@ assign 	: ident ASSIGN expr { $$ = new AssignNode($1 as IdNode, $3); }
 		;
 
 expr : S { $$ = $1; }
-    | expr LESS S { $$ = new BinaryNode($1, $3, BinaryType.Less); }
-    | expr GREAT S { $$ = new BinaryNode($1, $3, BinaryType.More); }
-    | expr EQUAL S { $$ = new BinaryNode($1, $3, BinaryType.Equal); }
-    | expr INEQUAL S { $$ = new BinaryNode($1, $3, BinaryType.NotEqual); }
+    | expr LESS S { $$ = new BinaryNode($1, $3, BinaryOperation.Less); }
+    | expr GREAT S { $$ = new BinaryNode($1, $3, BinaryOperation.Greater); }
+    | expr EQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
+    | expr INEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
     ;
 
 S : T { $$ = $1; }
-    | S PLUS T { $$ = new BinaryNode($1, $3, BinaryType.Plus); }
-    | S MINUS T { $$ = new BinaryNode($1, $3, BinaryType.Minus); }
+    | S PLUS T { $$ = new BinaryNode($1, $3, BinaryOperation.Plus); }
+    | S MINUS T { $$ = new BinaryNode($1, $3, BinaryOperation.Minus); }
     ;
 
 T : F { $$ = $1; }
-    | T MUL F { $$ = new BinaryNode($1, $3, BinaryType.Mult); }
-    | T DIV F { $$ = new BinaryNode($1, $3, BinaryType.Div); }
+    | T MUL F { $$ = new BinaryNode($1, $3, BinaryOperation.Mult); }
+    | T DIV F { $$ = new BinaryNode($1, $3, BinaryOperation.Div); }
     ;
 
 F : ident { $$ = $1 as IdNode; }
