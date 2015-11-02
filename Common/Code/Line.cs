@@ -166,5 +166,12 @@ namespace SimpleLang.Line
             double temp;
             return double.TryParse(second, out temp);
         }
+
+        public void ToIdentity(string value)
+        {
+            first = value;
+            second = "";
+            operation = BinaryOperation.None;
+        }
     }
 }

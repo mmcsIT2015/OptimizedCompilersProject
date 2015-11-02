@@ -1,129 +1,126 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using ProgramTree;
 
-//namespace SimpleLang
-//{
+namespace SimpleLang
+{
 
-//    /// <summary>
-//    /// Оптимизация: Свертка констант и применение алгебраических тождеств
-//    ///                  
-//    /// Пример: 
-//    /// ConstantFolding cf = new ConstantFolding(codeGenerator.Code);
-//    /// cf.Optimize();
-//    ///                    
-//    /// Console.WriteLine(codeGenerator.Code);
-//    ///
-//    /// </summary>
-//    class ConstantFolding : IOptimizer
-//    {
-//        public ConstantFolding(ThreeAddrCode tac)
-//        {
-//            Code = tac;
-//        }
+    /// <summary>
+    /// Оптимизация: Свертка констант и применение алгебраических тождеств
+    ///                  
+    /// Пример: 
+    /// ConstantFolding cf = new ConstantFolding(codeGenerator.Code);
+    /// cf.Optimize();
+    ///                    
+    /// Console.WriteLine(codeGenerator.Code);
+    ///
+    /// </summary>
+    class ConstantFolding : IOptimizer
+    {
+        public ConstantFolding(ThreeAddrCode tac)
+        {
+            Code = tac;
+        }
 
-//        private static HashSet<string> ops = new HashSet<string> { "+", "-", "*", "/" };
+        private static HashSet<string> ops = new HashSet<string> { "+", "-", "*", "/" };
 
-//        public override void Optimize(params Object[] values)
-//        {
-//            FoldConstants(Code);
-//            ApplyAlgebraicEqualities(Code);
-//        }
+        public override void Optimize(params Object[] values)
+        {
+            FoldConstants(Code);
+            ApplyAlgebraicEqualities(Code);
+        }
 
-//        private static void FoldConstants(ThreeAddrCode tac)
-//        {
-//            foreach (Block bl in tac.blocks)
-//            {
-//                foreach (ThreeAddrCode.Line ln in bl)
-//                {
-//                    string cmd = ln.command.Trim();
+        private static void FoldConstants(ThreeAddrCode code)
+        {
+            foreach (Block block in code.blocks)
+            {
+                foreach (var l in block)
+                {
+                    var line = l as Line.Operation;
+                    if (!line.IsArithmExpr()) continue;
+                    if (!line.FirstParamIsNumber() || !line.SecondParamIsNumber()) continue;
 
-//                    if (ops.Contains(cmd))
-//                    {
-//                        double fst, snd;
-//                        if (!double.TryParse(ln.first, out fst))
-//                            continue;
-//                        if (!double.TryParse(ln.second, out snd))
-//                            continue;
-//                        switch (cmd)
-//                        {
-//                            case "+":
-//                                ln.first = (fst + snd).ToString();
-//                                break;
-//                            case "-":
-//                                ln.first = (fst - snd).ToString();
-//                                break;
-//                            case "*":
-//                                ln.first = (fst * snd).ToString();
-//                                break;
-//                            case "/":
-//                                ln.first = (fst / snd).ToString();
-//                                break;
-//                        }
-//                        ln.command = ln.second = "";
-//                    }
-//                }
-//            }
-//        }
+                    double x = double.Parse(line.first);
+                    double y = double.Parse(line.second);
+                    switch (line.operation)
+                    {
+                        case BinaryOperation.Minus:
+                            line.ToIdentity((x - y).ToString());
+                            break;
+                        case BinaryOperation.Plus:
+                            line.ToIdentity((x + y).ToString());
+                            break;
+                        case BinaryOperation.Mult:
+                            line.ToIdentity((x * y).ToString());
+                            break;
+                        case BinaryOperation.Div:
+                            line.ToIdentity((x / y).ToString());
+                            break;
+                    }
+                }
+            }
+        }
 
-//        private static void ApplyAlgebraicEqualities(ThreeAddrCode tac)
-//        {
-//            foreach (Block bl in tac.blocks)
-//            {
-//                foreach (ThreeAddrCode.Line ln in bl)
-//                {
-//                    string cmd = ln.command.Trim();
+        private void ApplyAlgebraicEqualities(ThreeAddrCode code)
+        {
+            foreach (Block block in code.blocks)
+            {
+                foreach (var l in block)
+                {
+                    var line = l as Line.Operation;
+                    if (!line.IsArithmExpr()) continue;
 
-//                    if (ops.Contains(cmd))
-//                    {
-//                        double fst, snd;
-//                        bool b1 = double.TryParse(ln.first, out fst);
-//                        bool b2 = double.TryParse(ln.second, out snd);
-
-//                        if (b1 && !b2)
-//                        {
-//                            if (fst == 0)
-//                            {
-//                                if (cmd.Equals("+"))
-//                                    ln.first = ln.second;
-//                                if (cmd.Equals("-"))
-//                                    ln.first = (snd * (-1)).ToString();
-//                                if (cmd.Equals("*") || cmd.Equals("/"))
-//                                    ln.first = "0";
-//                                ln.command = ln.second = "";
-//                            }
-//                            if (fst == 1)
-//                            {
-//                                if (cmd.Equals("*"))
-//                                {
-//                                    ln.first = ln.second;
-//                                    ln.command = ln.second = "";
-//                                }
-//                            }
-//                        }
-
-//                        if (!b1 && b2)
-//                        {
-//                            if (snd == 0)
-//                            {
-//                                if (cmd.Equals("*"))
-//                                {
-//                                    ln.first = "0";
-//                                    ln.command = ln.second = "";
-//                                }
-//                                if (cmd.Equals("+") || cmd.Equals("-"))
-//                                    ln.command = ln.second = "";
-//                            }
-//                            if (snd == 1)
-//                            {
-//                                if (cmd.Equals("*") || cmd.Equals("/"))
-//                                    ln.command = ln.second = "";
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
+                    double first, second;
+                    bool firstIsNumber = double.TryParse(line.first, out first);
+                    bool secondIsNumber = double.TryParse(line.second, out second);
+                    if (firstIsNumber && !secondIsNumber)
+                    {
+                        // TODO 
+                        if (first == 0) // Мне кажется, тут что-то не так.
+                        {
+                            if (line.operation == BinaryOperation.Plus) line.ToIdentity(line.second);
+                            // TODO 
+                            // В самом условии утверждается, что `first` - число, а `second` - нет.
+                            // Намерения о следующей строчке понятны, но сделать это нужно как-то иначе. Если вообще нужно.
+                            // else if (line.operation == BinaryOperation.Minus) line.ToIdentity((second * (-1)).ToString());
+                            else if (line.operation == BinaryOperation.Mult) line.ToIdentity("0");
+                            else if (line.operation == BinaryOperation.Div) 
+                            {
+                                // TODO
+                                // Серьезно? 55 / 0 = 0?
+                                line.ToIdentity("0");
+                            }
+                        }
+                        else if (first == 1) // Дежавю?
+                        {
+                            if (line.operation == BinaryOperation.Mult)
+                            {
+                                line.ToIdentity(line.second);
+                            }
+                        }
+                    }
+                    else if (!firstIsNumber && secondIsNumber)
+                    {
+                        if (second == 0) // Снова?
+                        {
+                            if (line.operation == BinaryOperation.Mult) line.ToIdentity("0");
+                            else if (line.operation == BinaryOperation.Plus || line.operation == BinaryOperation.Minus)
+                            {
+                                line.ToIdentity(line.first);
+                            }
+                        }
+                        else if (second == 1) // Мы в Матрице...
+                        {
+                            if (line.operation == BinaryOperation.Mult || line.operation == BinaryOperation.Div)
+                            {
+                                line.ToIdentity(line.first);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
