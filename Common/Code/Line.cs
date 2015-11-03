@@ -6,7 +6,7 @@ using ProgramTree;
 
 namespace SimpleLang.Line
 {
-    class Line
+    public class Line
     {
         public string label = "";
 

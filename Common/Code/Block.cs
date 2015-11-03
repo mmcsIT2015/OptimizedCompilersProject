@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace SimpleLang
 {
-    class Block : List<Line.Line>
+    public class Block : List<Line.Line>
     {
         private List<HashSet<string>> mDefUseData;
 

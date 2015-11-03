@@ -81,7 +81,7 @@ namespace GUI
                 {
                     //Console.WriteLine("Синтаксическое дерево построено");
 
-                    Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+                    var codeGenerator = new SimpleLang.Gen3AddrCodeVisitor();
                     codeGenerator.Visit(parser.root);
 
                     // DEBUG Can watch result here
