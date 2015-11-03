@@ -112,9 +112,9 @@ namespace GUI
             else
             {
                 File.WriteAllText(fullFilename, textBox1.Text);
+                textModified = false;
+                Text = formName + " - " + Path.GetFileName(fullFilename);
             }
-            textModified = false;
-            Text = formName + " - " + Path.GetFileName(fullFilename);
         }
 
         private void сохранитьКакToolStripMenuItem_Click(object sender, EventArgs e)
@@ -136,6 +136,9 @@ namespace GUI
                     // Code to write the stream goes here.
                     myStream.Close();
                 }
+                textModified = false;
+                fullFilename = saveFileDialog1.FileName;
+                Text = formName + " - " + Path.GetFileName(fullFilename);
             }
         }
 
@@ -162,6 +165,12 @@ namespace GUI
         {
             if (e.KeyCode == Keys.F5)
                 запуститьToolStripMenuItem_Click(null, EventArgs.Empty);
+            else if (e.Control && e.KeyCode == Keys.S)       // Ctrl-S Save
+            {
+                сохранитьToolStripMenuItem_Click(null, EventArgs.Empty);
+                // Do what you want here
+                e.SuppressKeyPress = true;  // Stops bing! Also sets handled which stop event bubbling
+            }
         }
     }
 }
