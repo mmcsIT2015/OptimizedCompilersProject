@@ -23,6 +23,16 @@ namespace SimpleLang.Line
         {
 
         }
+
+        public bool Is<T>() where T : Line
+        {
+            return (this is T);
+        }
+
+        public bool IsNot<T>() where T : Line
+        {
+            return !(this is T);
+        }
     }
 
     class NonEmptyLine : Line

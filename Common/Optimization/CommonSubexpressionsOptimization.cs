@@ -76,7 +76,7 @@ namespace SimpleLang
             var expressions = new Dictionary<RightExpr, List<int>>();
             for (int i = 0; i < block.Count; ++i)
             {
-                if (!(block[i] is Line.Operation)) continue;
+                if (block[i].Is<Line.Operation>()) continue;
 
                 RightExpr re = new RightExpr(block[i] as Line.Operation);
                 if (!expressions.ContainsKey(re))

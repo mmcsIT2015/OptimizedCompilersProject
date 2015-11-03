@@ -1,63 +1,73 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 
 
-//namespace SimpleLang
-//{
+namespace SimpleLang
+{
 
-//    /// <summary>
-//    /// Оптимизация: Протяжка констант
-//    /// Примечание: Использовать после разбиения на внутренние блоки
-//    /// 
-//    /// Пример применения:
-//    /// SimpleLang.DraggingConstantsOptimization dco = new SimpleLang.DraggingConstantsOptimization(codeGenerator.Code);
-//    // / dco.Optimize();
-//    /// Console.WriteLine("Optimization:\n" + codeGenerator.Code);
-//    /// 
-//    /// </summary>
-//    class DraggingConstantsOptimization : IOptimizer
-//    {
-//        public DraggingConstantsOptimization(ThreeAddrCode code)
-//        {
-//            Code = code;
-//        }
+    /// <summary>
+    /// Оптимизация: Протяжка констант
+    /// Примечание: Использовать после разбиения на внутренние блоки
+    /// 
+    /// Пример применения:
+    /// SimpleLang.DraggingConstantsOptimization dco = new SimpleLang.DraggingConstantsOptimization(codeGenerator.Code);
+    // / dco.Optimize();
+    /// Console.WriteLine("Optimization:\n" + codeGenerator.Code);
+    /// 
+    /// </summary>
+    class DraggingConstantsOptimization : IOptimizer
+    {
+        public DraggingConstantsOptimization(ThreeAddrCode code)
+        {
+            Code = code;
+        }
 
-//        public override void Optimize(params Object[] values)
-//        {
-//            foreach(Block b in Code.blocks)
-//            {
-//                b.CalculateDefUseData();
-//                for(int i = 1; i < b.Count; ++i)
-//                {
-//                    foreach (string variable in b.GetAliveVariables(i))
-//                    {
-//                        for(int j = i - 1; j >= 0; --j)
-//                        {
-//                            if(!b.IsVariableAlive(variable, j))
-//                            {
-//                                if (b[j].command.Equals("") && b[j].first.Equals(""))
-//                                {
-//                                    string const_value = "";
-//                                    if (b[j].left.Equals(variable) && !b.GetAliveVariables(j).Contains(b[j].second))
-//                                        const_value = b[j].second;
-//                                    else
-//                                        const_value = variable;
+        public void CheckDragging(Block block, int targetLine)
+        {
+            foreach (string variable in block.GetAliveVariables(targetLine))
+            {
+                for (int j = targetLine - 1; j >= 0; --j)
+                {
+                    if (block.IsVariableAlive(variable, j)) continue;
+                    if (block[j].IsNot<Line.Operation>()) continue;
 
-//                                    if (variable.Equals(b[i].first))
-//                                        b[i].first = const_value;
-//                                    else if (variable.Equals(b[i].second))
-//                                        b[i].second = const_value;
-//                                    j = -1;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
+                    var jLine = block[j] as Line.Operation;
+                    if (jLine.IsIdentity()) // тождество, `a = b;`; b <- line.first
+                    {
+                        string const_value = "";
+                        if (jLine.left.Equals(variable) && !block.GetAliveVariables(j).Contains(jLine.first))
+                        {
+                            const_value = jLine.first;
+                        }
+                        else
+                        {
+                            const_value = variable;
+                        }
 
-//            }
-//        }
-//    }
-//}
+                        var iLine = block[targetLine] as Line.Operation;
+                        if (variable.Equals(iLine.first)) iLine.first = const_value;
+                        else if (variable.Equals(iLine.second)) iLine.second = const_value;
+                        j = -1;
+                    }
+                }
+            }
+        }
+
+        public override void Optimize(params Object[] values)
+        {
+            foreach (Block block in Code.blocks)
+            {
+                block.CalculateDefUseData();
+                for (int i = 1; i < block.Count; ++i) // TODO Почему с 1цы нумерация? Так и было задумано?
+                {
+                    if (block[i].Is<Line.Operation>()) {
+                        CheckDragging(block, i);
+                    }
+                }
+            }
+        }
+    }
+}
