@@ -128,14 +128,7 @@ namespace GUI
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if ((myStream = saveFileDialog1.OpenFile()) != null)
-                {
-                    StreamWriter sw = new StreamWriter(myStream);
-                    sw.Write(WorkingArea.Text);
-                    sw.Close();
-                    // Code to write the stream goes here.
-                    myStream.Close();
-                }
+                File.WriteAllText(saveFileDialog1.FileName, WorkingArea.Text);
                 textModified = false;
                 fullFilename = saveFileDialog1.FileName;
                 Text = formName + " - " + Path.GetFileName(fullFilename);
