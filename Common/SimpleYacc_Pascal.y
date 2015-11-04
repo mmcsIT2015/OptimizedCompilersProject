@@ -99,7 +99,7 @@ U		: F { $$ = $1; }
 		| F MOREEQUAL expr { $$ = new BinaryNode($1, $3, BinaryType.MoreEqual); }
 		| F EQUAL expr { $$ = new BinaryNode($1, $3, BinaryType.Equal); }
 		| F NOTEQUAL expr { $$ = new BinaryNode($1, $3, BinaryType.NotEqual); }
-		| NOT expr { $$ = new UnaryNode($2, UnaryType.Not); }
+		| NOT expr { $$ = new UnaryNode($2, UnaryOperation.Not); }
 		;
 		
 F       : ident  { $$ = $1 as IdNode; }

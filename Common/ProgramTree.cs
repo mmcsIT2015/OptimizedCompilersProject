@@ -9,7 +9,7 @@ namespace ProgramTree
     public enum BinaryOperation { None, Plus, Minus, Mult, Div, Less, Greater, Equal, NotEqual, LessEqual, GreaterEqual };
 
     public enum VarType { Int, Bool, Double };
-	public enum UnaryType { Not, Minus } ;
+	public enum UnaryOperation { Not, Minus } ;
 	
     public class Node // базовый класс для всех узлов    
     {
@@ -147,8 +147,8 @@ namespace ProgramTree
 	public class UnaryNode : ExprNode
     {
         public ExprNode Expr { get; set; }
-        public UnaryType Op { get; set; }
-        public UnaryNode(ExprNode expr, UnaryType op)
+        public UnaryOperation Op { get; set; }
+        public UnaryNode(ExprNode expr, UnaryOperation op)
         {
             Expr = expr;
             Op = op;

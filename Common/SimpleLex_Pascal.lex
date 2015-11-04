@@ -14,13 +14,21 @@ ID {Alpha}{AlphaDigit}*
 %%
 
 {INTNUM} { 
-  yylval.iVal = int.Parse(yytext); 
-  return (int)Tokens.INUM; 
+  bool isIntNum = int.TryParse(yytext, out yylval.iVal); 
+  if (isIntNum) {
+	return (int)Tokens.INUM; 
+  }
+
+  throw new SyntaxException(yytext + " не является числом типа `INTNUM`");
 }
 
 {REALNUM} { 
-  yylval.dVal = double.Parse(yytext); 
-  return (int)Tokens.RNUM;
+  bool isRealNum = double.TryParse(yytext, out yylval.dVal); 
+  if (isRealNum) {
+	return (int)Tokens.RNUM; 
+  }
+  
+  throw new SyntaxException(yytext + " не является числом типа `REALNUM`");
 }
 
 {ID}  { 
