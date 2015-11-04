@@ -26,11 +26,11 @@ namespace GUI
         public Form1()
         {
             InitializeComponent();
-            toolStripComboBox1.SelectedIndex = 0;
-            создатьToolStripMenuItem_Click(null, EventArgs.Empty);
+            SelectGrammar.SelectedIndex = 0;
+            CreateNewFile_Click(null, EventArgs.Empty);
         }
 
-        private void открытьToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void OpenFile_Click(object sender, EventArgs e)
         {
             Stream myStream = null;
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -47,7 +47,7 @@ namespace GUI
                     if ((myStream = openFileDialog1.OpenFile()) != null)
                     {
                         string s = new StreamReader(myStream, Encoding.UTF8).ReadToEnd();
-                        textBox1.Text = s;
+                        WorkingArea.Text = s;
                         fullFilename = openFileDialog1.FileName;
                     }
                     myStream.Dispose();
@@ -56,20 +56,20 @@ namespace GUI
                 {
                     MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
-                запуститьToolStripMenuItem_Click(null, EventArgs.Empty);
+                RunParser_Click(null, EventArgs.Empty);
                 textModified = false;
                 Text = formName + " - " + Path.GetFileName(fullFilename);
             }
         }
 
-        private void запуститьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RunParser_Click(object sender, EventArgs e)
         {
             //var file = fullFilename;
 
             try
             {
-                textBox2.Text = string.Empty;
-                string content = textBox1.Text;
+                ResultView.Text = string.Empty;
+                string content = WorkingArea.Text;
                 //Console.Write("File ...\\" + file.Substring(file.LastIndexOf('\\')) + "... ");
 
                 Scanner scanner = new Scanner();
@@ -87,7 +87,7 @@ namespace GUI
                     // DEBUG Can watch result here
                     //Console.WriteLine(codeGenerator.Code);
 
-                    textBox2.Text = codeGenerator.Code.ToString().Replace("\n", Environment.NewLine);
+                    ResultView.Text = codeGenerator.Code.ToString().Replace("\n", Environment.NewLine);
                 }
                 else MessageBox.Show("Ошибка");
             }
@@ -105,19 +105,19 @@ namespace GUI
             }
         }
 
-        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Save_Click(object sender, EventArgs e)
         {
             if (fullFilename == null)
-                сохранитьКакToolStripMenuItem_Click(sender, e);
+                SaveAs_Click(sender, e);
             else
             {
-                File.WriteAllText(fullFilename, textBox1.Text);
+                File.WriteAllText(fullFilename, WorkingArea.Text);
                 textModified = false;
                 Text = formName + " - " + Path.GetFileName(fullFilename);
             }
         }
 
-        private void сохранитьКакToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveAs_Click(object sender, EventArgs e)
         {
             Stream myStream;
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -131,7 +131,7 @@ namespace GUI
                 if ((myStream = saveFileDialog1.OpenFile()) != null)
                 {
                     StreamWriter sw = new StreamWriter(myStream);
-                    sw.Write(textBox1.Text);
+                    sw.Write(WorkingArea.Text);
                     sw.Close();
                     // Code to write the stream goes here.
                     myStream.Close();
@@ -142,11 +142,11 @@ namespace GUI
             }
         }
 
-        private void создатьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CreateNewFile_Click(object sender, EventArgs e)
         {
             fullFilename = null;
-            textBox1.Text = string.Empty;
-            textBox2.Text = string.Empty;
+            WorkingArea.Text = string.Empty;
+            ResultView.Text = string.Empty;
             Text = formName + " - новый файл";
             textModified = false;
         }
@@ -164,10 +164,10 @@ namespace GUI
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F5)
-                запуститьToolStripMenuItem_Click(null, EventArgs.Empty);
+                RunParser_Click(null, EventArgs.Empty);
             else if (e.Control && e.KeyCode == Keys.S)       // Ctrl-S Save
             {
-                сохранитьToolStripMenuItem_Click(null, EventArgs.Empty);
+                Save_Click(null, EventArgs.Empty);
                 // Do what you want here
                 e.SuppressKeyPress = true;  // Stops bing! Also sets handled which stop event bubbling
             }
