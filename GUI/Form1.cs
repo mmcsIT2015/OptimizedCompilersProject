@@ -31,8 +31,7 @@ namespace GUI
         }
 
         private void OpenFile_Click(object sender, EventArgs e)
-        {
-            Stream myStream = null;
+        {            
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
             //openFileDialog1.InitialDirectory = "c:\\";
@@ -44,13 +43,7 @@ namespace GUI
             {
                 try
                 {
-                    if ((myStream = openFileDialog1.OpenFile()) != null)
-                    {
-                        string s = new StreamReader(myStream, Encoding.UTF8).ReadToEnd();
-                        WorkingArea.Text = s;
-                        fullFilename = openFileDialog1.FileName;
-                    }
-                    myStream.Dispose();
+                    WorkingArea.Text = File.ReadAllText(openFileDialog1.FileName, Encoding.UTF8);
                 }
                 catch (Exception ex)
                 {
@@ -70,7 +63,6 @@ namespace GUI
             {
                 ResultView.Text = string.Empty;
                 string content = WorkingArea.Text;
-                //Console.Write("File ...\\" + file.Substring(file.LastIndexOf('\\')) + "... ");
 
                 Scanner scanner = new Scanner();
                 scanner.SetSource(content, 0);
@@ -79,31 +71,27 @@ namespace GUI
 
                 if (parser.Parse())
                 {
-                    //Console.WriteLine("Синтаксическое дерево построено");
 
                     var codeGenerator = new SimpleLang.Gen3AddrCodeVisitor();
                     codeGenerator.Visit(parser.root);
 
                     var code = codeGenerator.CreateCode();
 
-                    // DEBUG Can watch result here
-                    //Console.WriteLine(codeGenerator.Code);
-
                     ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
                 }
-                else MessageBox.Show("Ошибка");
+                else MessageBox.Show("Unknown error");
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ee)
             {
-                MessageBox.Show("Файл не найден");
+                MessageBox.Show("File not found: " + ee.FileName);
             }
             catch (LexException ee)
             {
-                MessageBox.Show("Лексическая ошибка. " + ee.Message);
+                MessageBox.Show("Lexer error: " + ee.Message);
             }
             catch (SyntaxException ee)
             {
-                MessageBox.Show("Синтаксическая ошибка. " + ee.Message);
+                MessageBox.Show("Syntax error: " + ee.Message);
             }
         }
 
@@ -113,7 +101,7 @@ namespace GUI
                 SaveAs_Click(sender, e);
             else
             {
-                File.WriteAllText(fullFilename, WorkingArea.Text);
+                File.WriteAllText(fullFilename, WorkingArea.Text, Encoding.UTF8);
                 textModified = false;
                 Text = formName + " - " + Path.GetFileName(fullFilename);
             }
@@ -129,7 +117,7 @@ namespace GUI
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(saveFileDialog1.FileName, WorkingArea.Text);
+                File.WriteAllText(saveFileDialog1.FileName, WorkingArea.Text, Encoding.UTF8);
                 textModified = false;
                 fullFilename = saveFileDialog1.FileName;
                 Text = formName + " - " + Path.GetFileName(fullFilename);
@@ -141,7 +129,7 @@ namespace GUI
             fullFilename = null;
             WorkingArea.Text = string.Empty;
             ResultView.Text = string.Empty;
-            Text = formName + " - новый файл";
+            Text = formName + " - new file";
             textModified = false;
         }
 
@@ -151,8 +139,7 @@ namespace GUI
             {
                 Text += "*";
                 textModified = true;
-            }
-            Console.Write("TextChengedc");
+            }            
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
