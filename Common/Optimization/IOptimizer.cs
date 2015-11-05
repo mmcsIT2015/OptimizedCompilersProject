@@ -18,7 +18,7 @@ namespace SimpleLang
     ///     }
     /// };
     /// </summary>
-    class IOptimizer
+    public class IOptimizer
     {
         public ThreeAddrCode Code { get; set; }
 

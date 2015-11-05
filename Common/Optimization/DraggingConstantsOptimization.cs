@@ -18,7 +18,7 @@ namespace SimpleLang
     /// Console.WriteLine("Optimization:\n" + codeGenerator.Code);
     /// 
     /// </summary>
-    class DraggingConstantsOptimization : IOptimizer
+    public class DraggingConstantsOptimization : IOptimizer
     {
         public DraggingConstantsOptimization(ThreeAddrCode code)
         {

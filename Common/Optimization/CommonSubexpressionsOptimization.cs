@@ -35,7 +35,7 @@ namespace SimpleLang
     ///     l = a - d;
     ///     m = l;
     /// </summary>
-    class CommonSubexpressionsOptimization : IOptimizer
+    public class CommonSubexpressionsOptimization : IOptimizer
     {
         class RightExpr
         {
@@ -76,7 +76,7 @@ namespace SimpleLang
             var expressions = new Dictionary<RightExpr, List<int>>();
             for (int i = 0; i < block.Count; ++i)
             {
-                if (block[i].Is<Line.Operation>()) continue;
+                if (block[i].IsNot<Line.Operation>()) continue;
 
                 RightExpr re = new RightExpr(block[i] as Line.Operation);
                 if (!expressions.ContainsKey(re))
@@ -121,6 +121,8 @@ namespace SimpleLang
                             bool cbo = true;
                             for (int j = lines[i]; j < lines[i + 1]; ++j)
                             {
+                                if (block[j].IsNot<Line.Operation>()) continue;
+
                                 var line = block[j] as Line.Operation;
                                 if (line.left == re.left || line.left == re.right)
                                 {

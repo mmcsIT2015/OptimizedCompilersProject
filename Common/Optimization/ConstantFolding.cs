@@ -17,7 +17,7 @@ namespace SimpleLang
     /// Console.WriteLine(codeGenerator.Code);
     ///
     /// </summary>
-    class ConstantFolding : IOptimizer
+    public class ConstantFolding : IOptimizer
     {
         public ConstantFolding(ThreeAddrCode tac)
         {
@@ -28,16 +28,18 @@ namespace SimpleLang
 
         public override void Optimize(params Object[] values)
         {
-            FoldConstants(Code);
-            ApplyAlgebraicEqualities(Code);
+            FoldConstants();
+            ApplyAlgebraicEqualities();
         }
 
-        private static void FoldConstants(ThreeAddrCode code)
+        private void FoldConstants()
         {
-            foreach (Block block in code.blocks)
+            foreach (Block block in Code.blocks)
             {
                 foreach (var l in block)
                 {
+                    if (l.IsNot<Line.Operation>()) continue;
+
                     var line = l as Line.Operation;
                     if (!line.IsArithmExpr()) continue;
                     if (!line.FirstParamIsNumber() || !line.SecondParamIsNumber()) continue;
@@ -63,12 +65,14 @@ namespace SimpleLang
             }
         }
 
-        private void ApplyAlgebraicEqualities(ThreeAddrCode code)
+        private void ApplyAlgebraicEqualities()
         {
-            foreach (Block block in code.blocks)
+            foreach (Block block in Code.blocks)
             {
                 foreach (var l in block)
                 {
+                    if (l.IsNot<Line.Operation>()) continue;
+
                     var line = l as Line.Operation;
                     if (!line.IsArithmExpr()) continue;
 

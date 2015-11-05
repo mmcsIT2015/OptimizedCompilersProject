@@ -23,7 +23,7 @@ namespace SimpleLang
     ///     
     ///     Console.WriteLine(codeGenerator.Code);
     /// </summary>
-    class DeadCodeElimination : IOptimizer
+    public class DeadCodeElimination : IOptimizer
     {
         private int mBlockNumber;
 
