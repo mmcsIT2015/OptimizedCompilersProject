@@ -84,10 +84,12 @@ namespace GUI
                     var codeGenerator = new SimpleLang.Gen3AddrCodeVisitor();
                     codeGenerator.Visit(parser.root);
 
+                    var code = codeGenerator.CreateCode();
+
                     // DEBUG Can watch result here
                     //Console.WriteLine(codeGenerator.Code);
 
-                    ResultView.Text = codeGenerator.Code.ToString().Replace("\n", Environment.NewLine);
+                    ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
                 }
                 else MessageBox.Show("Ошибка");
             }

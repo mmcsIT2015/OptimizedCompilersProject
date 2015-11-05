@@ -21,12 +21,13 @@ namespace SimpleLang
     /// </summary>
     public class Gen3AddrCodeVisitor : IVisitor
     {
-        public SimpleLang.ThreeAddrCode Code
+        /// <summary>
+        /// Код, возвращаемый этой ф-ей, уже разбит на блоки
+        /// </summary>
+        /// <returns></returns>
+        public SimpleLang.ThreeAddrCode CreateCode()
         {
-            get
-            {
-                return new SimpleLang.ThreeAddrCode(mLines);
-            }
+            return new SimpleLang.ThreeAddrCode(mLines);
         }
 
         private SimpleLang.Block mLines = new SimpleLang.Block();

@@ -36,7 +36,7 @@ namespace SimpleCompiler
                         codeGenerator.Visit(parser.root);
 
                         // DEBUG Can watch result here
-                        var code = codeGenerator.Code;
+                        var code = codeGenerator.CreateCode();
                         Console.WriteLine(code);
                     }
                     else Console.WriteLine("Ошибка");
