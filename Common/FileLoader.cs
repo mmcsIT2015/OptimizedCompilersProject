@@ -13,7 +13,7 @@ namespace SimpleLang
     {
         public enum GrammarType { PASCAL, C, UNKNOWN }
 
-        private static GrammarType GetGrammarType(string fileName)
+        public static GrammarType GetGrammarType(string fileName)
         {
             string extension = fileName.Substring(fileName.LastIndexOf(".") + 1);
             if (extension == "pasn") return GrammarType.PASCAL;

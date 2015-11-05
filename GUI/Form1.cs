@@ -20,6 +20,7 @@ namespace GUI
     {
         string fullFilename = null;
         bool textModified = false;
+        FileLoader.GrammarType type = FileLoader.GrammarType.C;
         string formName = "OptimizedCompilersProject";
 
         public Form1()
@@ -31,10 +32,9 @@ namespace GUI
 
         private void OpenFile_Click(object sender, EventArgs e)
         {            
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();            
             //openFileDialog1.InitialDirectory = "c:\\";
-            openFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog1.Filter = "pasn files (*.pasn)|*.pasn|cn files (*.cn)|*.cn";
             openFileDialog1.FilterIndex = 0;
             openFileDialog1.RestoreDirectory = true;
 
@@ -43,6 +43,12 @@ namespace GUI
                 try
                 {
                     WorkingArea.Text = File.ReadAllText(openFileDialog1.FileName, Encoding.UTF8);
+                    type = FileLoader.GetGrammarType(openFileDialog1.FileName);
+                    if (type == FileLoader.GrammarType.C)
+                        SelectGrammar.SelectedIndex = 0;
+                    else
+                        SelectGrammar.SelectedIndex = 1;
+                    
                 }
                 catch (Exception ex)
                 {
@@ -50,7 +56,7 @@ namespace GUI
                 }
                 RunParser_Click(null, EventArgs.Empty);
                 textModified = false;
-                Text = formName + " - " + Path.GetFileName(fullFilename);
+                Text = formName + " - " + openFileDialog1.FileName;
             }
         }
 
@@ -61,24 +67,15 @@ namespace GUI
             try
             {
                 ResultView.Text = string.Empty;
-                string content = WorkingArea.Text;
+                string content = WorkingArea.Text;                
+                var root = FileLoader.Parse(content, type);
 
-                SimpleScannerC.Scanner scanner = new SimpleScannerC.Scanner();
-                scanner.SetSource(content, 0);
+                var codeGenerator = new SimpleLang.Gen3AddrCodeVisitor();
+                codeGenerator.Visit(root);
 
-                SimpleParserC.Parser parser = new SimpleParserC.Parser(scanner);
+                var code = codeGenerator.CreateCode();
 
-                if (parser.Parse())
-                {
-
-                    var codeGenerator = new SimpleLang.Gen3AddrCodeVisitor();
-                    codeGenerator.Visit(parser.root);
-
-                    var code = codeGenerator.CreateCode();
-
-                    ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
-                }
-                else MessageBox.Show("Unknown error");
+                ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);                                
             }
             catch (FileNotFoundException ee)
             {
@@ -91,6 +88,10 @@ namespace GUI
             catch (SyntaxException ee)
             {
                 MessageBox.Show("Syntax error: " + ee.Message);
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("Unexpected error: " + ee.Message);
             }
         }
 
@@ -110,7 +111,7 @@ namespace GUI
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
-            saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.Filter = "pasn files (*.pasn)|*.pasn|cn files (*.cn)|*.cn";
             saveFileDialog1.FilterIndex = 0;
             saveFileDialog1.RestoreDirectory = true;
 

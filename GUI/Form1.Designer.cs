@@ -69,28 +69,28 @@
             // CreateNew
             // 
             this.CreateNew.Name = "CreateNew";
-            this.CreateNew.Size = new System.Drawing.Size(152, 22);
+            this.CreateNew.Size = new System.Drawing.Size(133, 22);
             this.CreateNew.Text = "Create new";
             this.CreateNew.Click += new System.EventHandler(this.CreateNewFile_Click);
             // 
             // OpenFile
             // 
             this.OpenFile.Name = "OpenFile";
-            this.OpenFile.Size = new System.Drawing.Size(152, 22);
+            this.OpenFile.Size = new System.Drawing.Size(133, 22);
             this.OpenFile.Text = "Open";
             this.OpenFile.Click += new System.EventHandler(this.OpenFile_Click);
             // 
             // SaveFile
             // 
             this.SaveFile.Name = "SaveFile";
-            this.SaveFile.Size = new System.Drawing.Size(152, 22);
+            this.SaveFile.Size = new System.Drawing.Size(133, 22);
             this.SaveFile.Text = "Save";
             this.SaveFile.Click += new System.EventHandler(this.Save_Click);
             // 
             // SaveFileAs
             // 
             this.SaveFileAs.Name = "SaveFileAs";
-            this.SaveFileAs.Size = new System.Drawing.Size(152, 22);
+            this.SaveFileAs.Size = new System.Drawing.Size(133, 22);
             this.SaveFileAs.Text = "Save as";
             this.SaveFileAs.Click += new System.EventHandler(this.SaveAs_Click);
             // 
