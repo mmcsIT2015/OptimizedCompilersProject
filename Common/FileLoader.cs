@@ -21,14 +21,19 @@ namespace SimpleLang
             return GrammarType.UNKNOWN;
         }
 
-        public static BlockNode Parse(string fileName, Encoding encoding)
+        public static BlockNode LoadFile(string fileName, Encoding encoding)
         {
+            string content = File.ReadAllText(fileName, encoding);
             var type = GetGrammarType(fileName);
+            return Parse(content, type);
+        }
+
+        public static BlockNode Parse(string content, GrammarType type)
+        {
             if (type == GrammarType.UNKNOWN)
                 throw new Exception("File extension is unknown");
             if (type == GrammarType.C)
-            {
-                string content = File.ReadAllText(fileName);                
+            {                
                 SimpleScannerC.Scanner scanner = new SimpleScannerC.Scanner();
                 scanner.SetSource(content, 0);
                 SimpleParserC.Parser parser = new SimpleParserC.Parser(scanner);
@@ -39,8 +44,7 @@ namespace SimpleLang
                     return parser.root;
                 else
                     throw new Exception("Parsing error. ");
-            } else {
-                string content = File.ReadAllText(fileName);
+            } else {                
                 SimpleScannerPascal.Scanner scanner = new SimpleScannerPascal.Scanner();
                 scanner.SetSource(content, 0);
                 SimpleParserPascal.Parser parser = new SimpleParserPascal.Parser(scanner);

@@ -19,7 +19,7 @@ namespace SimpleCompiler
             {
                 try
                 {
-                    var root = FileLoader.Parse(file, System.Text.Encoding.UTF8);
+                    var root = FileLoader.LoadFile(file, System.Text.Encoding.UTF8);
                     
                     Console.WriteLine("Syntax tree ready");
 
