@@ -4,7 +4,7 @@
     public Parser(AbstractScanner<ValueType, LexLocation> scanner) : base(scanner) { }
 %}
 
-%output = SimpleYacc.cs
+%output = SimpleYaccPascal.cs
 
 %union { 			public double dVal; 
 			public int iVal; 
@@ -20,7 +20,7 @@
 
 %using ProgramTree;
 
-%namespace SimpleParser
+%namespace SimpleParserPascal
 
 %token BEGIN END ASSIGN SEMICOLON PLUS MINUS PROD DIV LB RB COMMA IF ELSE THEN WHILE DO REPEAT UNTIL LESS MORE LESSEQUAL MOREEQUAL EQUAL NOTEQUAL NOT POINT
 %token <iVal> INUM 
@@ -83,22 +83,22 @@ assign 	: ident ASSIGN expr { $$ = new AssignNode($1 as IdNode, $3); }
 		;
 
 expr	: T { $$ = $1; }
-		| T PROD expr { $$ = new BinaryNode($1, $3, BinaryType.Mult); }
-		| T DIV expr { $$ = new BinaryNode($1, $3, BinaryType.Div); }
+		| T PROD expr { $$ = new BinaryNode($1, $3, BinaryOperation.Mult); }
+		| T DIV expr { $$ = new BinaryNode($1, $3, BinaryOperation.Div); }
 		;
 
 T 		: U { $$ = $1; }
-		| U PLUS expr { $$ = new BinaryNode($1, $3, BinaryType.Plus); }
-		| U MINUS expr { $$ = new BinaryNode($1, $3, BinaryType.Minus); }
+		| U PLUS expr { $$ = new BinaryNode($1, $3, BinaryOperation.Plus); }
+		| U MINUS expr { $$ = new BinaryNode($1, $3, BinaryOperation.Minus); }
 		;
 		
 U		: F { $$ = $1; }
-		| F LESS expr { $$ = new BinaryNode($1, $3, BinaryType.Less); }
-		| F MORE expr { $$ = new BinaryNode($1, $3, BinaryType.More); }
-		| F LESSEQUAL expr { $$ = new BinaryNode($1, $3, BinaryType.LessEqual); }
-		| F MOREEQUAL expr { $$ = new BinaryNode($1, $3, BinaryType.MoreEqual); }
-		| F EQUAL expr { $$ = new BinaryNode($1, $3, BinaryType.Equal); }
-		| F NOTEQUAL expr { $$ = new BinaryNode($1, $3, BinaryType.NotEqual); }
+		| F LESS expr { $$ = new BinaryNode($1, $3, BinaryOperation.Less); }
+		| F MORE expr { $$ = new BinaryNode($1, $3, BinaryOperation.Greater); }
+		| F LESSEQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.LessEqual); }
+		| F MOREEQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.GreaterEqual); }
+		| F EQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
+		| F NOTEQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
 		| NOT expr { $$ = new UnaryNode($2, UnaryOperation.Not); }
 		;
 		

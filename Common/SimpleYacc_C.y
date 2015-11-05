@@ -3,7 +3,7 @@
     public Parser(AbstractScanner<ValueType, LexLocation> scanner) : base(scanner) { }
 %}
 
-%output = SimpleYacc.cs
+%output = SimpleYaccC.cs
 
 %union {
 			public double dVal;
@@ -21,7 +21,7 @@
 
 %using ProgramTree;
 
-%namespace SimpleParser
+%namespace SimpleParserC
 
 %token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA
 %token <iVal> INUM

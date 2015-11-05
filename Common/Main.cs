@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using SimpleScanner;
-using SimpleParser;
 using SimpleLang;
+using CompilerExceptions;
 
 namespace SimpleCompiler
 {
@@ -23,14 +22,14 @@ namespace SimpleCompiler
                     string content = File.ReadAllText(file);
                     Console.Write("File ...\\" + file.Substring(file.LastIndexOf('\\')) + "... ");
 
-                    Scanner scanner = new Scanner();
+                    SimpleScannerC.Scanner scanner = new SimpleScannerC.Scanner();
                     scanner.SetSource(content, 0);
 
-                    Parser parser = new Parser(scanner);
+                    SimpleParserC.Parser parser = new SimpleParserC.Parser(scanner);
 
                     if (parser.Parse()) 
                     {
-                        Console.WriteLine("Синтаксическое дерево построено");
+                        Console.WriteLine("Syntax tree ready");
 
                         Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
                         codeGenerator.Visit(parser.root);
@@ -39,19 +38,19 @@ namespace SimpleCompiler
                         var code = codeGenerator.CreateCode();
                         Console.WriteLine(code);
                     }
-                    else Console.WriteLine("Ошибка");
+                    else Console.WriteLine("Unexpected error");
                 }
-                catch (FileNotFoundException)
+                catch (FileNotFoundException e)
                 {
-                    Console.WriteLine("Файл {0} не найден", file);
+                    Console.WriteLine("File not found: "+ file);
                 }
                 catch (LexException e)
                 {
-                    Console.WriteLine("Лексическая ошибка. " + e.Message);
+                    Console.WriteLine("Lexer error: " + e.Message);
                 }
                 catch (SyntaxException e)
                 {
-                    Console.WriteLine("Синтаксическая ошибка. " + e.Message);
+                    Console.WriteLine("Syntax error: " + e.Message);
                 }
             }
 

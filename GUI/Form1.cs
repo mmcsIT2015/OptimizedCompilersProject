@@ -10,9 +10,8 @@ using System.Windows.Forms;
 
 using System.IO;
 
+using CompilerExceptions;
 using SimpleCompiler;
-using SimpleScanner;
-using SimpleParser;
 using SimpleLang;
 
 namespace GUI
@@ -64,10 +63,10 @@ namespace GUI
                 ResultView.Text = string.Empty;
                 string content = WorkingArea.Text;
 
-                Scanner scanner = new Scanner();
+                SimpleScannerC.Scanner scanner = new SimpleScannerC.Scanner();
                 scanner.SetSource(content, 0);
 
-                Parser parser = new Parser(scanner);
+                SimpleParserC.Parser parser = new SimpleParserC.Parser(scanner);
 
                 if (parser.Parse())
                 {

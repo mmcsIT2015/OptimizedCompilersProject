@@ -1,8 +1,9 @@
-%using SimpleParser;
+%using CompilerExceptions;
 %using QUT.Gppg;
 %using System.Linq;
+%using SimpleParserC;
 
-%namespace SimpleScanner
+%namespace SimpleScannerC
 
 Alpha 	[a-zA-Z_]
 Digit   [0-9]

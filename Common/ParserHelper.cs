@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimpleParser
+namespace CompilerExceptions
 {
     public class LexException : Exception
     {
