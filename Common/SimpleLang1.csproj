@@ -47,6 +47,7 @@
     <Compile Include="Code\Block.cs" />
     <Compile Include="DataFlow.cs" />
     <Compile Include="Code\Gen3AddrCodeVisitor.cs" />
+    <Compile Include="FileLoader.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="Code\Line.cs" />
     <Compile Include="Main.cs" />

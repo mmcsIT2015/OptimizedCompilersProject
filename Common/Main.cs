@@ -12,33 +12,23 @@ namespace SimpleCompiler
         {
             List<string> files = new List<string>();
 
-            files.Add(@"..\..\a.txt");
+            files.Add(@"..\..\test_cso.cn");
             //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
 
             foreach (var file in files)
             {
                 try
                 {
-                    string content = File.ReadAllText(file);
-                    Console.Write("File ...\\" + file.Substring(file.LastIndexOf('\\')) + "... ");
+                    var root = FileLoader.Parse(file, System.Text.Encoding.UTF8);
+                    
+                    Console.WriteLine("Syntax tree ready");
 
-                    SimpleScannerC.Scanner scanner = new SimpleScannerC.Scanner();
-                    scanner.SetSource(content, 0);
-
-                    SimpleParserC.Parser parser = new SimpleParserC.Parser(scanner);
-
-                    if (parser.Parse()) 
-                    {
-                        Console.WriteLine("Syntax tree ready");
-
-                        Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
-                        codeGenerator.Visit(parser.root);
+                    Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+                    codeGenerator.Visit(root);
 
                         // DEBUG Can watch result here
-                        var code = codeGenerator.CreateCode();
-                        Console.WriteLine(code);
-                    }
-                    else Console.WriteLine("Unexpected error");
+                    var code = codeGenerator.CreateCode();
+                    Console.WriteLine(code);                    
                 }
                 catch (FileNotFoundException e)
                 {
@@ -51,6 +41,10 @@ namespace SimpleCompiler
                 catch (SyntaxException e)
                 {
                     Console.WriteLine("Syntax error: " + e.Message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unexpected error: " + e.Message);
                 }
             }
 
