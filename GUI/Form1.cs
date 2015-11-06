@@ -75,6 +75,9 @@ namespace GUI
 
                 var code = codeGenerator.CreateCode();
 
+                CommonSubexpressionsOptimization cso = new CommonSubexpressionsOptimization(code);
+                cso.Optimize();
+
                 ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);                                
             }
             catch (FileNotFoundException ee)
