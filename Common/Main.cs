@@ -12,7 +12,7 @@ namespace SimpleCompiler
         {
             List<string> files = new List<string>();
 
-            files.Add(@"..\..\test_cso.cn");
+            files.Add(@"..\..\in.pasn");
             //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
 
             foreach (var file in files)

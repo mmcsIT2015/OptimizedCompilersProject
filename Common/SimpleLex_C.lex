@@ -20,7 +20,7 @@ ID {Alpha}{AlphaDigit}*
 	return (int)Tokens.INUM; 
   }
 
-  throw new SyntaxException(yytext + " не является числом типа `INTNUM`");
+  throw new SyntaxException(yytext + " isn't a value of type `INTNUM`");
 }
 
 {REALNUM} { 
@@ -29,7 +29,7 @@ ID {Alpha}{AlphaDigit}*
 	return (int)Tokens.RNUM; 
   }
   
-  throw new SyntaxException(yytext + " не является числом типа `REALNUM`");
+  throw new SyntaxException(yytext + " isn't a value of type `REALNUM`");
 }
 
 {ID}  {
@@ -69,13 +69,13 @@ ID {Alpha}{AlphaDigit}*
 public override void yyerror(string format, params object[] args) // обработка синтаксических ошибок
 {
   var ww = args.Skip(1).Cast<string>().ToArray();
-  string errorMsg = string.Format("({0},{1}): Встречено {2}, а ожидалось {3}", yyline, yycol, args[0], string.Join(" или ", ww));
+  string errorMsg = string.Format("({0},{1}): Encountered {2}, but expected {3}.", yyline, yycol, args[0], string.Join(" OR ", ww));
   throw new SyntaxException(errorMsg);
 }
 
 public void LexError()
 {
-  string errorMsg = string.Format("({0},{1}): Неизвестный символ {2}", yyline, yycol, yytext);
+  string errorMsg = string.Format("({0},{1}): Unknown symbol: {2}", yyline, yycol, yytext);
   throw new LexException(errorMsg);
 }
 
