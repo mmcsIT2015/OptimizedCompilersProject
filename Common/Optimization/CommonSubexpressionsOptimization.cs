@@ -132,11 +132,13 @@ namespace SimpleLang
 
         public override void Optimize(params Object[] values)
         {
-            Dictionary<string, Value> dict = new Dictionary<string, Value>();
             foreach (Block block in Code.blocks)
+            {
+                Dictionary<string, Value> dict = new Dictionary<string, Value>();
                 foreach (Line.Line line in block)
                     if (line.Is<Line.Operation>())
                         Iteration(dict, line as Line.Operation);
+            }
         }
     }
 }
