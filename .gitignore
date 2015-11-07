@@ -1,0 +1,13 @@
+# Folders
+.vs/
+bin/
+obj/
+
+# Visual studio files.
+*.sdf
+*.pdb
+*.suo
+
+# Generated files.
+Common/SimpleLex.cs
+Common/SimpleYacc.cs
