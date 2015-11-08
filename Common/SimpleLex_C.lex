@@ -55,10 +55,7 @@ ID {Alpha}{AlphaDigit}*
 "==" { return (int)Tokens.EQUAL; }
 "!=" { return (int)Tokens.INEQUAL; }
 "," { return (int)Tokens.COMMA; }
-<<<<<<< HEAD
 "!" { return (int)Tokens.NOT; }
-=======
->>>>>>> 5ed01454fc05e4df8cd497e3fbd6fc8385e6541a
 
 [^\t \r\n] {
 	LexError();

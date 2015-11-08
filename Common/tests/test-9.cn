@@ -1,14 +1,6 @@
-<<<<<<< HEAD
 ﻿{
 	if (a1 > 5)
 	do 
 	  c1 = 8 + a2;
 	while (a1 > 5);
-=======
-﻿{
-	if (a1 > 5)
-	do 
-	  c1 = 8 + a2;
-	while (a1 > 5);
->>>>>>> 5ed01454fc05e4df8cd497e3fbd6fc8385e6541a
 }
