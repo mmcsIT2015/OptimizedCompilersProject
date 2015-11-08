@@ -11,11 +11,11 @@ namespace SimpleLang.Code
     ///     Инициализация
     ///     CFG g = new CFG(threeAddrCode.blocks);
     ///     
-    ///     Получить список всех блоков, следующих за блоком b
-    ///     foreach(Block b in g.GetOutBlocks(b)) {...}
+    ///     Получить список всех блоков, следующих за блоком b1
+    ///     foreach(Block b in g.GetOutBlocks(b1)) {...}
     ///     
-    ///     Получить список всех блоков, предшествующих блоку b
-    ///     foreach(Block b in g.GetInBlocks(b)) {...}
+    ///     Получить список всех блоков, предшествующих блоку b1
+    ///     foreach(Block b in g.GetInBlocks(b1)) {...}
     /// </summary>
     public class CFG
     {

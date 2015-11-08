@@ -28,15 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.CreateNew = new System.Windows.Forms.ToolStripMenuItem();
             this.OpenFile = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveFile = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveFileAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.GrammarToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.RunItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WorkingArea = new System.Windows.Forms.TextBox();
             this.ResultView = new System.Windows.Forms.TextBox();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,11 +49,12 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileMenu,
+            this.GrammarToolStripComboBox,
             this.RunItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1313, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1313, 32);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -61,72 +66,99 @@
             this.SaveFile,
             this.SaveFileAs});
             this.FileMenu.Name = "FileMenu";
-            this.FileMenu.Size = new System.Drawing.Size(44, 24);
+            this.FileMenu.Size = new System.Drawing.Size(44, 28);
             this.FileMenu.Text = "File";
             // 
             // CreateNew
             // 
             this.CreateNew.Name = "CreateNew";
-            this.CreateNew.Size = new System.Drawing.Size(152, 24);
+            this.CreateNew.Size = new System.Drawing.Size(175, 24);
             this.CreateNew.Text = "Create new";
             this.CreateNew.Click += new System.EventHandler(this.CreateNewFile_Click);
             // 
             // OpenFile
             // 
             this.OpenFile.Name = "OpenFile";
-            this.OpenFile.Size = new System.Drawing.Size(152, 24);
+            this.OpenFile.Size = new System.Drawing.Size(175, 24);
             this.OpenFile.Text = "Open";
             this.OpenFile.Click += new System.EventHandler(this.OpenFile_Click);
             // 
             // SaveFile
             // 
             this.SaveFile.Name = "SaveFile";
-            this.SaveFile.Size = new System.Drawing.Size(152, 24);
+            this.SaveFile.Size = new System.Drawing.Size(175, 24);
             this.SaveFile.Text = "Save";
             this.SaveFile.Click += new System.EventHandler(this.Save_Click);
             // 
             // SaveFileAs
             // 
             this.SaveFileAs.Name = "SaveFileAs";
-            this.SaveFileAs.Size = new System.Drawing.Size(152, 24);
+            this.SaveFileAs.Size = new System.Drawing.Size(175, 24);
             this.SaveFileAs.Text = "Save as";
             this.SaveFileAs.Click += new System.EventHandler(this.SaveAs_Click);
+            // 
+            // GrammarToolStripComboBox
+            // 
+            this.GrammarToolStripComboBox.AutoCompleteCustomSource.AddRange(new string[] {
+            "С/С++",
+            "Pascal"});
+            this.GrammarToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GrammarToolStripComboBox.Items.AddRange(new object[] {
+            "С/С++",
+            "Pascal"});
+            this.GrammarToolStripComboBox.Name = "GrammarToolStripComboBox";
+            this.GrammarToolStripComboBox.Size = new System.Drawing.Size(121, 28);
+            this.GrammarToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.GrammarToolStripComboBox_SelectedIndexChanged);
+            this.GrammarToolStripComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // RunItem
             // 
             this.RunItem.Image = global::GUI.Properties.Resources.run;
             this.RunItem.Name = "RunItem";
-            this.RunItem.Size = new System.Drawing.Size(72, 24);
+            this.RunItem.Size = new System.Drawing.Size(72, 28);
             this.RunItem.Text = "Start";
             this.RunItem.Click += new System.EventHandler(this.RunParser_Click);
             // 
             // WorkingArea
             // 
             this.WorkingArea.AcceptsTab = true;
-            this.WorkingArea.Dock = System.Windows.Forms.DockStyle.Left;
+            this.WorkingArea.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.WorkingArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.WorkingArea.Location = new System.Drawing.Point(0, 28);
+            this.WorkingArea.Location = new System.Drawing.Point(0, 32);
             this.WorkingArea.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.WorkingArea.MaxLength = 0;
             this.WorkingArea.Multiline = true;
             this.WorkingArea.Name = "WorkingArea";
             this.WorkingArea.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.WorkingArea.Size = new System.Drawing.Size(751, 693);
+            this.WorkingArea.Size = new System.Drawing.Size(736, 689);
             this.WorkingArea.TabIndex = 1;
             this.WorkingArea.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.WorkingArea.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // ResultView
             // 
-            this.ResultView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ResultView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ResultView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ResultView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ResultView.Location = new System.Drawing.Point(751, 28);
+            this.ResultView.Location = new System.Drawing.Point(737, 32);
             this.ResultView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ResultView.Multiline = true;
             this.ResultView.Name = "ResultView";
             this.ResultView.ReadOnly = true;
             this.ResultView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.ResultView.Size = new System.Drawing.Size(562, 693);
+            this.ResultView.Size = new System.Drawing.Size(576, 689);
             this.ResultView.TabIndex = 2;
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn";
             // 
             // Form1
             // 
@@ -136,11 +168,11 @@
             this.Controls.Add(this.ResultView);
             this.Controls.Add(this.WorkingArea);
             this.Controls.Add(this.menuStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MaximizeBox = false;
             this.Name = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -159,6 +191,9 @@
         private System.Windows.Forms.ToolStripMenuItem SaveFileAs;
         private System.Windows.Forms.ToolStripMenuItem RunItem;
         private System.Windows.Forms.ToolStripMenuItem CreateNew;
+        private System.Windows.Forms.ToolStripComboBox GrammarToolStripComboBox;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
