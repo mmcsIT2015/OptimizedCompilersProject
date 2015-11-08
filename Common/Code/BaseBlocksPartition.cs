@@ -6,7 +6,7 @@ using System.Text;
 namespace SimpleLang
 {
     /// <summary>
-    /// Класс изменяет входящий threeAddrCode - на выходе этот код будет разбит на блоки и будет построен граф переходов между блоками
+    /// Класс изменяет входящий threeAddrCode - на выходе этот код будет разбит на блоки
     /// (!)
     /// Вызывать вручную разбиение на блоки не требуется - оно происходит при конструировании трехадресного кода из List<Line.Line>.
     /// </summary>
@@ -35,6 +35,15 @@ namespace SimpleLang
 
             if (currentBlock.Count() > 0) blocks.Add(currentBlock);
 
+            threeAddrCode.blocks = blocks;
+            
+        }
+
+        //!удалить
+        public static void CreateCFG(ThreeAddrCode threeAddrCode)
+        {
+            List<Block> blocks = threeAddrCode.blocks;
+
             Dictionary<string, int> labelsToBlocksIndexes = new Dictionary<string, int>();
             for (int i = 0; i < blocks.Count(); i++)
             {
@@ -46,7 +55,7 @@ namespace SimpleLang
             {
                 graph[i] = new List<int>(2);
             }
-                
+
             for (int i = 0; i < blocks.Count(); i++)
             {
                 var line = blocks[i].Last();
@@ -65,7 +74,6 @@ namespace SimpleLang
                 }
             }
 
-            threeAddrCode.blocks = blocks;
             threeAddrCode.graph = graph;
         }
     }

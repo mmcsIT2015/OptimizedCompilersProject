@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SimpleLang.Code;
 
 namespace SimpleLang
 {
@@ -77,13 +78,13 @@ namespace SimpleLang
         public Dictionary<string, Label> labels; // содержит список меток и адресом этих меток в blocks
         public List<Block> blocks; // содержит массив с блоками
 
-        public bool Verbose { get; set; }
-
+        //!удалить
         //граф переходов между базовыми блоками (по индексам в массиве)
         //Пример: получить список всех дуг (переходов) из 5-ого блока
-        //  List<int> d = graph[5];
+        // List<int> d = graph[5];
         public Dictionary<int, List<int>> graph; 
 
+        //!удалить
         //получить обратный граф переходов между базовыми блоками
         //Пример: получить список всех дуг (переходов) в 5-ый блок
         //  List<int> d = graph[5];
@@ -106,27 +107,38 @@ namespace SimpleLang
             return reversedGraph;
         }
 
+        //Переменная графа потока управления
+        CFG cfg;
+
         public ThreeAddrCode()
         {
-            Verbose = false;
-
             blocks = new List<Block>() { new Block() };
             labels = new Dictionary<string, Label>();
+            
+            //!удалить
             graph = null;
+            cfg = null;
         }
 
         public ThreeAddrCode(Block lines)
         {
-            Verbose = false;
-
             blocks = new List<Block>();
             blocks.Add(lines);
 
             labels = new Dictionary<string, Label>();
+
+            //!удалить
             graph = null;
 
             BaseBlocksPartition.Partition(this);
+
+            //старый граф
+            BaseBlocksPartition.CreateCFG(this);
+            //новый граф
+            cfg = new CFG(this.blocks);
         }
+
+        
 
         public void NewBlock()
         {
@@ -140,32 +152,12 @@ namespace SimpleLang
         public override string ToString()
         {
             var builder = new StringBuilder();
-            if (graph == null)
+            foreach (var block in blocks)
             {
-                foreach (var block in blocks)
-                {
-                    builder.Append(block.ToString());
-                    builder.Append("\n\n");
-                }
-            }
-            else
-            {
-                for (int i = 0; i < blocks.Count(); i++)
-                {
-                    if (Verbose) builder.Append("BLOCK " + i + "\n");
-
-                    builder.Append(blocks[i].ToString());
-
-                    if (Verbose)
-                    {
-                        builder.Append("TRANSITION TO BLOCKS: ");
-                        foreach (int index in graph[i])
-                        {
-                            builder.Append(" " + index);
-                        }
-                        builder.Append("\n\n");
-                    }
-                }
+                builder.Append(block.ToString());
+                //builder.Append("Count of blocks to transition: " + cfg.GetOutBlocks(block).Count()+'\n');
+                //builder.Append("Count of blocks to transition from: " + cfg.GetInBlocks(block).Count());
+                builder.Append("\n");
             }
             return builder.ToString();
         }

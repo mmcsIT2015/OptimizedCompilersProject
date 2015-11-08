@@ -26,7 +26,6 @@ namespace GUI
         public Form1()
         {
             InitializeComponent();
-            SelectGrammar.SelectedIndex = 0;
             CreateNewFile_Click(null, EventArgs.Empty);
         }
 
@@ -34,7 +33,7 @@ namespace GUI
         {            
             OpenFileDialog openFileDialog1 = new OpenFileDialog();            
             //openFileDialog1.InitialDirectory = "c:\\";
-            openFileDialog1.Filter = "pasn files (*.pasn)|*.pasn|cn files (*.cn)|*.cn";
+            openFileDialog1.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn";
             openFileDialog1.FilterIndex = 0;
             openFileDialog1.RestoreDirectory = true;
 
@@ -42,13 +41,9 @@ namespace GUI
             {
                 try
                 {
+                    fullFilename = openFileDialog1.FileName;
                     WorkingArea.Text = File.ReadAllText(openFileDialog1.FileName, Encoding.UTF8);
                     type = FileLoader.GetGrammarType(openFileDialog1.FileName);
-                    if (type == FileLoader.GrammarType.C)
-                        SelectGrammar.SelectedIndex = 0;
-                    else
-                        SelectGrammar.SelectedIndex = 1;
-                    
                 }
                 catch (Exception ex)
                 {
@@ -106,7 +101,7 @@ namespace GUI
             {
                 File.WriteAllText(fullFilename, WorkingArea.Text, Encoding.UTF8);
                 textModified = false;
-                Text = formName + " - " + Path.GetFileName(fullFilename);
+                Text = formName + " - " + fullFilename;
             }
         }
 
@@ -114,7 +109,7 @@ namespace GUI
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
-            saveFileDialog1.Filter = "pasn files (*.pasn)|*.pasn|cn files (*.cn)|*.cn";
+            saveFileDialog1.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn";
             saveFileDialog1.FilterIndex = 0;
             saveFileDialog1.RestoreDirectory = true;
 
@@ -123,7 +118,7 @@ namespace GUI
                 File.WriteAllText(saveFileDialog1.FileName, WorkingArea.Text, Encoding.UTF8);
                 textModified = false;
                 fullFilename = saveFileDialog1.FileName;
-                Text = formName + " - " + Path.GetFileName(fullFilename);
+                Text = formName + " - " + fullFilename;
             }
         }
 
