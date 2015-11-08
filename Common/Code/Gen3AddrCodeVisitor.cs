@@ -35,7 +35,7 @@ namespace SimpleLang
 
         public Gen3AddrCodeVisitor()
         {
-
+            UniqueIdsGenerator.Instance().Reset();
         }
 
         private void replaceAllReferencesToLabel(string what, string forWhat)

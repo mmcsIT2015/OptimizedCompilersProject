@@ -31,6 +31,11 @@ namespace SimpleLang
             return mInstance;
         }
 
+        public void Reset()
+        {
+            mCounters.Clear();
+        }
+
         public string Get(String prefix)
         {
             if (!mCounters.ContainsKey(prefix)) mCounters.Add(prefix, 0);
