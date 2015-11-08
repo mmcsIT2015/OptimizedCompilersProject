@@ -10,11 +10,13 @@ namespace SimpleLang.Line
     {
         public string label = "";
 
-        public virtual bool IsEmpty() {
+        public virtual bool IsEmpty() // является ли строка пустым оператором
+        {
             return true;
         }
 
-        public virtual bool HasLabel() {
+        public virtual bool HasLabel() // есть ли у строки метка
+        {  
             return label != "";
         }
 
@@ -97,7 +99,7 @@ namespace SimpleLang.Line
             this.destination = dest;
         }
 
-        public virtual bool IsVoid()
+        public virtual bool IsVoid() // есть ли у функции возвращаемый параметр
         {
             return destination == null || destination.Count() == 0;
         }
@@ -105,7 +107,7 @@ namespace SimpleLang.Line
 
     class Operation : NonEmptyLine
     {
-        private static ISet<BinaryOperation> mBoolOps= new HashSet<BinaryOperation> {
+        private static ISet<BinaryOperation> mBoolOps = new HashSet<BinaryOperation> {
             BinaryOperation.Equal,
             BinaryOperation.Less,
             BinaryOperation.LessEqual,
@@ -126,7 +128,7 @@ namespace SimpleLang.Line
         public string second;
         public BinaryOperation operation;
 
-        // Бинарная операция
+        // Конструктор для бинарного выражения в правой части
         public Operation(string left, string first, BinaryOperation op, string second)
         {
             this.left = left;
@@ -135,7 +137,7 @@ namespace SimpleLang.Line
             this.second = second;
         }
 
-        // Тождество
+        // Конструктор для создания тождества
         public Operation(string left, string first)
         {
             this.left = left;
@@ -150,33 +152,38 @@ namespace SimpleLang.Line
             return false;
         }
 
-        public virtual bool IsIdentity()
+        public virtual bool IsIdentity() // является ли строка тождеством (a = b)
         {
             return second == "" && operation == BinaryOperation.None;
         }
 
-        public virtual bool IsBoolExpr()
+        public virtual bool IsBoolExpr() // является ли строка арифметическим выражением (операции +,-,*,/)
         {
             return mBoolOps.Contains(operation);
         }
 
-        public virtual bool IsArithmExpr()
+        public virtual bool IsArithmExpr() // является ли строка логическим выражением (операции <= >=, <, >, !=)
         {
             return mArithmOps.Contains(operation);
         }
 
-        public virtual bool FirstParamIsNumber()
+        public virtual bool FirstParamIsNumber() // является ли первый параметр правой части числом
         {
             double temp;
             return double.TryParse(first, out temp);
         }
 
-        public virtual bool SecondParamIsNumber()
+        public virtual bool SecondParamIsNumber() // является ли второй параметр правой части числом
         {
             double temp;
             return double.TryParse(second, out temp);
         }
 
+        /// Преобразует правую часть выражения в указанное значение
+        /// (т.е. преобразует линию в тождество).
+        /// Пример:
+        /// line = `a = b + c`
+        /// line.ToIdentity("z") -> `a = z`
         public void ToIdentity(string value)
         {
             first = value;
