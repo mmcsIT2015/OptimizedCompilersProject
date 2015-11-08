@@ -103,9 +103,14 @@ U		: F { $$ = $1; }
 		;
 		
 F       : ident  { $$ = $1 as IdNode; }
+<<<<<<< HEAD
 		| MINUS ident { $$ = new UnaryNode($2, UnaryOperation.Minus); }
 		| INUM { $$ = new IntNumNode($1); }
 		| MINUS INUM { $$ = new IntNumNode(-$2); }
+=======
+		| MINUS INUM { $$ = new IntNumNode($2); }
+		| INUM { $$ = new IntNumNode($1); }
+>>>>>>> 5ed01454fc05e4df8cd497e3fbd6fc8385e6541a
 		| LB expr RB { $$ = $2; }
 		| funcall { $$ = $1; }
 		;

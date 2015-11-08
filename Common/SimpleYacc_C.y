@@ -23,7 +23,11 @@
 
 %namespace SimpleParserC
 
+<<<<<<< HEAD
 %token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA NOT
+=======
+%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA
+>>>>>>> 5ed01454fc05e4df8cd497e3fbd6fc8385e6541a
 %token <iVal> INUM
 %token <dVal> RNUM
 %token <sVal> ID
@@ -95,7 +99,10 @@ expr : S { $$ = $1; }
     | expr GREAT S { $$ = new BinaryNode($1, $3, BinaryOperation.Greater); }
     | expr EQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
     | expr INEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
+<<<<<<< HEAD
 	| NOT expr { $$ = new UnaryNode($2, UnaryOperation.Not); }
+=======
+>>>>>>> 5ed01454fc05e4df8cd497e3fbd6fc8385e6541a
     ;
 
 S : T { $$ = $1; }
@@ -109,9 +116,13 @@ T : F { $$ = $1; }
     ;
 
 F : ident { $$ = $1 as IdNode; }
+<<<<<<< HEAD
 	| MINUS ident { $$ = new UnaryNode($2, UnaryOperation.Minus); }
     | INUM { $$ = new IntNumNode($1); }
 	| MINUS INUM { $$ = new IntNumNode(-$2); }
+=======
+    | INUM { $$ = new IntNumNode($1); }
+>>>>>>> 5ed01454fc05e4df8cd497e3fbd6fc8385e6541a
     | LBRACKET expr RBRACKET { $$ = $2; }
     | funcall { $$ = $1; }
     ;

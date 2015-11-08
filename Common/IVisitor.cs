@@ -18,9 +18,15 @@ namespace SimpleLang
         void Visit(BinaryNode node);
         void Visit(IdNode node);
         void Visit(IntNumNode node);
+<<<<<<< HEAD
         void Visit(FloatNumNode node);
         void Visit(FunctionNodeSt node);
         void Visit(FunctionNode node);
         void Visit(UnaryNode node);
+=======
+        void Visit(FloatNumNode node);
+        void Visit(FunctionNodeSt node);
+        void Visit(FunctionNode node);
+>>>>>>> 5ed01454fc05e4df8cd497e3fbd6fc8385e6541a
     }
 }

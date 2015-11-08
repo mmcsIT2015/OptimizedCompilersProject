@@ -15,12 +15,22 @@ namespace SimpleLang
     /// ====
     ///     Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
     ///     codeGenerator.Visit(parser.root);
+<<<<<<< HEAD
     ///     var code = codeGenerator.CreateCode();
 
     ///     DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code/*, 1*/);
     ///     deadCodeElimination.Optimize();
 
     ///     Console.WriteLine(code);
+=======
+    ///     
+    ///     BaseBlocksPartition baseBlocksPartition = new BaseBlocksPartition(codeGenerator.Code);
+    ///
+    ///     DeadCodeElimination deadCodeElimination = new DeadCodeElimination(codeGenerator.Code/*, 1*/);
+    ///     deadCodeElimination.Optimize();
+    ///     
+    ///     Console.WriteLine(codeGenerator.Code);
+>>>>>>> 5ed01454fc05e4df8cd497e3fbd6fc8385e6541a
     /// </summary>
     public class DeadCodeElimination : IOptimizer
     {

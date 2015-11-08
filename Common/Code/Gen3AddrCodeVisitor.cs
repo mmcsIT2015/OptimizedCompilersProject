@@ -233,6 +233,7 @@ namespace SimpleLang
         {
             mStack.Push(node.Num.ToString());
         }
+<<<<<<< HEAD
 
         public void Visit(UnaryNode node)
         {
@@ -245,5 +246,7 @@ namespace SimpleLang
 
            // mLines.Add(new Line.Operation(temp, expr, node.Op));
         }
+=======
+>>>>>>> 5ed01454fc05e4df8cd497e3fbd6fc8385e6541a
     }
 }
