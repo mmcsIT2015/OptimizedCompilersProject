@@ -46,11 +46,16 @@
     <Compile Include="Code\BaseBlocksPartition.cs" />
     <Compile Include="Code\Block.cs" />
     <Compile Include="Code\CFG.cs" />
+    <Compile Include="Code\Line\FunctionCall.cs" />
+    <Compile Include="Code\Line\FunctionParam.cs" />
+    <Compile Include="Code\Line\GoTo.cs" />
+    <Compile Include="Code\Line\Operation.cs" />
+    <Compile Include="Code\Line\СonditionalJump.cs" />
     <Compile Include="DataFlow.cs" />
     <Compile Include="Code\Gen3AddrCodeVisitor.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="IVisitor.cs" />
-    <Compile Include="Code\Line.cs" />
+    <Compile Include="Code\Line\Line.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Optimization\CommonSubexpressionsOptimization.cs" />
     <Compile Include="Optimization\ConstantFolding.cs" />
