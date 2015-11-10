@@ -8,23 +8,26 @@ namespace SimpleLang.Code
     /// <summary>
     /// Объект графа потока управления
     /// Использование:
-    ///     Инициализация
-    ///     CFG g = new CFG(threeAddrCode.blocks);
+    ///     - Инициализация
+    ///     var graph = new ControlFlowGraph(threeAddrCode.blocks);
     ///     
-    ///     Получить список всех блоков, следующих за блоком b1
-    ///     foreach(Block b in g.GetOutBlocks(b1)) {...}
+    ///     - Получить список всех блоков, в которые есть вход из блока `source`
+    ///     foreach (var block in graph.OutEdges(source)) {...}
     ///     
-    ///     Получить список всех блоков, предшествующих блоку b1
-    ///     foreach(Block b in g.GetInBlocks(b1)) {...}
+    ///     - Получить список всех блоков, из которых есть вход в блок `sink`
+    ///     foreach (var block in graph.InEdges(sink)) {...}
     /// </summary>
-    public class CFG
+    public class ControlFlowGraph : IGraph<Block>
     {
-        private Dictionary<Block, IList<Block>> graph;
-        private Dictionary<Block, IList<Block>> reversedGraph;
+        private Block mEntryPoint;
+        private Dictionary<Block, IList<Block>> mGraph;
+        private Dictionary<Block, IList<Block>> mReversedGraph;
 
         private Dictionary<int, List<int>> getIndexedGraph(IList<Block> blocks)
         {
-            Dictionary<string, int> labelsToBlocksIndexes = new Dictionary<string, int>();
+            mEntryPoint = blocks.First();
+
+            var labelsToBlocksIndexes = new Dictionary<string, int>();
             for (int i = 0; i < blocks.Count(); i++)
             {
                 if (blocks[i][0].HasLabel()) labelsToBlocksIndexes[blocks[i][0].label] = i;
@@ -64,47 +67,62 @@ namespace SimpleLang.Code
             for (int i = 0; i < graph.Count(); i++)
             {
                 foreach (int j in graph[i])
+                {
                     graphTable[i, j] = true;
+                }
             }
+
             Dictionary<int, List<int>> reversedGraph = new Dictionary<int, List<int>>();
+            for (int i = 0; i < graph.Count(); i++) reversedGraph[i] = new List<int>(2);
             for (int i = 0; i < graph.Count(); i++)
-                reversedGraph[i] = new List<int>(2);
-            for (int i = 0; i < graph.Count(); i++)
+            {
                 for (int j = 0; j < graph.Count(); j++)
-                    if (graphTable[i, j])
-                        reversedGraph[j].Add(i);
+                {
+                    if (graphTable[i, j]) reversedGraph[j].Add(i);
+                }
+            }
+
             return reversedGraph;
         }
 
-        public CFG(IList<Block> blocks)
+        public ControlFlowGraph(IList<Block> blocks)
         {
-            graph = new Dictionary<Block, IList<Block>>();
+            mGraph = new Dictionary<Block, IList<Block>>();
             var indGr = getIndexedGraph(blocks);
             for (int i = 0; i < blocks.Count; i++)
             {
-                graph[blocks[i]] = new List<Block>(2);
+                mGraph[blocks[i]] = new List<Block>(2);
                 foreach (Block b in indGr[i].Select(ind => blocks[ind]))
-                    graph[blocks[i]].Add(b);
+                {
+                    mGraph[blocks[i]].Add(b);
+                }
             }
 
-            reversedGraph = new Dictionary<Block, IList<Block>>();
-            var revIndGr = getReversedIndexedGraph(indGr);
+            mReversedGraph = new Dictionary<Block, IList<Block>>();
+            var indices = getReversedIndexedGraph(indGr);
             for (int i = 0; i < blocks.Count; i++)
             {
-                reversedGraph[blocks[i]] = new List<Block>();
-                foreach (Block b in revIndGr[i].Select(ind => blocks[ind]))
-                    reversedGraph[blocks[i]].Add(b);
+                mReversedGraph[blocks[i]] = new List<Block>();
+                foreach (Block block in indices[i].Select(ind => blocks[ind]))
+                {
+                    mReversedGraph[blocks[i]].Add(block);
+                }
             }
         }
 
-        public IEnumerable<Block> GetOutBlocks(Block block)
+        public Block EntryPoint()
         {
-            return graph[block];
+            return mEntryPoint;
         }
 
-        public IEnumerable<Block> GetInBlocks(Block block)
+        public IEnumerable<Block> OutEdges(Block block)
         {
-            return reversedGraph[block];
+            return mGraph[block];
+        }
+
+        public IEnumerable<Block> InEdges(Block block)
+        {
+            return mReversedGraph[block];
         }
     }
 }

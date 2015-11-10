@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SimpleLang.Code;
+using System.Diagnostics;
 
 namespace SimpleLang
 {
@@ -78,46 +79,14 @@ namespace SimpleLang
         public Dictionary<string, Label> labels; // содержит список меток и адресом этих меток в blocks
         public List<Block> blocks; // содержит массив с блоками
 
-        //!удалить
-        //граф переходов между базовыми блоками (по индексам в массиве)
-        //Пример: получить список всех дуг (переходов) из 5-ого блока
-        // List<int> d = graph[5];
-        public Dictionary<int, List<int>> graph; 
-
-        //!удалить
-        //получить обратный граф переходов между базовыми блоками
-        //Пример: получить список всех дуг (переходов) в 5-ый блок
-        //  List<int> d = graph[5];
-        public Dictionary<int, List<int>> GetReversedGraph()
-        {
-            bool[,] graphTable = new bool[blocks.Count(), blocks.Count()];
-            graphTable.Initialize();
-            for (int i = 0; i < blocks.Count(); i++)
-            {
-                foreach (int j in graph[i])
-                    graphTable[i, j] = true;
-            }
-            Dictionary<int, List<int>> reversedGraph = new Dictionary<int, List<int>>();
-            for (int i = 0; i < blocks.Count(); i++)
-                reversedGraph[i] = new List<int>(2);
-            for (int i = 0; i < blocks.Count(); i++)
-                for (int j = 0; j < blocks.Count(); j++)
-                    if (graphTable[i, j])
-                        reversedGraph[j].Add(i);
-            return reversedGraph;
-        }
-
-        //Переменная графа потока управления
-        CFG cfg;
+        public IGraph<Block> graph; // граф потока управления
 
         public ThreeAddrCode()
         {
             blocks = new List<Block>() { new Block() };
             labels = new Dictionary<string, Label>();
             
-            //!удалить
             graph = null;
-            cfg = null;
         }
 
         public ThreeAddrCode(Block lines)
@@ -127,18 +96,9 @@ namespace SimpleLang
 
             labels = new Dictionary<string, Label>();
 
-            //!удалить
-            graph = null;
-
             BaseBlocksPartition.Partition(this);
-
-            //старый граф
-            BaseBlocksPartition.CreateCFG(this);
-            //новый граф
-            cfg = new CFG(this.blocks);
+            graph = new Code.ControlFlowGraph(this.blocks);
         }
-
-        
 
         public void NewBlock()
         {
@@ -161,6 +121,16 @@ namespace SimpleLang
             }
             return builder.ToString();
         }
+
+        public int GetBlockId(Block block)
+        {
+            for (int i = 0; i<blocks.Count(); ++i) {
+                if (block == blocks[i]) return i;
+            }
+
+            Debug.Assert(false);
+            return -1;
+        } 
 
         /// <summary>
         /// Функция возвращает список объектов GenKillInfo для каждого блока
@@ -238,7 +208,6 @@ namespace SimpleLang
         public List<InOutInfo> GetInOutInfoData()
         {
             List<GenKillInfo> gen_kill = GetGenKillInfoData();
-            var r_graph = GetReversedGraph();
 
             List<InOutInfo> result = new List<InOutInfo>(blocks.Count);
             for (int i = 0; i < blocks.Count; ++i) result.Add(new InOutInfo());
@@ -251,8 +220,10 @@ namespace SimpleLang
                 for (int i = 0; i < blocks.Count; ++i)
                 {
                     result[i].In.Clear();
-                    foreach (int j in r_graph[i])
-                        result[i].In.UnionWith(result[j].Out);
+                    foreach (var block in graph.OutEdges(blocks[i])) // для обратного графа это входные дуги
+                    {
+                        result[i].In.UnionWith(result[GetBlockId(block)].Out);
+                    }
 
                     HashSet<Index> prev_b = null;
                     if (!changed)
@@ -280,7 +251,6 @@ namespace SimpleLang
         public List<InOutInfo> GetInOutInfoData(List<int> ordering, out int iters)
         {
             List<GenKillInfo> gen_kill = GetGenKillInfoData();
-            var r_graph = GetReversedGraph();
 
             List<InOutInfo> result = new List<InOutInfo>(blocks.Count);
             for (int i = 0; i < blocks.Count; ++i) result.Add(new InOutInfo());
@@ -294,8 +264,10 @@ namespace SimpleLang
                 foreach (int i in ordering)
                 {
                     result[i].In.Clear();
-                    foreach (int j in r_graph[i])
-                        result[i].In.UnionWith(result[j].Out);
+                    foreach (var block in graph.OutEdges(blocks[i])) // для обратного графа это входные дуги
+                    {
+                        result[i].In.UnionWith(result[GetBlockId(block)].Out);
+                    }
 
                     HashSet<Index> prev_b = null;
                     if (!changed)

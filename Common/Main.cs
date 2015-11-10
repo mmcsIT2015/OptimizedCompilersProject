@@ -37,7 +37,7 @@ namespace SimpleCompiler
 
                     Console.WriteLine(code);                    
                 }
-                catch (FileNotFoundException e)
+                catch (FileNotFoundException)
                 {
                     Console.WriteLine("File not found: "+ file);
                 }

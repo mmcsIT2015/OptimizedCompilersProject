@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="Code\BaseBlocksPartition.cs" />
     <Compile Include="Code\Block.cs" />
-    <Compile Include="Code\CFG.cs" />
+    <Compile Include="Code\ControlFlowGraph.cs" />
     <Compile Include="Code\Line\FunctionCall.cs" />
     <Compile Include="Code\Line\FunctionParam.cs" />
     <Compile Include="Code\Line\GoTo.cs" />
@@ -54,6 +54,7 @@
     <Compile Include="DataFlow.cs" />
     <Compile Include="Code\Gen3AddrCodeVisitor.cs" />
     <Compile Include="FileLoader.cs" />
+    <Compile Include="IGraph.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="Code\Line\Line.cs" />
     <Compile Include="Main.cs" />
