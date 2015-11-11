@@ -51,10 +51,14 @@
     <Compile Include="Code\Line\GoTo.cs" />
     <Compile Include="Code\Line\Operation.cs" />
     <Compile Include="Code\Line\СonditionalJump.cs" />
-    <Compile Include="DataFlow.cs" />
     <Compile Include="Code\Gen3AddrCodeVisitor.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="IGraph.cs" />
+    <Compile Include="IterativeAlgs\IntersectSemilattice.cs" />
+    <Compile Include="IterativeAlgs\IterativeAlgo.cs" />
+    <Compile Include="IterativeAlgs\TransferFunction.cs" />
+    <Compile Include="IterativeAlgs\UnionSemilattice.cs" />
+    <Compile Include="IterativeAlgs\ISemilattice.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="Code\Line\Line.cs" />
     <Compile Include="Main.cs" />
