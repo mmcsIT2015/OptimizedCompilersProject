@@ -1,0 +1,77 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace SimpleLang
+{
+    public class TransferFunction<T>
+    {
+        private IEnumerable<T> mGen;
+        private IEnumerable<T> mKill;
+
+        public TransferFunction(IEnumerable<T> gen, IEnumerable<T> kill)
+        {
+            mGen = gen;
+            mKill = kill;
+        }
+
+        /// <summary>
+        /// Т.к. перегрузить круглые скобки нельзя, вызов этой функции будет аналогом вызова f(x)
+        /// </summary>
+        public IEnumerable<T> Map(IEnumerable<T> x)
+        {
+            return mGen.Union(x.Except(mKill)) as IEnumerable<T>;
+        }
+
+        /// <summary>
+        /// Композиция двух передаточных функций: (`this` . f1)
+        /// </summary>
+        public TransferFunction<T> Map(TransferFunction<T> f1)
+        {
+            var g12 = mGen.Union(f1.mGen.Except(mKill)) as IEnumerable<T>;
+            var k12 = mKill.Union(f1.mKill) as IEnumerable<T>;
+            return new TransferFunction<T>(g12, k12);
+        }
+
+        /// <summary>
+        /// Возвращает композицию последовательности передаточных функций.
+        /// Функции передаются в порядке Fn, F_{n-1}, ..., F1, 
+        /// в результате будет возвращена функция (Fn . F_{n-1} . ... . F1)(x).
+        /// Пример использования:
+        /// var f1 = new TransferFunction<string>(new List<string>() { "d1", "d2", "d3" }, new List<string>() { "d1", "d4", "d5" });
+        /// var f2 = new TransferFunction<string>(new List<string>() { "d4", "d5", "d3" }, new List<string>() { "d1", "d2", "d3" });
+        /// var f3 = new TransferFunction<string>(new List<string>() { "d4", "d7", "d3" }, new List<string>() { "d2", "d3" });
+        /// var f4 = new TransferFunction<string>(new List<string>() { "d4", "d5" }, new List<string>() { "d1", "d2" });
+        /// var f = TransferFunction.Сomposition(f1, f2, f3, f4); // f(x) = (f1 . f2 . f3 . f4)(x)
+        /// </summary>
+        public static TransferFunction<T> Сomposition(params TransferFunction<T>[] funcs)
+        {
+            if (funcs.Length < 2)
+            {
+                throw new ArgumentException("funcs.Length < 2!");
+            }
+
+            var kill = new HashSet<T>();
+            foreach (var func in funcs)
+            {
+                kill = kill.Union(func.mKill) as HashSet<T>;
+            }
+
+            var gen = new HashSet<T>();
+            for (int i = 0; i < funcs.Length; ++i)
+            {
+                var chunk = new HashSet<T>(funcs[i].mGen);
+                for (int j = i - 1; j >= 0; --j)
+                {
+                    chunk = chunk.Except(funcs[j].mKill) as HashSet<T>;
+                }
+                Console.WriteLine();
+
+                gen = gen.Union(chunk) as HashSet<T>;
+            }
+
+            return new TransferFunction<T>(gen, kill);
+        }
+    }
+}

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleLang.Code;
 using System.Diagnostics;
 
 namespace SimpleLang
@@ -97,7 +96,7 @@ namespace SimpleLang
             labels = new Dictionary<string, Label>();
 
             BaseBlocksPartition.Partition(this);
-            graph = new Code.ControlFlowGraph(this.blocks);
+            graph = new ControlFlowGraph(this.blocks);
         }
 
         public void NewBlock()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SimpleLang.Code
+namespace SimpleLang
 {
     /// <summary>
     /// Объект графа потока управления
