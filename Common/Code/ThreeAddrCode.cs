@@ -70,11 +70,18 @@ namespace SimpleLang
             public HashSet<Index> Kill = new HashSet<Index>();
         }
 
-        public class InOutInfo
+        public class InOutInfo<T>
         {
-            public HashSet<Index> In = new HashSet<Index>();
-            public HashSet<Index> Out = new HashSet<Index>();
+            public HashSet<T> In = new HashSet<T>();
+            public HashSet<T> Out = new HashSet<T>();
         }
+
+        public class DefUseInfo
+        {
+            public HashSet<String> Def = new HashSet<String>();
+            public HashSet<String> Use = new HashSet<String>();
+        }
+
 
         public Dictionary<string, Label> labels; // содержит список меток и адресом этих меток в blocks
         public List<Block> blocks; // содержит массив с блоками
@@ -205,12 +212,12 @@ namespace SimpleLang
         /// }
         /// </summary>
         /// <returns></returns>
-        public List<InOutInfo> GetInOutInfoData()
+        public List<InOutInfo<Index>> GetInOutInfoData()
         {
             List<GenKillInfo> gen_kill = GetGenKillInfoData();
 
-            List<InOutInfo> result = new List<InOutInfo>(blocks.Count);
-            for (int i = 0; i < blocks.Count; ++i) result.Add(new InOutInfo());
+            List<InOutInfo<Index>> result = new List<InOutInfo<Index>>(blocks.Count);
+            for (int i = 0; i < blocks.Count; ++i) result.Add(new InOutInfo<Index>());
 
             bool changed = true;
             while (changed)
@@ -248,12 +255,12 @@ namespace SimpleLang
         /// <param name="ordering">Порядок блоков</param>
         /// <param name="iters">Количество итераций</param>
         /// <returns></returns>
-        public List<InOutInfo> GetInOutInfoData(List<int> ordering, out int iters)
+        public List<InOutInfo<Index>> GetInOutInfoData(List<int> ordering, out int iters)
         {
             List<GenKillInfo> gen_kill = GetGenKillInfoData();
 
-            List<InOutInfo> result = new List<InOutInfo>(blocks.Count);
-            for (int i = 0; i < blocks.Count; ++i) result.Add(new InOutInfo());
+            List<InOutInfo<Index>> result = new List<InOutInfo<Index>>(blocks.Count);
+            for (int i = 0; i < blocks.Count; ++i) result.Add(new InOutInfo<Index>());
 
             iters = 0;
             bool changed = true;
@@ -287,5 +294,105 @@ namespace SimpleLang
 
             return result;
         }
+
+
+
+        /// <summary>
+        /// Функция возвращает список объектов DefUseInfo для каждого блока
+        /// </summary>
+        /// <returns>Список DefUseInfo</returns>
+        public List<DefUseInfo> GetDefUseInfo()
+        {
+            List<DefUseInfo> defUseInfoList = new List<DefUseInfo>();
+
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                defUseInfoList.Add(new DefUseInfo());
+                for (int j = 0; j < blocks[i].Count; j++)
+                {
+
+                    //DEF
+                    var line = blocks[i][j];
+                    if (line.IsEmpty())
+                        continue;
+                    if (line is Line.GoTo || line is Line.FunctionParam || line is Line.FunctionCall) continue;
+
+                    String currentIndDef = (line as Line.Operation).left;
+
+                    if (defUseInfoList[i].Def.Contains(currentIndDef))
+                        defUseInfoList[i].Def.Remove(currentIndDef);
+
+                    defUseInfoList[i].Def.Add(currentIndDef);
+
+                    //USE
+                    String usedVar = "";
+
+                    if (!(line as Line.Operation).FirstParamIsNumber() && !"".Equals((line as Line.Operation).first))
+                    {
+                        usedVar = (line as Line.Operation).first;
+
+                        if (defUseInfoList[i].Use.Contains(usedVar))
+                            defUseInfoList[i].Use.Remove(usedVar);
+
+                        defUseInfoList[i].Use.Add(usedVar);
+                    }
+
+
+                    if (!(line as Line.Operation).SecondParamIsNumber() && !"".Equals((line as Line.Operation).second))
+                    {
+                        usedVar = (line as Line.Operation).second;
+
+                        if (defUseInfoList[i].Use.Contains(usedVar))
+                            defUseInfoList[i].Use.Remove(usedVar);
+
+                        defUseInfoList[i].Use.Add(usedVar);
+                    }
+
+                }
+            }
+
+            return defUseInfoList;
+        }
+
+        public List<InOutInfo<String>> GetAliveVariablesIterationAlgo()
+        {
+
+            List<DefUseInfo> def_use = GetDefUseInfo();
+
+            List<InOutInfo<String>> result = new List<InOutInfo<String>>(blocks.Count);
+            for (int i = 0; i < blocks.Count; ++i) result.Add(new InOutInfo<String>());
+
+            bool changed = true;
+            while (changed)
+            {
+                changed = false;
+
+                for (int i = 0; i < blocks.Count; ++i)
+                {
+                    result[i].In.Clear();
+                    foreach (var block in graph.OutEdges(blocks[i])) // для обратного графа это входные дуги
+                    {
+                        result[i].In.UnionWith(result[GetBlockId(block)].Out);
+                    }
+
+                    HashSet<String> prev_b = null;
+                    if (!changed)
+                        prev_b = new HashSet<String>(result[i].Out);
+
+                    HashSet<String> subs = new HashSet<String>(result[i].In);
+                    subs.ExceptWith(def_use[i].Def);
+                    result[i].Out = new HashSet<String>(def_use[i].Use);
+                    result[i].Out.UnionWith(subs);
+
+                    if (!changed)
+                        changed = !prev_b.SetEquals(result[i].Out);
+                }
+            }
+
+            return result;
+        }
+
+
+
     }
 }
