@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 namespace SimpleLang
 {
-    public class TransferFunction<T>
+    public class TransferFunction<T> : ITransferFunction<T>
     {
         private IEnumerable<T> mGen;
         private IEnumerable<T> mKill;
@@ -27,10 +28,12 @@ namespace SimpleLang
         /// <summary>
         /// Композиция двух передаточных функций: (`this` . f1)
         /// </summary>
-        public TransferFunction<T> Map(TransferFunction<T> f1)
+        public ITransferFunction<T> Map(ITransferFunction<T> f1)
         {
-            var g12 = mGen.Union(f1.mGen.Except(mKill)) as IEnumerable<T>;
-            var k12 = mKill.Union(f1.mKill) as IEnumerable<T>;
+            Debug.Assert(f1 is TransferFunction<T>);
+
+            var g12 = mGen.Union((f1 as TransferFunction<T>).mGen.Except(mKill)) as IEnumerable<T>;
+            var k12 = mKill.Union((f1 as TransferFunction<T>).mKill) as IEnumerable<T>;
             return new TransferFunction<T>(g12, k12);
         }
 

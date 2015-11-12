@@ -6,8 +6,8 @@ using System.Text;
 namespace SimpleLang
 {
     class IterativeAlgo<AData, TrFunc>
-        where AData : IEqualityComparer<AData> 
-        where TrFunc : TransferFunction<AData>
+        where AData : IEqualityComparer<AData>
+        where TrFunc : ITransferFunction<AData>
     {
         public Dictionary<Block, IEnumerable<AData>> In { get; set; }
         public Dictionary<Block, IEnumerable<AData>> Out { get; set; }

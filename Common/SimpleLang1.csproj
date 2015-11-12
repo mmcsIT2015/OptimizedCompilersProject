@@ -56,6 +56,7 @@
     <Compile Include="IGraph.cs" />
     <Compile Include="IterativeAlgs\IntersectSemilattice.cs" />
     <Compile Include="IterativeAlgs\IterativeAlgo.cs" />
+    <Compile Include="IterativeAlgs\ITransferFunction.cs" />
     <Compile Include="IterativeAlgs\TransferFunction.cs" />
     <Compile Include="IterativeAlgs\UnionSemilattice.cs" />
     <Compile Include="IterativeAlgs\ISemilattice.cs" />
