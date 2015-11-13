@@ -1,0 +1,3 @@
+https://en.wikipedia.org/wiki/Common_Intermediate_Language
+http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-335.pdf
+https://msdn.microsoft.com/ru-ru/library/system.reflection.emit.opcodes.ldc_i4(v=vs.110).aspx

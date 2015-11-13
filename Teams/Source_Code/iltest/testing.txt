@@ -1,0 +1,71 @@
+{	
+	while (a > b)
+	{	
+		a = 4 + f(4, g(6, 7, 8));
+		b = p;
+		f(89);
+	}
+}
+_______________________________________________________________________________
+
+@l0:	@t0 = a Greater b
+	if @t0 goto @l1
+
+	goto @l2
+
+@l1:	param 6
+	param 7
+	param 8
+	@t1 = call g, 3
+	param 4
+	param @t1
+	@t2 = call f, 2
+	a = 4 Plus @t2
+	b = p 
+	param 89
+	call f, 1
+	goto @l0
+
+@l2:	<empty statement>
+_______________________________________________________________________________
+
+stack:
+0	1	2	3	4	5
+a	b	@t0	@t1	@t2 p
+
+
+.assembly task {}
+.method static public void Main()
+{
+	.entrypoint
+	.maxstack 5
+	.locals init (int32 a, int32 b, int32 t0, int32 t1, int32 t2, int32 p)
+	
+@l0:
+	ldloc.0
+	ldloc.1
+	cgt
+	stloc.2 t0
+	brtrue @l1
+	br @l2
+@l1:
+	ldc.i4.6
+	ldc.i4.7
+	ldc.i4.8
+	call int32 g
+	stloc.3
+	ld.i4.4
+	ldloc.3
+	call int32 f
+	stloc.4
+	ld.i4.4
+	ldloc.4
+	add
+	stloc.0
+	ldloc.5
+	stloc.1
+	ld.i4.89
+	call int32 f
+	br @l0
+@l2:
+}

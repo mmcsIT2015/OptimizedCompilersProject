@@ -1,0 +1,43 @@
+.assembly extern mscorlib
+.assembly program
+
+.method public static void main()
+{
+	.entrypoint
+	.maxstack 5
+	.locals init (int32 i, int32 j, int32 @t0, int32 @t1, int32 @t2)
+	
+	ld.i4.0
+	stloc.0
+@l0:
+	ldloc.0
+	ld.i4.10
+	clt
+	stloc.2
+	ldloc.2
+	brtrue @l1
+	br @l2
+@l1:
+	ld.i4.0
+	stloc.1
+@l3:
+	ldloc.10
+	ld.i4.10
+	clt
+	stloc.3
+	brtrue @l4
+	br @l5
+@l4:
+	ldloc.0
+	ldloc.1
+	mul
+	stloc.4
+	ldloc.4
+	call void [mscorlib]System.Console::WriteLine(int32)
+	br @l3
+@l5:
+	nop
+	br @l0
+@l2:
+	nop
+}
