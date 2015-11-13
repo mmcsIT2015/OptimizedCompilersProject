@@ -13,7 +13,7 @@ namespace Compiler
     /// Примечание: Использовать после разбиения на внутренние блоки
     /// 
     /// Пример применения:
-    /// Compiler.DraggingConstantsOptimization dco = new Compiler.DraggingConstantsOptimization(codeGenerator.Code);
+    /// Compiler.DraggingConstantsOptimization dco = new SimpleLang.DraggingConstantsOptimization(codeGenerator.Code);
     // / dco.Optimize();
     /// Console.WriteLine("Optimization:\n" + codeGenerator.Code);
     /// 
@@ -28,7 +28,6 @@ namespace Compiler
         public void CheckDragging(Block block, int targetLine)
         {
             foreach (string variable in block.GetAliveVariables(targetLine))
-            {
                 for (int j = targetLine - 1; j >= 0; --j)
                 {
                     if (block.IsVariableAlive(variable, j)) continue;
@@ -39,13 +38,9 @@ namespace Compiler
                     {
                         string const_value = "";
                         if (jLine.left.Equals(variable) && !block.GetAliveVariables(j).Contains(jLine.first))
-                        {
                             const_value = jLine.first;
-                        }
                         else
-                        {
                             const_value = variable;
-                        }
 
                         var iLine = block[targetLine] as Line.Operation;
                         if (variable.Equals(iLine.first)) iLine.first = const_value;
@@ -53,7 +48,6 @@ namespace Compiler
                         j = -1;
                     }
                 }
-            }
         }
 
         public override void Optimize(params Object[] values)
@@ -61,12 +55,9 @@ namespace Compiler
             foreach (Block block in Code.blocks)
             {
                 block.CalculateDefUseData();
-                for (int i = 1; i < block.Count; ++i) // TODO Почему с 1цы нумерация? Так и было задумано?
-                {
-                    if (block[i].Is<Line.Operation>()) {
+                for (int i = 0; i < block.Count; ++i)
+                    if (block[i].Is<Line.Operation>())
                         CheckDragging(block, i);
-                    }
-                }
             }
         }
     }
