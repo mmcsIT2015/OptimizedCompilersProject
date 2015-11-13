@@ -81,33 +81,23 @@ namespace Compiler
                     bool secondIsNumber = double.TryParse(line.second, out second);
                     if (firstIsNumber && !secondIsNumber)
                     {
-                        // TODO 
-                        if (first == 0) // Мне кажется, тут что-то не так.
+                        if (first == 0) //мы сравниваем double
                         {
                             if (line.operation == BinaryOperation.Plus) line.ToIdentity(line.second);
-                            // TODO 
-                            // В самом условии утверждается, что `first` - число, а `second` - нет.
-                            // Намерения о следующей строчке понятны, но сделать это нужно как-то иначе. Если вообще нужно.
-                            // else if (line.operation == BinaryOperation.Minus) line.ToIdentity((second * (-1)).ToString());
+                            else if (line.operation == BinaryOperation.Minus) line.ToIdentity(("-" + second));
                             else if (line.operation == BinaryOperation.Mult) line.ToIdentity("0");
                             else if (line.operation == BinaryOperation.Div) 
-                            {
-                                // TODO
-                                // Серьезно? 55 / 0 = 0?
                                 line.ToIdentity("0");
-                            }
                         }
-                        else if (first == 1) // Дежавю?
+                        else if (first == 1) 
                         {
                             if (line.operation == BinaryOperation.Mult)
-                            {
                                 line.ToIdentity(line.second);
-                            }
                         }
                     }
                     else if (!firstIsNumber && secondIsNumber)
                     {
-                        if (second == 0) // Снова?
+                        if (second == 0) 
                         {
                             if (line.operation == BinaryOperation.Mult) line.ToIdentity("0");
                             else if (line.operation == BinaryOperation.Plus || line.operation == BinaryOperation.Minus)
@@ -115,13 +105,9 @@ namespace Compiler
                                 line.ToIdentity(line.first);
                             }
                         }
-                        else if (second == 1) // Мы в Матрице...
-                        {
+                        else if (second == 1) 
                             if (line.operation == BinaryOperation.Mult || line.operation == BinaryOperation.Div)
-                            {
                                 line.ToIdentity(line.first);
-                            }
-                        }
                     }
                 }
             }
