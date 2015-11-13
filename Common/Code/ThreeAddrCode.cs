@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
-namespace SimpleLang
+namespace Compiler
 {
     using Label = KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
 

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace SimpleLang
+namespace Compiler
 {
     // TODO
     // Нужен пример кода, который этой оптимизацией оптимизируется.

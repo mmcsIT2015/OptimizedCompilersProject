@@ -5,7 +5,7 @@ using System.Text;
 
 
 
-namespace SimpleLang
+namespace Compiler
 {
 
     /// <summary>
@@ -13,7 +13,7 @@ namespace SimpleLang
     /// Примечание: Использовать после разбиения на внутренние блоки
     /// 
     /// Пример применения:
-    /// SimpleLang.DraggingConstantsOptimization dco = new SimpleLang.DraggingConstantsOptimization(codeGenerator.Code);
+    /// Compiler.DraggingConstantsOptimization dco = new Compiler.DraggingConstantsOptimization(codeGenerator.Code);
     // / dco.Optimize();
     /// Console.WriteLine("Optimization:\n" + codeGenerator.Code);
     /// 

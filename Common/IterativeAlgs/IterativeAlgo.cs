@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SimpleLang
+namespace Compiler
 {
     class IterativeAlgo<AData, TrFunc>
         where AData : IEqualityComparer<AData>

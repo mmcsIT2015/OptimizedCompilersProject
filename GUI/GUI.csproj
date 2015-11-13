@@ -99,9 +99,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\SimpleLang1.csproj">
+    <ProjectReference Include="..\Common\Compiler.csproj">
       <Project>{12b9d996-7b4a-4ee4-9ad8-2e24eaf3f574}</Project>
-      <Name>SimpleLang1</Name>
+      <Name>Compiler</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

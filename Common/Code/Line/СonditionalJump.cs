@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 
-namespace SimpleLang.Line
+namespace Compiler.Line
 {
     class СonditionalJump : GoTo
     {

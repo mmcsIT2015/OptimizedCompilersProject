@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace SimpleLang
+namespace Compiler
 {
     public class TransferFunction<T> : ITransferFunction<T>
     {

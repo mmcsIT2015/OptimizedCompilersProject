@@ -7,7 +7,7 @@ using System.IO;
 
 using ProgramTree;
 
-namespace SimpleLang
+namespace Compiler
 {
     public static class FileLoader
     {

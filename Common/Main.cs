@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using SimpleLang;
+using Compiler;
 using CompilerExceptions;
 
 namespace SimpleCompiler

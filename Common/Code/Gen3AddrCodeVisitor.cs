@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 using Label = System.Collections.Generic.KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
 
-namespace SimpleLang
+namespace Compiler
 {
     /// <summary>
     /// Выполняет обход дерева и возвращает полученный трехадресный код
@@ -25,12 +25,12 @@ namespace SimpleLang
         /// Код, возвращаемый этой ф-ей, уже разбит на блоки
         /// </summary>
         /// <returns></returns>
-        public SimpleLang.ThreeAddrCode CreateCode()
+        public Compiler.ThreeAddrCode CreateCode()
         {
-            return new SimpleLang.ThreeAddrCode(mLines);
+            return new Compiler.ThreeAddrCode(mLines);
         }
 
-        private SimpleLang.Block mLines = new SimpleLang.Block();
+        private Compiler.Block mLines = new Compiler.Block();
         private Stack<string> mStack = new Stack<string>();
 
         public Gen3AddrCodeVisitor()
