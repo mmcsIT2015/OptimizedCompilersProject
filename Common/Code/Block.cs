@@ -69,9 +69,8 @@ namespace Compiler
             HashSet<string> currentlyAlive = new HashSet<string>();
 
             for (int i = this.Count - 1; i >= 0; --i)
-            {
-                if (this[i] is Line.FunctionCall) continue;
-                else if (this[i] is Line.FunctionParam)
+            {                
+                if (this[i] is Line.FunctionParam)
                 {
                     var line = this[i] as Line.FunctionParam;
                     if (line.param == "")
@@ -104,26 +103,22 @@ namespace Compiler
                             currentlyAlive.Add(line.condition);
                         }
                     }
-                }
-                else if (this[i] is Line.GoTo) continue;
-                else
+                }                
+                else if (this[i] is Line.Operation)
                 {
                     var line = this[i] as Line.Operation;
-
-                    Debug.Assert(line.left != "");
-                    if (currentlyAlive.Contains(line.left))
+                    
+                    if (line.left != "" && currentlyAlive.Contains(line.left))
                     {
                         currentlyAlive.Remove(line.left);
                     }
-
-                    Debug.Assert(line.first != "");
-                    if (!line.FirstParamIsNumber() && !currentlyAlive.Contains(line.first))
+                    
+                    if (line.first != "" && !line.FirstParamIsNumber() && !currentlyAlive.Contains(line.first))
                     {
                         currentlyAlive.Add(line.first);
                     }
-
-                    Debug.Assert(line.second != "");
-                    if (!line.SecondParamIsNumber() && !currentlyAlive.Contains(line.second))
+                    
+                    if (line.second != "" && !line.SecondParamIsNumber() && !currentlyAlive.Contains(line.second))
                     {
                         currentlyAlive.Add(line.second);
                     }
