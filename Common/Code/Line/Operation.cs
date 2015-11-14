@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ProgramTree;
+using System.Diagnostics;
 
 namespace Compiler.Line
 {
@@ -90,6 +91,30 @@ namespace Compiler.Line
             first = value;
             second = "";
             operation = BinaryOperation.None;
+        }
+
+        private static string toString(BinaryOperation operation)
+        {
+            switch (operation)
+            {
+                case BinaryOperation.Div: return "/";
+                case BinaryOperation.Equal: return "==";
+                case BinaryOperation.Greater: return ">";
+                case BinaryOperation.GreaterEqual: return ">=";
+                case BinaryOperation.Less: return "<";
+                case BinaryOperation.LessEqual: return "<=";
+                case BinaryOperation.Minus: return "-";
+                case BinaryOperation.Mult: return "*";
+                case BinaryOperation.None: return "";
+                case BinaryOperation.NotEqual: return "!=";
+                case BinaryOperation.Plus: return "+";
+                default: Debug.Assert(false, "[Not implemented]");  return "";
+            }
+        }
+
+        public override string ToString()
+        {
+            return left + " = " + first + " " + (IsIdentity() ? "" : toString(operation) + " ") + second + "\n";
         }
     }
 }

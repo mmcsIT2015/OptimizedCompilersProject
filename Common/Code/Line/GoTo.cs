@@ -10,13 +10,18 @@ namespace Compiler.Line
     {
         public string target;
 
-         public GoTo(string target) {
-             this.target = target;
-         }
+        public GoTo(string target) {
+            this.target = target;
+        }
 
-         public override void ChangeTargetIfEqual(string check, string forWhat)
-         {
-             if (target == check) target = forWhat;
-         }
+        public override void ChangeTargetIfEqual(string check, string forWhat)
+        {
+            if (target == check) target = forWhat;
+        }
+
+        public override string ToString()
+        {
+            return "goto " + target + "\n";
+        }
     }
 }

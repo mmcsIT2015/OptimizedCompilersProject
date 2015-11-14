@@ -23,5 +23,17 @@ namespace Compiler.Line
         {
             return destination == null || destination.Count() == 0;
         }
+
+        public override string ToString()
+        {
+            if (IsVoid())
+            {
+                return "call " + name + ", " + parameters + "\n";
+            }
+            else
+            {
+                return destination + " = call " + name + ", " + parameters + "\n";
+            }
+        }
     }
 }

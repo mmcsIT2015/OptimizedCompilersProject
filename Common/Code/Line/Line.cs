@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ProgramTree;
+using System.Diagnostics;
 
 namespace Compiler.Line
 {
@@ -35,6 +36,12 @@ namespace Compiler.Line
         {
             return !(this is T);
         }
+
+        public override string ToString()
+        {
+            Debug.Assert(false, "[Abstract line to string conversion]");
+            return "";
+        }
     }
 
     class NonEmptyLine : Line
@@ -47,6 +54,9 @@ namespace Compiler.Line
 
     class EmptyLine : Line
     {
-
+        public override string ToString()
+        {
+            return "<empty statement>\n";
+        }
     }
 }

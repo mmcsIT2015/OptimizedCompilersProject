@@ -14,5 +14,10 @@ namespace Compiler.Line
         {
             this.param = param;
         }
+
+        public override string ToString()
+        {
+            return "param " + param + "\n";
+        }
     }
 }

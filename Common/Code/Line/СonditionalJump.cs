@@ -15,5 +15,10 @@ namespace Compiler.Line
         {
             this.condition = condition;
         }
+
+        public override string ToString()
+        {
+            return "if " + condition + " goto " + target + "\n";
+        }
     }
 }
