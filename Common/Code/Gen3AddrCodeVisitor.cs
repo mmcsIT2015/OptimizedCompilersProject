@@ -27,6 +27,7 @@ namespace Compiler
         /// <returns></returns>
         public Compiler.ThreeAddrCode CreateCode()
         {
+            eraseEmptyLines();
             return new Compiler.ThreeAddrCode(mLines);
         }
 
@@ -44,6 +45,23 @@ namespace Compiler
             {
                 if (line.label == what) line.label = forWhat;
                 if (line is Line.GoTo) line.ChangeTargetIfEqual(what, forWhat);
+            }
+        }
+
+        private void eraseEmptyLines()
+        {
+            Debug.Assert(mLines.Count != 0);
+
+            for (int i = mLines.Count - 2; i >= 0; --i)
+            {
+                if (mLines[i].Is<Line.EmptyLine>())
+                {
+                    string forWhat = mLines[i + 1].label.Count() != 0 ? mLines[i + 1].label : mLines[i].label;
+                    mLines[i + 1].label = forWhat;
+                    replaceAllReferencesToLabel(mLines[i].label, forWhat);
+
+                    mLines.RemoveAt(i);
+                }
             }
         }
 
@@ -88,9 +106,9 @@ namespace Compiler
             string condition = mStack.Pop();
             var labelForTrue = UniqueIdsGenerator.Instance().Get("l");
             var labelForFalse = UniqueIdsGenerator.Instance().Get("l");
-            
-            mLines.Add(new Line.СonditionalJump(condition, labelForTrue));
-            var ifPosition = mLines.Count - 1;
+
+            Line.СonditionalJump conditionalLine = new Line.СonditionalJump(condition, labelForTrue);
+            mLines.Add(conditionalLine);
 
             if (node.StatElse != null)
             {
@@ -104,8 +122,7 @@ namespace Compiler
         
             if (mLines[gotoPosition + 1].label.Count() != 0)
             {
-                string what = mLines[gotoPosition + 1].label;
-                replaceAllReferencesToLabel(what, labelForTrue);
+                conditionalLine.target = mLines[gotoPosition + 1].label;
             }
             else mLines[gotoPosition + 1].label = labelForTrue;
 
