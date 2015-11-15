@@ -8,12 +8,39 @@ namespace SimpleCompiler
 {
     public class SimpleCompilerMain
     {
+        public static void TestIterativeAlgo(ThreeAddrCode code) 
+        {
+            var semilattice = new ReachDefSemilattice(code);
+            var funcs = TransferFuncFactory.TransferFuncsForReachDef(code);
+            var alg = new IterativeAlgo<ThreeAddrCode.Index, TransferFunction<ThreeAddrCode.Index>>(semilattice, funcs);
+
+            alg.Run(code);
+
+            foreach (var block in code.blocks)
+            {
+                Console.WriteLine("===");
+                Console.WriteLine(block);
+                Console.Write("In: ");
+                foreach (var v in alg.In[block])
+                {
+                    Console.Write(v + " ");
+                }
+                Console.WriteLine();
+                Console.Write("Out: ");
+                foreach (var v in alg.Out[block])
+                {
+                    Console.Write(v + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+        
         public static void Main()
         {
             List<string> files = new List<string>();
 
-            files.Add(@"..\..\tests\test-dce1.cn");
-            files.Add(@"..\..\tests\test-dce2.cn");
+            files.Add(@"..\..\tests\test-1.cn");
+            //files.Add(@"..\..\tests\test-dce2.cn");
             //files.Add(@"..\..\in.pasn");
             //files.Add(@"..\..\a.cn");
             //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
@@ -29,13 +56,11 @@ namespace SimpleCompiler
                     Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
                     codeGenerator.Visit(root);
 
-                        // DEBUG Can watch result here
                     var code = codeGenerator.CreateCode();
+                    Console.WriteLine(code);
 
                     //DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code/*, 1*/);
-                    //deadCodeElimination.Optimize();
-
-                    Console.WriteLine(code);                    
+                    //deadCodeElimination.Optimize();                   
                 }
                 catch (FileNotFoundException)
                 {

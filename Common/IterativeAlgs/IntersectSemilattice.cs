@@ -7,7 +7,7 @@ namespace Compiler
 {
     public class IntersectSemilattice<T> : ISemilattice<T>
     {
-        private HashSet<T> mTop;
+        protected HashSet<T> mTop;
 
         public IntersectSemilattice(HashSet<T> top)
         {

@@ -6,19 +6,22 @@ using System.Text;
 namespace Compiler
 {
     class IterativeAlgo<AData, TrFunc>
-        where AData : IEqualityComparer<AData>
+        //where AData : IEqualityComparer<AData>
         where TrFunc : ITransferFunction<AData>
     {
         public Dictionary<Block, IEnumerable<AData>> In { get; set; }
         public Dictionary<Block, IEnumerable<AData>> Out { get; set; }
 
         public ISemilattice<AData> Semilattice; // полурешетка
-        // TODO
-        public Dictionary<Block, TrFunc> TransferFuncs = new Dictionary<Block, TrFunc>(); // передаточные функции (для блоков если AData = Block)
+        public Dictionary<Block, TrFunc> TransferFuncs; // передаточные функции (для блоков если AData = Block)
 
-        public IterativeAlgo(ISemilattice<AData> semilattice)
+        public IterativeAlgo(ISemilattice<AData> semilattice, Dictionary<Block, TrFunc> transferFuncs)
         {
+            In = new Dictionary<Block, IEnumerable<AData>>();
+            Out = new Dictionary<Block, IEnumerable<AData>>();
+
             Semilattice = semilattice;
+            TransferFuncs = transferFuncs;
         }
 
         public void Run(ThreeAddrCode code)
@@ -40,10 +43,13 @@ namespace Compiler
 
                 foreach (var block in blocks)
                 {
-                    var temp = new HashSet<AData>();
-                    foreach (var p in graph.InEdges(block))
+                    var edges = graph.InEdges(block);
+                    if (edges.Count() == 0) continue;
+
+                    var temp = Out[edges.First()];
+                    foreach (var p in edges.Skip(1))
                     {
-                        temp = Semilattice.Join(temp, Out[p]) as HashSet<AData>;
+                        temp = Semilattice.Join(temp, Out[p]);
                     }
 
                     In[block] = temp;

@@ -19,29 +19,29 @@ namespace Compiler
             {
                 public bool Equals(Index obj1, Index obj2)
                 {
-                    return obj1.mVariableName == obj2.mVariableName;
+                    return obj1.VariableName == obj2.VariableName;
                 }
 
                 public int GetHashCode(Index obj)
                 {
-                    return obj.mVariableName.GetHashCode();
+                    return obj.VariableName.GetHashCode();
                 }
             }
 
-            public int mBlockInd { get; set; }
-            public int mInternalInd { get; set; }
-            public string mVariableName { get; set; }
+            public int BlockIndex { get; set; }
+            public int InternalIndex { get; set; }
+            public string VariableName { get; set; }
 
             public Index (int blockInd, int internalInd, string variableName)
             {
-                mBlockInd = blockInd;
-                mInternalInd = internalInd;
-                mVariableName = variableName;
+                BlockIndex = blockInd;
+                InternalIndex = internalInd;
+                VariableName = variableName;
             }
 
             public override int GetHashCode()
             {
- 	            return mBlockInd * 65536 + mInternalInd;
+                return BlockIndex * 65536 + InternalIndex;
             }
 
             public override bool Equals(object obj)
@@ -50,12 +50,13 @@ namespace Compiler
  	            if (obj.GetType() != this.GetType()) return false;
 
                 Index o = obj as Index;
-                return (this.mInternalInd == o.mInternalInd) && (this.mBlockInd == o.mBlockInd);
+                return (this.InternalIndex == o.InternalIndex) && (this.BlockIndex == o.BlockIndex);
             }
 
             public override string ToString()
             {
-                return "Name: " + this.mVariableName + "; Block: " + this.mBlockInd + "; Line: " + this.mInternalInd;
+                //return "Name: " + this.VariableName + "; Block: " + this.BlockIndex + "; Line: " + this.InternalIndex;
+                return "[" + this.VariableName + "] b: " + this.BlockIndex + ", l: " + this.InternalIndex;
             }
         }
 
@@ -67,6 +68,34 @@ namespace Compiler
         {
             public HashSet<Index> Gen = new HashSet<Index>();
             public HashSet<Index> Kill = new HashSet<Index>();
+
+            public HashSet<Index> GetGenForBlock(int blockIndex)
+            {
+                var gen = new HashSet<Index>();
+                foreach (var e in Gen)
+                {
+                    if (e.BlockIndex == blockIndex)
+                    {
+                        gen.Add(e);
+                    }
+                }
+
+                return gen;
+            }
+
+            public HashSet<Index> GetKillForBlock(int blockIndex)
+            {
+                var kill = new HashSet<Index>();
+                foreach (var e in Kill)
+                {
+                    if (e.BlockIndex == blockIndex)
+                    {
+                        kill.Add(e);
+                    }
+                }
+
+                return kill;
+            }
         }
 
         public class InOutInfo<T>
@@ -80,7 +109,6 @@ namespace Compiler
             public HashSet<String> Def = new HashSet<String>();
             public HashSet<String> Use = new HashSet<String>();
         }
-
 
         public Dictionary<string, Label> labels; // содержит список меток и адресом этих меток в blocks
         public List<Block> blocks; // содержит массив с блоками
@@ -178,7 +206,7 @@ namespace Compiler
                     {
                         foreach (Index ind_j in genKillInfoList[j].Gen)
                         {
-                            if (ind_i.mVariableName == ind_j.mVariableName)
+                            if (ind_i.VariableName == ind_j.VariableName)
                                 genKillInfoList[i].Kill.Add(ind_j);
                         }
                     }
@@ -390,8 +418,6 @@ namespace Compiler
 
             return result;
         }
-
-
-
     }
 }
+
