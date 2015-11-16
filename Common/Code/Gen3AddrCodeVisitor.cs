@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 using System.Diagnostics;
+using CompilerExceptions;
 
 using Label = System.Collections.Generic.KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
 
@@ -27,7 +28,8 @@ namespace Compiler
         /// <returns></returns>
         public Compiler.ThreeAddrCode CreateCode()
         {
-            eraseEmptyLines();
+            EraseEmptyLines();
+            VerifyCorrectnessOfProgram();
             return new Compiler.ThreeAddrCode(mLines);
         }
 
@@ -39,7 +41,7 @@ namespace Compiler
             UniqueIdsGenerator.Instance().Reset();
         }
 
-        private void replaceAllReferencesToLabel(string what, string forWhat)
+        private void ReplaceAllReferencesToLabel(string what, string forWhat)
         {
             foreach (var line in mLines)
             {
@@ -48,7 +50,17 @@ namespace Compiler
             }
         }
 
-        private void eraseEmptyLines()
+        private void VerifyCorrectnessOfProgram() {
+            bool isValid = true;
+            // TODO
+
+            if (!isValid)
+            {
+                throw new SemanticException("Тут будут подробности");
+            }
+        }
+
+        private void EraseEmptyLines()
         {
             Debug.Assert(mLines.Count != 0);
 
@@ -58,7 +70,7 @@ namespace Compiler
                 {
                     string forWhat = mLines[i + 1].label.Count() != 0 ? mLines[i + 1].label : mLines[i].label;
                     mLines[i + 1].label = forWhat;
-                    replaceAllReferencesToLabel(mLines[i].label, forWhat);
+                    ReplaceAllReferencesToLabel(mLines[i].label, forWhat);
 
                     mLines.RemoveAt(i);
                 }
