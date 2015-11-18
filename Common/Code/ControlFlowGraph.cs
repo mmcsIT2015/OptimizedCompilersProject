@@ -20,13 +20,12 @@ namespace Compiler
     public class ControlFlowGraph : IGraph<Block>
     {
         private Block mEntryPoint;
+        private Block mExitPoint;
         private Dictionary<Block, IList<Block>> mGraph;
         private Dictionary<Block, IList<Block>> mReversedGraph;
 
         private Dictionary<int, List<int>> getIndexedGraph(IList<Block> blocks)
         {
-            mEntryPoint = blocks.First();
-
             var labelsToBlocksIndexes = new Dictionary<string, int>();
             for (int i = 0; i < blocks.Count(); i++)
             {
@@ -87,6 +86,11 @@ namespace Compiler
 
         public ControlFlowGraph(IList<Block> blocks)
         {
+            ReverseMode = false;
+            mExitPoint = blocks.Last();
+            mEntryPoint = blocks.First();
+
+
             mGraph = new Dictionary<Block, IList<Block>>();
             var indGr = getIndexedGraph(blocks);
             for (int i = 0; i < blocks.Count; i++)
@@ -110,19 +114,30 @@ namespace Compiler
             }
         }
 
+        public bool ReverseMode { get; set; }
+
         public Block EntryPoint()
         {
-            return mEntryPoint;
+            if (!ReverseMode) return mEntryPoint;
+            else return mExitPoint;
         }
 
+        public Block ExitPoint()
+        {
+            if (!ReverseMode) return mExitPoint;
+            else return mEntryPoint;
+        }
+        
         public IEnumerable<Block> OutEdges(Block block)
         {
-            return mGraph[block];
+            if (!ReverseMode) return mGraph[block];
+            else return mReversedGraph[block];
         }
 
         public IEnumerable<Block> InEdges(Block block)
         {
-            return mReversedGraph[block];
+            if (!ReverseMode) return mReversedGraph[block];
+            else return mGraph[block];
         }
     }
 }

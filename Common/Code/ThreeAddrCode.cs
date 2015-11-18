@@ -85,7 +85,7 @@ namespace Compiler
         public Dictionary<string, Label> labels; // содержит список меток и адресом этих меток в blocks
         public List<Block> blocks; // содержит массив с блоками
 
-        public IGraph<Block> graph; // граф потока управления
+        public ControlFlowGraph graph; // граф потока управления
 
         public ThreeAddrCode()
         {

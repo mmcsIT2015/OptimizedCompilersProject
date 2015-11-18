@@ -24,7 +24,7 @@ namespace Compiler
             TransferFuncs = transferFuncs;
         }
 
-        public void Run(ThreeAddrCode code)
+        private void RunAlgorithm(ThreeAddrCode code)
         {
             var graph = code.graph; // граф управления потоком
             var blocks = code.blocks;
@@ -44,15 +44,22 @@ namespace Compiler
                 foreach (var block in blocks)
                 {
                     var edges = graph.InEdges(block);
-                    if (edges.Count() == 0) continue;
 
-                    var temp = Out[edges.First()];
-                    foreach (var p in edges.Skip(1))
+                    IEnumerable<AData> newIn;
+                    if (edges.Count() > 0)
                     {
-                        temp = Semilattice.Join(temp, Out[p]);
+                        newIn = Out[edges.First()];
+                        foreach (var p in edges.Skip(1))
+                        {
+                            newIn = Semilattice.Join(newIn, Out[p]);
+                        }
+                    }
+                    else
+                    {
+                        newIn = new HashSet<AData>();
                     }
 
-                    In[block] = temp;
+                    In[block] = newIn;
                     Out[block] = TransferFuncs[block].Map(In[block]);
                 }
 
@@ -65,6 +72,22 @@ namespace Compiler
                     }
                 }
             } while (hasChanges);
+        }
+
+        public void Run(ThreeAddrCode code)
+        {
+            RunAlgorithm(code);
+        }
+
+        public void RunOnReverseGraph(ThreeAddrCode code)
+        {
+            code.graph.ReverseMode = true;
+            RunAlgorithm(code);
+
+            var temp = new Dictionary<Block, IEnumerable<AData>>(In);
+            In = Out;
+            Out = temp;
+            code.graph.ReverseMode = false;
         }
     }
 }

@@ -13,13 +13,11 @@ namespace Compiler
             var source = code.GetGenKillInfoData();
             foreach (var block in code.blocks)
             {
-                var gen = new HashSet<ThreeAddrCode.Index>();
-                var kill = new HashSet<ThreeAddrCode.Index>();
-                foreach (var e in source)
-                {
-                    foreach (var e1 in e.GetGenForBlock(code.GetBlockId(block))) gen.Add(e1);
-                    foreach (var e1 in e.GetKillForBlock(code.GetBlockId(block))) kill.Add(e1);
-                }
+                int id = code.GetBlockId(block);
+                var info = source[id];
+
+                var gen = new HashSet<ThreeAddrCode.Index>(info.Gen);
+                var kill = new HashSet<ThreeAddrCode.Index>(info.Kill);
 
                 funcs[block] = new TransferFunction<ThreeAddrCode.Index>(gen, kill);
             }

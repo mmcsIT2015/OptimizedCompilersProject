@@ -18,7 +18,9 @@ namespace SimpleCompiler
 
             foreach (var block in code.blocks)
             {
-                Console.WriteLine("===");
+                Console.WriteLine();
+                Console.WriteLine("---");
+                Console.WriteLine("block: " + code.GetBlockId(block));
                 Console.WriteLine(block);
                 Console.Write("In: ");
                 foreach (var v in alg.In[block])
