@@ -67,35 +67,7 @@ namespace Compiler
         public class GenKillInfo
         {
             public HashSet<Index> Gen = new HashSet<Index>();
-            public HashSet<Index> Kill = new HashSet<Index>();
-
-            public HashSet<Index> GetGenForBlock(int blockIndex)
-            {
-                var gen = new HashSet<Index>();
-                foreach (var e in Gen)
-                {
-                    if (e.BlockIndex == blockIndex)
-                    {
-                        gen.Add(e);
-                    }
-                }
-
-                return gen;
-            }
-
-            public HashSet<Index> GetKillForBlock(int blockIndex)
-            {
-                var kill = new HashSet<Index>();
-                foreach (var e in Kill)
-                {
-                    if (e.BlockIndex == blockIndex)
-                    {
-                        kill.Add(e);
-                    }
-                }
-
-                return kill;
-            }
+            public HashSet<Index> Kill = new HashSet<Index>();          
         }
 
         public class InOutInfo<T>
