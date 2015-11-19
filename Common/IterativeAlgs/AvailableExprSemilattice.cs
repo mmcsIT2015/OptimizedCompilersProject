@@ -43,9 +43,9 @@ namespace Compiler
             {
                 foreach (var line in block)
                 {
-                    if (line.IsNot<Line.Operation>()) continue;
+                    if (line.IsNot<Line.BinaryExpr>()) continue;
 
-                    var expr = line as Line.Operation;
+                    var expr = line as Line.BinaryExpr;
                     mTop.Add(new Expression(expr.first, expr.operation, expr.second));
                 }
             }

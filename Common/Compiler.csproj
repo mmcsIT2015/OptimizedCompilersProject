@@ -49,7 +49,8 @@
     <Compile Include="Code\Line\FunctionCall.cs" />
     <Compile Include="Code\Line\FunctionParam.cs" />
     <Compile Include="Code\Line\GoTo.cs" />
-    <Compile Include="Code\Line\Operation.cs" />
+    <Compile Include="Code\Line\BinaryExpr.cs" />
+    <Compile Include="Code\Line\UnaryExpr.cs" />
     <Compile Include="Code\Line\СonditionalJump.cs" />
     <Compile Include="Code\Gen3AddrCodeVisitor.cs" />
     <Compile Include="FileLoader.cs" />

@@ -95,6 +95,7 @@ expr : S { $$ = $1; }
     | expr GREAT S { $$ = new BinaryNode($1, $3, BinaryOperation.Greater); }
     | expr EQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
     | expr INEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
+	| MINUS expr { $$ = new UnaryNode($2, UnaryOperation.Minus); }
 	| NOT expr { $$ = new UnaryNode($2, UnaryOperation.Not); }
     ;
 
@@ -109,9 +110,7 @@ T : F { $$ = $1; }
     ;
 
 F : ident { $$ = $1 as IdNode; }
-	| MINUS ident { $$ = new UnaryNode($2, UnaryOperation.Minus); }
     | INUM { $$ = new IntNumNode($1); }
-	| MINUS INUM { $$ = new IntNumNode(-$2); }
     | LBRACKET expr RBRACKET { $$ = $2; }
     | funcall { $$ = $1; }
     ;

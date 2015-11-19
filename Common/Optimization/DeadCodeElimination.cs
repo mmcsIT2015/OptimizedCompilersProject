@@ -49,8 +49,8 @@ namespace Compiler
             //цикл по строкам кода ББл
             for (int i = listSize - 1; i >= 0; --i)
             {
-                if (dotLine[i].IsNot<Line.Operation>()) continue;
-                var line = dotLine[i] as Line.Operation;
+                if (dotLine[i].IsNot<Line.BinaryExpr>()) continue;
+                var line = dotLine[i] as Line.BinaryExpr;
 
                 bool isIdentity = line.IsIdentity() && line.left == line.first; //если строка вида "x = x"
               

@@ -28,11 +28,11 @@ namespace Compiler.Line
         {
             if (IsVoid())
             {
-                return "call " + name + ", " + parameters + "\n";
+                return "call " + name + ", " + parameters;
             }
             else
             {
-                return destination + " = call " + name + ", " + parameters + "\n";
+                return destination + " = call " + name + ", " + parameters;
             }
         }
     }

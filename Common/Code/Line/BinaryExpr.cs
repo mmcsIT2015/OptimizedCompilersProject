@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Compiler.Line
 {
-    class Operation : NonEmptyLine
+    class BinaryExpr : NonEmptyLine
     {
         private static ISet<BinaryOperation> mBoolOps = new HashSet<BinaryOperation> {
             BinaryOperation.Equal,
@@ -31,7 +31,7 @@ namespace Compiler.Line
         public BinaryOperation operation;
 
         // Конструктор для бинарного выражения в правой части
-        public Operation(string left, string first, BinaryOperation op, string second)
+        public BinaryExpr(string left, string first, BinaryOperation op, string second)
         {
             this.left = left;
             this.first = first;
@@ -40,7 +40,7 @@ namespace Compiler.Line
         }
 
         // Конструктор для создания тождества
-        public Operation(string left, string first)
+        public BinaryExpr(string left, string first)
         {
             this.left = left;
             this.first = first;
@@ -49,22 +49,17 @@ namespace Compiler.Line
             this.operation = BinaryOperation.None;
         }
 
-        public virtual bool IsUnary() //на будущее
-        {
-            return false;
-        }
-
         public virtual bool IsIdentity() // является ли строка тождеством (a = b)
         {
             return second == "" && operation == BinaryOperation.None;
         }
 
-        public virtual bool IsBoolExpr() // является ли строка арифметическим выражением (операции +,-,*,/)
+        public virtual bool IsBoolExpr() // является ли строка логическим выражением (операции <= >=, <, >, !=)
         {
             return mBoolOps.Contains(operation);
         }
 
-        public virtual bool IsArithmExpr() // является ли строка логическим выражением (операции <= >=, <, >, !=)
+        public virtual bool IsArithmExpr() // является ли строка арифметическим выражением (операции +,-,*,/)
         {
             return mArithmOps.Contains(operation);
         }
@@ -93,7 +88,7 @@ namespace Compiler.Line
             operation = BinaryOperation.None;
         }
 
-        private static string toString(BinaryOperation operation)
+        private static string ToString(BinaryOperation operation)
         {
             switch (operation)
             {
@@ -114,7 +109,7 @@ namespace Compiler.Line
 
         public override string ToString()
         {
-            return left + " = " + first + " " + (IsIdentity() ? "" : toString(operation) + " ") + second + "\n";
+            return left + " = " + first + " " + (IsIdentity() ? "" : ToString(operation) + " ") + second;
         }
     }
 }

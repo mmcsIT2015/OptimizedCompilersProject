@@ -14,7 +14,7 @@ namespace Compiler
     static class DataFlowAnalysis
     {
         // Получить достигающие определения для блоков
-        public InOutData<ThreeAddrCode.Index> GetReachDefs(ThreeAddrCode code)
+        public static InOutData<ThreeAddrCode.Index> GetReachDefs(ThreeAddrCode code)
         {
             var semilattice = new ReachDefSemilattice(code);
             var funcs = TransferFuncFactory.TransferFuncsForReachDef(code);

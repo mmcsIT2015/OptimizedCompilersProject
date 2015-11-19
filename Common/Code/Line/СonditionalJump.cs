@@ -18,7 +18,7 @@ namespace Compiler.Line
 
         public override string ToString()
         {
-            return "if " + condition + " goto " + target + "\n";
+            return "if " + condition + " goto " + target;
         }
     }
 }

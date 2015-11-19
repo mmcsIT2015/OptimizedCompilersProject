@@ -81,7 +81,7 @@ namespace Compiler
             return v;
         }
 
-        private void Iteration(Dictionary<string, Value> dict, Line.Operation op)
+        private void Iteration(Dictionary<string, Value> dict, Line.BinaryExpr op)
         {
             if (dict.ContainsKey(op.left))
                 dict[op.left].ids.Remove(op.left);
@@ -136,8 +136,8 @@ namespace Compiler
             {
                 Dictionary<string, Value> dict = new Dictionary<string, Value>();
                 foreach (Line.Line line in block)
-                    if (line.Is<Line.Operation>())
-                        Iteration(dict, line as Line.Operation);
+                    if (line.Is<Line.BinaryExpr>())
+                        Iteration(dict, line as Line.BinaryExpr);
             }
         }
     }

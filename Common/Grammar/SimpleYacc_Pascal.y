@@ -99,13 +99,12 @@ U		: F { $$ = $1; }
 		| F MOREEQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.GreaterEqual); }
 		| F EQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
 		| F NOTEQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
+		| MINUS expr { $$ = new UnaryNode($2, UnaryOperation.Minus); }
 		| NOT expr { $$ = new UnaryNode($2, UnaryOperation.Not); }
 		;
 		
 F       : ident  { $$ = $1 as IdNode; }
-		| MINUS ident { $$ = new UnaryNode($2, UnaryOperation.Minus); }
 		| INUM { $$ = new IntNumNode($1); }
-		| MINUS INUM { $$ = new IntNumNode(-$2); }
 		| LB expr RB { $$ = $2; }
 		| funcall { $$ = $1; }
 		;

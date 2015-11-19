@@ -38,9 +38,9 @@ namespace Compiler
             {
                 foreach (var l in block)
                 {
-                    if (l.IsNot<Line.Operation>()) continue;
+                    if (l.IsNot<Line.BinaryExpr>()) continue;
 
-                    var line = l as Line.Operation;
+                    var line = l as Line.BinaryExpr;
                     if (!line.IsArithmExpr()) continue;
                     if (!line.FirstParamIsNumber() || !line.SecondParamIsNumber()) continue;
 
@@ -71,9 +71,9 @@ namespace Compiler
             {
                 foreach (var l in block)
                 {
-                    if (l.IsNot<Line.Operation>()) continue;
+                    if (l.IsNot<Line.BinaryExpr>()) continue;
 
-                    var line = l as Line.Operation;
+                    var line = l as Line.BinaryExpr;
                     if (!line.IsArithmExpr()) continue;
 
                     double first, second;

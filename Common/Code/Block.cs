@@ -18,7 +18,7 @@ namespace Compiler
             {
                 if (line.HasLabel()) builder.Append(line.label + ":");
                 builder.Append('\t', 1);
-                builder.Append(line.ToString());
+                builder.Append(line.ToString() + "\n");
             }
 
             builder.Replace("  ", " ");
@@ -71,9 +71,9 @@ namespace Compiler
                         }
                     }
                 }                
-                else if (this[i] is Line.Operation)
+                else if (this[i] is Line.BinaryExpr)
                 {
-                    var line = this[i] as Line.Operation;
+                    var line = this[i] as Line.BinaryExpr;
                     
                     if (line.left != "" && currentlyAlive.Contains(line.left))
                     {

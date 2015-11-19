@@ -17,7 +17,7 @@ namespace Compiler.Line
 
         public override string ToString()
         {
-            return "param " + param + "\n";
+            return "param " + param;
         }
     }
 }

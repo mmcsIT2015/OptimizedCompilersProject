@@ -148,6 +148,7 @@ namespace ProgramTree
     {
         public ExprNode Expr { get; set; }
         public UnaryOperation Op { get; set; }
+
         public UnaryNode(ExprNode expr, UnaryOperation op)
         {
             Expr = expr;

@@ -156,7 +156,7 @@ namespace Compiler
                     if (line.IsEmpty()) continue;
                     if (line is Line.GoTo || line is Line.FunctionParam || line is Line.FunctionCall) continue;
 
-                    var left = (line as Line.Operation).left;
+                    var left = (line as Line.BinaryExpr).left;
                     Index currentInd = new Index(i, j, left);
                     if (genKillInfoList[i].Gen.Contains(currentInd, new Index.IndexVariableNameComparer()))
                     {
@@ -316,7 +316,7 @@ namespace Compiler
                         continue;
                     if (line is Line.GoTo || line is Line.FunctionParam || line is Line.FunctionCall) continue;
 
-                    String currentIndDef = (line as Line.Operation).left;
+                    String currentIndDef = (line as Line.BinaryExpr).left;
 
                     if (defUseInfoList[i].Def.Contains(currentIndDef))
                         defUseInfoList[i].Def.Remove(currentIndDef);
@@ -326,9 +326,9 @@ namespace Compiler
                     //USE
                     String usedVar = "";
 
-                    if (!(line as Line.Operation).FirstParamIsNumber() && !"".Equals((line as Line.Operation).first))
+                    if (!(line as Line.BinaryExpr).FirstParamIsNumber() && !"".Equals((line as Line.BinaryExpr).first))
                     {
-                        usedVar = (line as Line.Operation).first;
+                        usedVar = (line as Line.BinaryExpr).first;
 
                         if (defUseInfoList[i].Use.Contains(usedVar))
                             defUseInfoList[i].Use.Remove(usedVar);
@@ -337,9 +337,9 @@ namespace Compiler
                     }
 
 
-                    if (!(line as Line.Operation).SecondParamIsNumber() && !"".Equals((line as Line.Operation).second))
+                    if (!(line as Line.BinaryExpr).SecondParamIsNumber() && !"".Equals((line as Line.BinaryExpr).second))
                     {
-                        usedVar = (line as Line.Operation).second;
+                        usedVar = (line as Line.BinaryExpr).second;
 
                         if (defUseInfoList[i].Use.Contains(usedVar))
                             defUseInfoList[i].Use.Remove(usedVar);

@@ -31,9 +31,9 @@ namespace Compiler
                 for (int j = targetLine - 1; j >= 0; --j)
                 {
                     if (block.IsVariableAlive(variable, j)) continue;
-                    if (block[j].IsNot<Line.Operation>()) continue;
+                    if (block[j].IsNot<Line.BinaryExpr>()) continue;
 
-                    var jLine = block[j] as Line.Operation;
+                    var jLine = block[j] as Line.BinaryExpr;
                     if (jLine.IsIdentity()) // тождество, `a = b;`; b <- line.first
                     {
                         string const_value = "";
@@ -42,7 +42,7 @@ namespace Compiler
                         else
                             const_value = variable;
 
-                        var iLine = block[targetLine] as Line.Operation;
+                        var iLine = block[targetLine] as Line.BinaryExpr;
                         if (variable.Equals(iLine.first)) iLine.first = const_value;
                         else if (variable.Equals(iLine.second)) iLine.second = const_value;
                         j = -1;
@@ -56,7 +56,7 @@ namespace Compiler
             {
                 block.CalculateDefUseData();
                 for (int i = 0; i < block.Count; ++i)
-                    if (block[i].Is<Line.Operation>())
+                    if (block[i].Is<Line.BinaryExpr>())
                         CheckDragging(block, i);
             }
         }

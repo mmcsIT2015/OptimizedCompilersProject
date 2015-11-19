@@ -104,11 +104,11 @@ namespace Compiler
             }
             else if (node.Expr is BinaryNode)
             {
-                (mLines.Last() as Line.Operation).left = variable;                
+                (mLines.Last() as Line.BinaryExpr).left = variable;                
             }
             else
             {
-                mLines.Add(new Line.Operation(variable, expression));
+                mLines.Add(new Line.BinaryExpr(variable, expression));
             }
         }
 
@@ -245,7 +245,19 @@ namespace Compiler
             string temp = UniqueIdsGenerator.Instance().Get("t");
             mStack.Push(temp);
 
-            mLines.Add(new Line.Operation(temp, lhs, node.Operation, rhs));
+            mLines.Add(new Line.BinaryExpr(temp, lhs, node.Operation, rhs));
+        }
+
+        public void Visit(UnaryNode node)
+        {
+            node.Expr.Accept(this);
+
+            string expr = mStack.Pop();
+
+            string temp = UniqueIdsGenerator.Instance().Get("t");
+            mStack.Push(temp);
+
+            mLines.Add(new Line.UnaryExpr(temp, node.Op, expr));
         }
 
         public void Visit(IdNode node)
@@ -261,18 +273,6 @@ namespace Compiler
         public void Visit(FloatNumNode node)
         {
             mStack.Push(node.Num.ToString());
-        }
-
-        public void Visit(UnaryNode node)
-        {
-            node.Expr.Accept(this);
-
-            string expr = mStack.Pop();
-
-            string temp = UniqueIdsGenerator.Instance().Get("t");
-            mStack.Push(temp);
-
-           // mLines.Add(new Line.Operation(temp, expr, node.Op));
         }
     }
 }
