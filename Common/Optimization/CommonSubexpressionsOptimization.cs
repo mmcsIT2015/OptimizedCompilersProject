@@ -62,6 +62,26 @@ namespace Compiler
             }
         }
 
+        class UnaryOperation : Value
+        {
+            public Value value = null;
+            public ProgramTree.UnaryOperation op_type = ProgramTree.UnaryOperation.Minus;
+
+            public override bool Equals(object obj)
+            {
+                UnaryOperation op = obj as UnaryOperation;
+                if (op == null)
+                    return false;
+
+                return value == op.value && op_type == op.op_type;
+            }
+
+            public override int GetHashCode()
+            {
+                return value.GetHashCode() * 23 + op_type.GetHashCode() * 29;
+            }
+        }
+
         public CommonSubexpressionsOptimization(ThreeAddrCode code)
         {
             Code = code;
@@ -130,14 +150,51 @@ namespace Compiler
             }
         }
 
+        private void Iteration(Dictionary<string, Value> dict, Block block, int ind)
+        {
+            Line.UnaryExpr op = block[ind] as Line.UnaryExpr;
+
+            if (dict.ContainsKey(op.left))
+                dict[op.left].ids.Remove(op.left);
+
+            UnaryOperation opp = new UnaryOperation();
+            opp.ids.Add(op.left);
+            opp.value = GetValue(dict, op.argument);
+            opp.op_type = op.operation;
+
+            bool b = false;
+            foreach (Value v2 in dict.Values)
+            {
+                UnaryOperation opp2 = v2 as UnaryOperation;
+                if (opp2 != null && opp2.Equals(opp))
+                {
+                    dict[op.left] = opp2;
+                    opp2.ids.Add(op.left);
+
+                    block[ind] = new Line.BinaryExpr(op.left, opp2.ids[0]);
+                    b = true;
+                    break;
+                }
+            }
+
+            if (!b)
+            {
+                dict[op.left] = opp;
+                if (opp.value.ids.Count != 0)
+                    op.argument = opp.value.ids[0];
+            }
+        }
+
         public override void Optimize(params Object[] values)
         {
             foreach (Block block in Code.blocks)
             {
                 Dictionary<string, Value> dict = new Dictionary<string, Value>();
-                foreach (Line.Line line in block)
-                    if (line.Is<Line.BinaryExpr>())
-                        Iteration(dict, line as Line.BinaryExpr);
+                for (int i = 0; i < block.Count; ++i)
+                    if (block[i].Is<Line.BinaryExpr>())
+                        Iteration(dict, block[i] as Line.BinaryExpr);
+                    else if (block[i].Is<Line.UnaryExpr>())
+                        Iteration(dict, block, i);
             }
         }
     }
