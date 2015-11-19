@@ -13,7 +13,7 @@ namespace Compiler.Line
         public UnaryOperation operation;
         public string argument;
 
-        // Конструктор для бинарного выражения в правой части
+        // Конструктор для унарного выражения
         public UnaryExpr(string left, UnaryOperation op, string arg)
         {
             this.left = left;
