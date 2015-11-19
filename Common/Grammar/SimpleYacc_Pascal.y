@@ -27,7 +27,7 @@
 %token <dVal> RNUM 
 %token <sVal> ID
 
-%type <eVal> expr ident T F U
+%type <eVal> expr ident S T U F
 %type <stVal> assign statement if while repeatuntil
 %type <blVal> stlist block
 %type <funVal> funcall
@@ -82,32 +82,35 @@ ident 	: ID { $$ = new IdNode($1); }
 assign 	: ident ASSIGN expr { $$ = new AssignNode($1 as IdNode, $3); }
 		;
 
-expr	: T { $$ = $1; }
-		| T PROD expr { $$ = new BinaryNode($1, $3, BinaryOperation.Mult); }
-		| T DIV expr { $$ = new BinaryNode($1, $3, BinaryOperation.Div); }
-		;
+expr : S { $$ = $1; }
+	| expr LESS S { $$ = new BinaryNode($1, $3, BinaryOperation.Less); }
+	| expr MORE S { $$ = new BinaryNode($1, $3, BinaryOperation.Greater); }
+	| expr LESSEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.LessEqual); }
+	| expr MOREEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.GreaterEqual); }
+	| expr EQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
+	| expr NOTEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
+	;
 
-T 		: U { $$ = $1; }
-		| U PLUS expr { $$ = new BinaryNode($1, $3, BinaryOperation.Plus); }
-		| U MINUS expr { $$ = new BinaryNode($1, $3, BinaryOperation.Minus); }
-		;
-		
-U		: F { $$ = $1; }
-		| F LESS expr { $$ = new BinaryNode($1, $3, BinaryOperation.Less); }
-		| F MORE expr { $$ = new BinaryNode($1, $3, BinaryOperation.Greater); }
-		| F LESSEQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.LessEqual); }
-		| F MOREEQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.GreaterEqual); }
-		| F EQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
-		| F NOTEQUAL expr { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
-		| MINUS expr { $$ = new UnaryNode($2, UnaryOperation.Minus); }
-		| NOT expr { $$ = new UnaryNode($2, UnaryOperation.Not); }
-		;
-		
-F       : ident  { $$ = $1 as IdNode; }
-		| INUM { $$ = new IntNumNode($1); }
-		| LB expr RB { $$ = $2; }
-		| funcall { $$ = $1; }
-		;
+S : T { $$ = $1; }
+    | S PLUS T { $$ = new BinaryNode($1, $3, BinaryOperation.Plus); }
+    | S MINUS T { $$ = new BinaryNode($1, $3, BinaryOperation.Minus); }
+    ;
+
+T : U { $$ = $1; }
+    | T PROD U { $$ = new BinaryNode($1, $3, BinaryOperation.Mult); }
+    | T DIV U { $$ = new BinaryNode($1, $3, BinaryOperation.Div); }
+    ;
+
+U : F { $$ = $1; }
+	| MINUS U { $$ = new UnaryNode($2, UnaryOperation.Minus); }
+	| NOT U { $$ = new UnaryNode($2, UnaryOperation.Not); }
+	;
+
+F : ident { $$ = $1 as IdNode; }
+    | INUM { $$ = new IntNumNode($1); }
+    | LB expr RB { $$ = $2; }
+    | funcall { $$ = $1; }
+    ;
 				
 block	: BEGIN stlist END { $$ = $2; }
 		;

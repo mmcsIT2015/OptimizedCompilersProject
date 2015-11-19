@@ -28,7 +28,7 @@
 %token <dVal> RNUM
 %token <sVal> ID
 
-%type <eVal> expr ident T F S
+%type <eVal> expr ident T F S U
 %type <stVal> assign statement do_while while if
 %type <blVal> stlist block
 %type <ioVal> cout
@@ -95,8 +95,6 @@ expr : S { $$ = $1; }
     | expr GREAT S { $$ = new BinaryNode($1, $3, BinaryOperation.Greater); }
     | expr EQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
     | expr INEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
-	| MINUS expr { $$ = new UnaryNode($2, UnaryOperation.Minus); }
-	| NOT expr { $$ = new UnaryNode($2, UnaryOperation.Not); }
     ;
 
 S : T { $$ = $1; }
@@ -104,10 +102,15 @@ S : T { $$ = $1; }
     | S MINUS T { $$ = new BinaryNode($1, $3, BinaryOperation.Minus); }
     ;
 
-T : F { $$ = $1; }
-    | T MUL F { $$ = new BinaryNode($1, $3, BinaryOperation.Mult); }
-    | T DIV F { $$ = new BinaryNode($1, $3, BinaryOperation.Div); }
+T : U { $$ = $1; }
+    | T MUL U { $$ = new BinaryNode($1, $3, BinaryOperation.Mult); }
+    | T DIV U { $$ = new BinaryNode($1, $3, BinaryOperation.Div); }
     ;
+
+U : F { $$ = $1; }
+	| MINUS U { $$ = new UnaryNode($2, UnaryOperation.Minus); }
+	| NOT U { $$ = new UnaryNode($2, UnaryOperation.Not); }
+	;
 
 F : ident { $$ = $1 as IdNode; }
     | INUM { $$ = new IntNumNode($1); }
