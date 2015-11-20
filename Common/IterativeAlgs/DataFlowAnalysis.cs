@@ -27,5 +27,22 @@ namespace Compiler
             dst.Out = alg.Out;
             return dst;
         }
+
+        // Анализ активных переменных
+        public static InOutData<String> GetActiveVariables(ThreeAddrCode code)
+        {
+            var semilattice = new ActiveVariablesSemilattice(code);
+            var funcs = TransferFuncFactory.TransferFuncsForActiveVariables(code);
+            var alg = new IterativeAlgo<String, TransferFunction<String>>(semilattice, funcs);
+
+            alg.RunOnReverseGraph(code);
+
+            InOutData<String> dst = new InOutData<String>();
+            dst.In = alg.In;
+            dst.Out = alg.Out;
+            return dst;
+        }
+
+
     }
 }

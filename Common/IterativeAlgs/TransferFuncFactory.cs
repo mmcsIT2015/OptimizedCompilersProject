@@ -24,5 +24,25 @@ namespace Compiler
 
             return funcs;
         }
+
+        public static Dictionary<Block, TransferFunction<String>> TransferFuncsForActiveVariables(ThreeAddrCode code)
+        {
+            var funcs = new Dictionary<Block, TransferFunction<String>>();
+            var source = code.GetDefUseInfo();
+            foreach (var block in code.blocks)
+            {
+                int id = code.GetBlockId(block);
+                var info = source[id];
+
+                var def = new HashSet<String>(info.Def);
+                var use = new HashSet<String>(info.Use);
+
+                funcs[block] = new TransferFunction<String>(def, use);
+            }
+
+            return funcs;
+        }
+
+
     }
 }

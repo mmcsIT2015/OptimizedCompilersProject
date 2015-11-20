@@ -62,6 +62,7 @@
     <Compile Include="Grammar\SimpleYaccC.cs" />
     <Compile Include="Grammar\SimpleYaccPascal.cs" />
     <Compile Include="IGraph.cs" />
+    <Compile Include="IterativeAlgs\ActiveVariablesSemilattice.cs" />
     <Compile Include="IterativeAlgs\AvailableExprSemilattice.cs" />
     <Compile Include="IterativeAlgs\DataFlowAnalysis.cs" />
     <Compile Include="IterativeAlgs\IntersectSemilattice.cs" />
