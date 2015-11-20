@@ -73,8 +73,8 @@ namespace ProgramTree
 		{
 			public AssignNode ValueAssignment { get; set; }
 			public SimpleVarType VariableType { get; set; }
-			public IdNode Id { get; set; }			
-			public bool isAssigned { get; }
+			public IdNode Id { get; set; }
+            public bool isAssigned { get; private set; }
 			
 			public IdNode GetID()
 			{
