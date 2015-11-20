@@ -49,6 +49,8 @@ namespace Compiler
             //цикл по строкам кода ББл
             for (int i = listSize - 1; i >= 0; --i)
             {
+                //if (dotLine[i].IsNot<Line.Identity>() && dotLine[i].IsNot<Line.BinaryExpr>() && dotLine[i].IsNot<Line.UnaryExpr>()) continue;
+                
                 if (dotLine[i].Is<Line.Identity>())
                 {
                     var temp = dotLine[i] as Line.Identity;
@@ -57,6 +59,24 @@ namespace Compiler
                         //idLife[line.left] = false;//переменная в левой части "мертвая"
                         removeIndexList.Add(i); //добавляем номер текущей строки в лист для удаления
                     }
+                    else
+                    {
+                        idLife[temp.right] = true;
+
+                        //если для переменной в левой части есть значение "живучести"
+                        bool isAlive;
+                        if (idLife.TryGetValue(temp.left, out isAlive))
+                        {
+                            //если переменная в левой части "живая"
+                            if (isAlive) idLife[temp.left] = false; //делаем ее "мертвой"
+                            else removeIndexList.Add(i); //добавляем номер текущей строки в лист для удаления
+                        }
+                        else
+                        {
+                            idLife[temp.left] = false; //делаем ее "мертвой"
+                        }
+                    }
+
                 }
                 else if (dotLine[i].Is<Line.BinaryExpr>())
                 {
@@ -77,6 +97,26 @@ namespace Compiler
                     {
                         idLife[line.left] = false; //делаем ее "мертвой"
                     }
+                }
+                else if (dotLine[i].Is<Line.UnaryExpr>())
+                {
+                    var line = dotLine[i] as Line.UnaryExpr;
+
+                    idLife[line.argument] = true;
+
+                    //если для переменной в левой части есть значение "живучести"
+                    bool isAlive;
+                    if (idLife.TryGetValue(line.left, out isAlive))
+                    {
+                        //если переменная в левой части "живая"
+                        if (isAlive) idLife[line.left] = false; //делаем ее "мертвой"
+                        else removeIndexList.Add(i); //добавляем номер текущей строки в лист для удаления
+                    }
+                    else
+                    {
+                        idLife[line.left] = false; //делаем ее "мертвой"
+                    }
+
                 }
             }
 
