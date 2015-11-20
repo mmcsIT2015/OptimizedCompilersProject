@@ -31,22 +31,20 @@ namespace Compiler
                 for (int j = targetLine - 1; j >= 0; --j)
                 {
                     if (block.IsVariableAlive(variable, j)) continue;
-                    if (block[j].IsNot<Line.BinaryExpr>()) continue;
+                    if (block[j].IsNot<Line.Identity>()) continue;
 
-                    var jLine = block[j] as Line.BinaryExpr;
-                    if (jLine.IsIdentity()) // тождество, `a = b;`; b <- line.first
-                    {
-                        string const_value = "";
-                        if (jLine.left.Equals(variable) && !block.GetAliveVariables(j).Contains(jLine.first))
-                            const_value = jLine.first;
-                        else
-                            const_value = variable;
+                    var jLine = block[j] as Line.Identity;
 
-                        var iLine = block[targetLine] as Line.BinaryExpr;
-                        if (variable.Equals(iLine.first)) iLine.first = const_value;
-                        else if (variable.Equals(iLine.second)) iLine.second = const_value;
-                        j = -1;
-                    }
+                    string const_value = "";
+                    if (jLine.left.Equals(variable) && !block.GetAliveVariables(j).Contains(jLine.right))
+                        const_value = jLine.right;
+                    else
+                        const_value = variable;
+
+                    var iLine = block[targetLine] as Line.BinaryExpr;
+                    if (variable.Equals(iLine.first)) iLine.first = const_value;
+                    else if (variable.Equals(iLine.second)) iLine.second = const_value;
+                    j = -1;
                 }
         }
 

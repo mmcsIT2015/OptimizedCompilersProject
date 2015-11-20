@@ -39,21 +39,6 @@ namespace Compiler.Line
             this.second = second;
         }
 
-        // Конструктор для создания тождества
-        public BinaryExpr(string left, string first)
-        {
-            this.left = left;
-            this.first = first;
-
-            this.second = "";
-            this.operation = BinaryOperation.None;
-        }
-
-        public virtual bool IsIdentity() // является ли строка тождеством (a = b)
-        {
-            return second == "" && operation == BinaryOperation.None;
-        }
-
         public virtual bool IsBoolExpr() // является ли строка логическим выражением (операции <= >=, <, >, !=)
         {
             return mBoolOps.Contains(operation);
@@ -74,18 +59,6 @@ namespace Compiler.Line
         {
             double temp;
             return double.TryParse(second, out temp);
-        }
-
-        /// Преобразует правую часть выражения в указанное значение
-        /// (т.е. преобразует линию в тождество).
-        /// Пример:
-        /// line = `a = b + c`
-        /// line.ToIdentity("z") -> `a = z`
-        public void ToIdentity(string value)
-        {
-            first = value;
-            second = "";
-            operation = BinaryOperation.None;
         }
 
         private static string ToString(BinaryOperation operation)
@@ -109,7 +82,7 @@ namespace Compiler.Line
 
         public override string ToString()
         {
-            return left + " = " + first + " " + (IsIdentity() ? "" : ToString(operation) + " ") + second;
+            return left + " = " + first + " " + ToString(operation) + " " + second;
         }
     }
 }

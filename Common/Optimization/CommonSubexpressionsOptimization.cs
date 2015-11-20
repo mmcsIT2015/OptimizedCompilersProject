@@ -106,7 +106,7 @@ namespace Compiler
             if (dict.ContainsKey(op.left))
                 dict[op.left].ids.Remove(op.left);
 
-            if (op.IsIdentity())
+            if (false/*op.IsIdentity()*/)
             {
                 Value v = GetValue(dict, op.first);
                 dict[op.left] = v;
@@ -171,7 +171,7 @@ namespace Compiler
                     dict[op.left] = opp2;
                     opp2.ids.Add(op.left);
 
-                    block[ind] = new Line.BinaryExpr(op.left, opp2.ids[0]);
+                    block[ind] = new Line.Identity(op.left, opp2.ids[0]);
                     b = true;
                     break;
                 }

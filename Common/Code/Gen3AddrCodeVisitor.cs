@@ -147,7 +147,7 @@ namespace Compiler
             }
             else
             {
-                mLines.Add(new Line.BinaryExpr(variable, expression));
+                mLines.Add(new Line.Identity(variable, expression));
             }
         }
 

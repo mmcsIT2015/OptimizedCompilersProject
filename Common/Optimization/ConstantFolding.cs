@@ -49,16 +49,16 @@ namespace Compiler
                     switch (line.operation)
                     {
                         case BinaryOperation.Minus:
-                            line.ToIdentity((x - y).ToString());
+                            block.ReplaceLines(line, new Line.Identity(line.left, (x - y).ToString()));
                             break;
                         case BinaryOperation.Plus:
-                            line.ToIdentity((x + y).ToString());
+                            block.ReplaceLines(line, new Line.Identity(line.left, (x + y).ToString()));
                             break;
                         case BinaryOperation.Mult:
-                            line.ToIdentity((x * y).ToString());
+                            block.ReplaceLines(line, new Line.Identity(line.left, (x * y).ToString()));
                             break;
                         case BinaryOperation.Div:
-                            line.ToIdentity((x / y).ToString());
+                            block.ReplaceLines(line, new Line.Identity(line.left, (x / y).ToString()));
                             break;
                     }
                 }
@@ -83,31 +83,47 @@ namespace Compiler
                     {
                         if (first == 0) //мы сравниваем double
                         {
-                            if (line.operation == BinaryOperation.Plus) line.ToIdentity(line.second);
-                            else if (line.operation == BinaryOperation.Minus) line.ToIdentity(("-" + second));
-                            else if (line.operation == BinaryOperation.Mult) line.ToIdentity("0");
-                            else if (line.operation == BinaryOperation.Div) 
-                                line.ToIdentity("0");
+                            if (line.operation == BinaryOperation.Plus)
+                            {
+                                block.ReplaceLines(line, new Line.Identity(line.left, line.second));
+                            }
+                            else if (line.operation == BinaryOperation.Minus)
+                            {
+                                block.ReplaceLines(line, new Line.Identity(line.left, "-" + second));
+                            }
+                            else if (line.operation == BinaryOperation.Mult)
+                            {
+                                block.ReplaceLines(line, new Line.Identity(line.left, "0"));
+                            }
+                            else if (line.operation == BinaryOperation.Div)
+                                block.ReplaceLines(line, new Line.Identity(line.left, "0"));
                         }
                         else if (first == 1) 
                         {
                             if (line.operation == BinaryOperation.Mult)
-                                line.ToIdentity(line.second);
+                                block.ReplaceLines(line, new Line.Identity(line.left, line.second));
                         }
                     }
                     else if (!firstIsNumber && secondIsNumber)
                     {
                         if (second == 0) 
                         {
-                            if (line.operation == BinaryOperation.Mult) line.ToIdentity("0");
+                            if (line.operation == BinaryOperation.Mult)
+                            {
+                                block.ReplaceLines(line, new Line.Identity(line.left, "0"));
+                            }
                             else if (line.operation == BinaryOperation.Plus || line.operation == BinaryOperation.Minus)
                             {
-                                line.ToIdentity(line.first);
+                                block.ReplaceLines(line, new Line.Identity(line.left, line.first));
                             }
                         }
-                        else if (second == 1) 
+                        else if (second == 1)
+                        {
                             if (line.operation == BinaryOperation.Mult || line.operation == BinaryOperation.Div)
-                                line.ToIdentity(line.first);
+                            {
+                                block.ReplaceLines(line, new Line.Identity(line.left, line.first));
+                            }
+                        }
                     }
                 }
             }

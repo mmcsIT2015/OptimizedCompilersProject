@@ -50,6 +50,7 @@
     <Compile Include="Code\Line\FunctionParam.cs" />
     <Compile Include="Code\Line\GoTo.cs" />
     <Compile Include="Code\Line\BinaryExpr.cs" />
+    <Compile Include="Code\Line\Identity.cs" />
     <Compile Include="Code\Line\UnaryExpr.cs" />
     <Compile Include="Code\Line\СonditionalJump.cs" />
     <Compile Include="Code\Gen3AddrCodeVisitor.cs" />

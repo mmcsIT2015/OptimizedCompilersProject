@@ -117,6 +117,18 @@ namespace Compiler
         {
             return mDefUseData[step];
         }
+
+        public void ReplaceLines(Line.Line what, Line.Line who)
+        {
+            for (int i = 0; i < Count; ++i)
+            {
+                if (this[i] == what)
+                {
+                    this[i] = who;
+                    return;
+                }
+            }
+        }
     };
 
     static class Extensions

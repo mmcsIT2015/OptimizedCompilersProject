@@ -49,13 +49,19 @@ namespace Compiler
             //цикл по строкам кода ББл
             for (int i = listSize - 1; i >= 0; --i)
             {
-                if (dotLine[i].IsNot<Line.BinaryExpr>()) continue;
-                var line = dotLine[i] as Line.BinaryExpr;
-
-                bool isIdentity = line.IsIdentity() && line.left == line.first; //если строка вида "x = x"
-              
-                if (!isIdentity)
+                if (dotLine[i].Is<Line.Identity>())
                 {
+                    var temp = dotLine[i] as Line.Identity;
+                    if (temp.left == temp.right)
+                    {
+                        //idLife[line.left] = false;//переменная в левой части "мертвая"
+                        removeIndexList.Add(i); //добавляем номер текущей строки в лист для удаления
+                    }
+                }
+                else if (dotLine[i].Is<Line.BinaryExpr>())
+                {
+                    var line = dotLine[i] as Line.BinaryExpr;
+
                     idLife[line.first] = true; //первый операнд правой части "живой"
                     idLife[line.second] = true; //второй операнд правой части "живой"
 
@@ -71,11 +77,6 @@ namespace Compiler
                     {
                         idLife[line.left] = false; //делаем ее "мертвой"
                     }
-                }
-                else
-                {
-                    //idLife[line.left] = false;//переменная в левой части "мертвая"
-                    removeIndexList.Add(i); //добавляем номер текущей строки в лист для удаления
                 }
             }
 
