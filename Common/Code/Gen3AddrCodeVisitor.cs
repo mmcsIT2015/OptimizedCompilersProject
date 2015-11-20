@@ -64,22 +64,33 @@ namespace Compiler
                 for (int j = 0; j < code.blocks[i].Count; ++j)
                 {
                     var line = code.blocks[i][j];
-                    if (line.IsNot<Line.Operation>()) continue;
+                    if (line.IsNot<Line.BinaryExpr>() && line.IsNot<Line.UnaryExpr>()) continue;
 
-                    var lineOp = line as Line.Operation;
-                    if (!lineOp.FirstParamIsNumber() && DefSetList[i].Contains(lineOp.first) && !lineOp.SecondParamIsNumber() && DefSetList[i].Contains(lineOp.second)//оба операнда переменные
-                        || lineOp.FirstParamIsNumber() && !lineOp.SecondParamIsNumber() && DefSetList[i].Contains(lineOp.second) //первый операнд число, а второй переменная
-                        || !lineOp.FirstParamIsNumber() && DefSetList[i].Contains(lineOp.first) && lineOp.SecondParamIsNumber() //первый операнд переменная, а второй число
-                        || lineOp.FirstParamIsNumber() && lineOp.second == ""// первый операнд число, а второй пуст
-                        || lineOp.SecondParamIsNumber() && lineOp.first == ""//второй операнд число, а первый пуст
-                        || lineOp.FirstParamIsNumber() && lineOp.SecondParamIsNumber() //оба операнда числа
-                        || !lineOp.FirstParamIsNumber() && DefSetList[i].Contains(lineOp.first) && lineOp.second == ""//первый операнд переменная, а второй пуст
-                        || !lineOp.SecondParamIsNumber() && DefSetList[i].Contains(lineOp.second) && lineOp.first == ""//второй операнд переменная, а первый пуст
-                        )
-                            
+                    if (line.Is<Line.BinaryExpr>())
+                    {
+                        var lineOp = line as Line.BinaryExpr;
+                        if (!lineOp.FirstParamIsNumber() && DefSetList[i].Contains(lineOp.first) && !lineOp.SecondParamIsNumber() && DefSetList[i].Contains(lineOp.second)//оба операнда переменные
+                            || lineOp.FirstParamIsNumber() && !lineOp.SecondParamIsNumber() && DefSetList[i].Contains(lineOp.second) //первый операнд число, а второй переменная
+                            || !lineOp.FirstParamIsNumber() && DefSetList[i].Contains(lineOp.first) && lineOp.SecondParamIsNumber() //первый операнд переменная, а второй число
+                            || lineOp.FirstParamIsNumber() && lineOp.second == ""// первый операнд число, а второй пуст
+                            || lineOp.SecondParamIsNumber() && lineOp.first == ""//второй операнд число, а первый пуст
+                            || lineOp.FirstParamIsNumber() && lineOp.SecondParamIsNumber() //оба операнда числа
+                            || !lineOp.FirstParamIsNumber() && DefSetList[i].Contains(lineOp.first) && lineOp.second == ""//первый операнд переменная, а второй пуст
+                            || !lineOp.SecondParamIsNumber() && DefSetList[i].Contains(lineOp.second) && lineOp.first == ""//второй операнд переменная, а первый пуст
+                            )
+
                             leftIDSet.Add(lineOp.left);
+                        else
+                            throw new SemanticException("Одна или две переменные в правой части не определены в пределах одного базового блока");
+                    }
                     else
-                        throw new SemanticException("Одна или две переменные в правой части не определены в пределах одного базового блока");
+                    {
+                        var lineOp = line as Line.UnaryExpr;
+                        if (lineOp.ParamIsNumber() || !lineOp.ParamIsNumber() && DefSetList[i].Contains(lineOp.argument)) //если операнд число или переменная
+                            leftIDSet.Add(lineOp.left);
+                        else
+                            throw new SemanticException("Переменная в правой части не определена в пределах одного базового блока");
+                    }
                 }
 
             //if (!isValid)
