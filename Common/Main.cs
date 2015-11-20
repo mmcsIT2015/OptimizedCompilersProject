@@ -95,12 +95,13 @@ namespace SimpleCompiler
             else
             {
                 List<string> files = new List<string>();
-                files.Add(@"..\..\tests\test-validation3.cn");
+                //files.Add(@"..\..\tests\test-validation3.cn");
                 //files.Add(@"..\..\tests\test-1.cn");
                 //files.Add(@"..\..\tests\test-dce2.cn");
                 //files.Add(@"..\..\in.pasn");
                 //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
+                files.Add(@"..\..\test-pas1.pasn");
 
                 foreach (var file in files)
                 {
