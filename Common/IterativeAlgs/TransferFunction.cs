@@ -76,5 +76,22 @@ namespace Compiler
 
             return new TransferFunction<T>(gen, kill);
         }
+
+        public static TransferFunction<T> SuperPosition(params TransferFunction<T>[] funcs)
+        {
+            if (funcs.Length < 2)
+            {
+                throw new ArgumentException("funcs.Length < 2!");
+            }
+
+            TransferFunction<T> tf = funcs[funcs.Length - 1];
+
+            for (int i = funcs.Length - 2; i >= 0; --i)
+            {
+                 tf = tf.Map(funcs[i]) as TransferFunction<T>;
+            }
+
+            return tf;
+        }
     }
 }
