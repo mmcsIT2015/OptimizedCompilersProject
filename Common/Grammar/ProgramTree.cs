@@ -5,6 +5,8 @@ using Compiler;
 namespace ProgramTree
 {
     public enum AssignType { Assign, AssignPlus, AssignMinus, AssignMult, AssignDivide };
+		
+		public enum SimpleVarType { Int, Float, Str, Bool };
 
     public enum BinaryOperation { None, Plus, Minus, Mult, Div, Less, Greater, Equal, NotEqual, LessEqual, GreaterEqual };
 
@@ -44,6 +46,17 @@ namespace ProgramTree
             visitor.Visit(this);
         }
     }
+		
+		public class StringLiteralNode : ExprNode
+		{
+			public string Str { get; set; }
+			public StringLiteralNode(string str) { Str = str; }
+			
+			public override void Accept(IVisitor visitor)
+            {
+                visitor.Visit(this);
+            }
+		}
 
     public class FloatNumNode : ExprNode
     {
@@ -55,6 +68,43 @@ namespace ProgramTree
             visitor.Visit(this);
         }
     }
+		
+		public class VarDeclNode: StatementNode
+		{
+			public AssignNode ValueAssignment { get; set; }
+			public SimpleVarType VariableType { get; set; }
+			public IdNode Id { get; set; }			
+			public bool isAssigned { get; }
+			
+			public IdNode GetID()
+			{
+				if (isAssigned)
+					return ValueAssignment.Id;
+				else
+					return Id;
+			}
+			
+			public VarDeclNode(SimpleVarType type, AssignNode Assignment)
+			{
+				Id = null;
+				ValueAssignment = Assignment;
+				VariableType = type;
+				isAssigned = true;
+			}
+			
+			public VarDeclNode(SimpleVarType type, IdNode ident)
+			{
+				ValueAssignment = null;
+				Id = ident;
+				VariableType = type;
+				isAssigned = false;
+			}
+			
+			public override void Accept(IVisitor visitor)
+            {
+                visitor.Visit(this);
+            }
+		}
 
     public class BinaryNode : ExprNode
     {

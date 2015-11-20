@@ -11,6 +11,9 @@ AlphaDigit {Alpha}|{Digit}
 INTNUM  {Digit}+
 REALNUM {INTNUM}\.{INTNUM}
 ID {Alpha}{AlphaDigit}*
+TYPEDESC int|float|string|bool
+
+STRING_LITERAL \"([^\"]|\\.)*\"
 
 %%
 
@@ -19,8 +22,15 @@ ID {Alpha}{AlphaDigit}*
   if (isIntNum) {
 	return (int)Tokens.INUM; 
   }
-
   throw new SyntaxException(yytext + " isn't a value of type `INTNUM`");
+}
+
+{STRING_LITERAL} {
+	return (int)Tokens.STRING_L;
+}
+
+{TYPEDESC}	{
+	return (int)Tokens.TYPE;		
 }
 
 {REALNUM} { 

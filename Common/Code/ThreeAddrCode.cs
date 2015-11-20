@@ -314,7 +314,7 @@ namespace Compiler
                     var line = blocks[i][j];
                     if (line.IsEmpty())
                         continue;
-                    if (line is Line.GoTo || line is Line.FunctionParam || line is Line.FunctionCall) continue;
+                    if (line is Line.GoTo || line is Line.FunctionParam || line is Line.FunctionCall || line is Line.UnaryExpr) continue;
 
                     String currentIndDef = (line as Line.BinaryExpr).left;
 

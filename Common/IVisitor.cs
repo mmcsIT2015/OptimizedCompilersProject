@@ -22,5 +22,7 @@ namespace Compiler
         void Visit(FunctionNodeSt node);
         void Visit(FunctionNode node);
         void Visit(UnaryNode node);
+        void Visit(StringLiteralNode node);
+        void Visit(VarDeclNode node);
     }
 }

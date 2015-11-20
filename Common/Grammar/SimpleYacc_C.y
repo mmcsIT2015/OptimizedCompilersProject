@@ -17,6 +17,7 @@
 			public FunctionNode funVal;
 			public FunctionNodeSt funStVal;
 			public List<ExprNode> paramVal;
+			public SimpleVarType typeVal;
         }
 
 %using ProgramTree;
@@ -26,10 +27,11 @@
 %token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA NOT
 %token <iVal> INUM
 %token <dVal> RNUM
-%token <sVal> ID
+%token <sVal> ID STRING_L
+%token <typeVal> TYPE
 
 %type <eVal> expr ident T F S U
-%type <stVal> assign statement do_while while if
+%type <stVal> assign statement do_while while if decl_assign
 %type <blVal> stlist block
 %type <ioVal> cout
 %type <funVal> funcall
@@ -72,7 +74,12 @@ statement: assign SEMICOLON { $$ = $1; }
     | cout SEMICOLON { $$ = $1; }
     | if { $$ = $1; }
     | funcallst SEMICOLON { $$ = $1; }
+		| decl_assign SEMICOLON { $$ = $1; }
     ;
+
+decl_assign: TYPE assign { $$ = new VarDeclNode($1, $2 as AssignNode); }
+		| TYPE ident { $$ = new VarDeclNode($1, $2 as IdNode); }
+		;
 
 funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }
 		;
@@ -114,6 +121,7 @@ U : F { $$ = $1; }
 
 F : ident { $$ = $1 as IdNode; }
     | INUM { $$ = new IntNumNode($1); }
+		| STRING_L { $$ = new StringLiteralNode($1); }
     | LBRACKET expr RBRACKET { $$ = $2; }
     | funcall { $$ = $1; }
     ;

@@ -30,7 +30,7 @@ namespace Compiler
         {
             EraseEmptyLines();
             Compiler.ThreeAddrCode code = new Compiler.ThreeAddrCode(mLines); 
-            VerifyCorrectnessOfProgram(code);
+            //VerifyCorrectnessOfProgram(code);
             return code;
         }
 
@@ -149,6 +149,16 @@ namespace Compiler
             {
                 mLines.Add(new Line.BinaryExpr(variable, expression));
             }
+        }
+
+        public void Visit(StringLiteralNode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(VarDeclNode node)
+        {
+            throw new NotImplementedException();
         }
 
         public void Visit(IfNode node)
