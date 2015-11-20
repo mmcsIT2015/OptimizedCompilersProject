@@ -100,57 +100,8 @@ namespace Compiler
                 v = dict[id];
             return v;
         }
-
-        private void Iteration(Dictionary<string, Value> dict, Line.BinaryExpr op)
-        {
-            if (dict.ContainsKey(op.left))
-                dict[op.left].ids.Remove(op.left);
-
-            if (false/*op.IsIdentity()*/)
-            {
-                Value v = GetValue(dict, op.first);
-                dict[op.left] = v;
-                v.ids.Add(op.left);
-
-                op.first = v.ids[0];
-            }
-            else
-            {
-                Operation opp = new Operation();
-                opp.ids.Add(op.left);
-                opp.value1 = GetValue(dict, op.first);
-                opp.value2 = GetValue(dict, op.second);
-                opp.op_type = op.operation;
-
-                bool b = false;
-                foreach (Value v2 in dict.Values)
-                {
-                    Operation opp2 = v2 as Operation;
-                    if (opp2 != null && opp2.Equals(opp))
-                    {
-                        dict[op.left] = opp2;
-                        opp2.ids.Add(op.left);
-
-                        op.first = opp2.ids[0];
-                        op.operation = ProgramTree.BinaryOperation.None;
-                        op.second = "";
-                        b = true;
-                        break;
-                    }
-                }
-
-                if (!b)
-                {
-                    dict[op.left] = opp;
-                    if (opp.value1.ids.Count != 0)
-                        op.first = opp.value1.ids[0];
-                    if (opp.value2.ids.Count != 0)
-                        op.second = opp.value2.ids[0];
-                }
-            }
-        }
-
-        private void Iteration(Dictionary<string, Value> dict, Block block, int ind)
+        
+        private void IterationUnaryExpr(Dictionary<string, Value> dict, Block block, int ind)
         {
             Line.UnaryExpr op = block[ind] as Line.UnaryExpr;
 
@@ -185,16 +136,70 @@ namespace Compiler
             }
         }
 
+        private void IterationBinaryExpr(Dictionary<string, Value> dict, Block block, int ind)
+        {
+            Line.BinaryExpr op = block[ind] as Line.BinaryExpr;
+
+            if (dict.ContainsKey(op.left))
+                dict[op.left].ids.Remove(op.left);
+
+            Operation opp = new Operation();
+            opp.ids.Add(op.left);
+            opp.value1 = GetValue(dict, op.first);
+            opp.value2 = GetValue(dict, op.second);
+            opp.op_type = op.operation;
+
+            bool b = false;
+            foreach (Value v2 in dict.Values)
+            {
+                Operation opp2 = v2 as Operation;
+                if (opp2 != null && opp2.Equals(opp))
+                {
+                    dict[op.left] = opp2;
+                    opp2.ids.Add(op.left);
+
+                    block[ind] = new Line.Identity(op.left, opp2.ids[0]);
+                    b = true;
+                    break;
+                }
+            }
+
+            if (!b)
+            {
+                dict[op.left] = opp;
+                if (opp.value1.ids.Count != 0)
+                    op.first = opp.value1.ids[0];
+                if (opp.value2.ids.Count != 0)
+                    op.second = opp.value2.ids[0];
+            }
+        }
+
+        private void IterationItentity(Dictionary<string, Value> dict, Block block, int ind)
+        {
+            Line.Identity op = block[ind] as Line.Identity;
+
+            if (dict.ContainsKey(op.left))
+                dict[op.left].ids.Remove(op.left);
+
+            Value v = GetValue(dict, op.right);
+            dict[op.left] = v;
+            v.ids.Add(op.left);
+
+            op.right = v.ids[0];
+        }
+
         public override void Optimize(params Object[] values)
         {
             foreach (Block block in Code.blocks)
             {
                 Dictionary<string, Value> dict = new Dictionary<string, Value>();
                 for (int i = 0; i < block.Count; ++i)
-                    if (block[i].Is<Line.BinaryExpr>())
-                        Iteration(dict, block[i] as Line.BinaryExpr);
+                    if (block[i].Is<Line.Identity>())
+                        IterationItentity(dict, block, i);
+                    else if (block[i].Is<Line.BinaryExpr>())
+                        IterationBinaryExpr(dict, block, i);
                     else if (block[i].Is<Line.UnaryExpr>())
-                        Iteration(dict, block, i);
+                        IterationUnaryExpr(dict, block, i);
             }
         }
     }
