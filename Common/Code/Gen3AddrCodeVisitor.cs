@@ -29,12 +29,14 @@ namespace Compiler
         public Compiler.ThreeAddrCode CreateCode()
         {
             EraseEmptyLines();
-            VerifyCorrectnessOfProgram();
-            return new Compiler.ThreeAddrCode(mLines);
+            Compiler.ThreeAddrCode code = new Compiler.ThreeAddrCode(mLines); 
+            VerifyCorrectnessOfProgram(code);
+            return code;
         }
 
         private Compiler.Block mLines = new Compiler.Block();
         private Stack<string> mStack = new Stack<string>();
+        private HashSet<String> leftIDSet = new HashSet<string>();
 
         public Gen3AddrCodeVisitor()
         {
@@ -50,14 +52,40 @@ namespace Compiler
             }
         }
 
-        private void VerifyCorrectnessOfProgram() {
-            bool isValid = true;
-            // TODO
+        private void VerifyCorrectnessOfProgram(Compiler.ThreeAddrCode code) {
+            //bool isValid = true;
+            List<ThreeAddrCode.DefUseInfo> DefUseInfoList = code.GetDefUseInfo();
+            List<HashSet<String> > DefSetList = new List<HashSet<string> >();
 
-            if (!isValid)
-            {
-                throw new SemanticException("Тут будут подробности");
-            }
+            for (int i = 0; i < DefUseInfoList.Count; ++i)
+                DefSetList.Add(DefUseInfoList[i].Def);
+
+            for (int i = 0; i < DefSetList.Count; ++i)
+                for (int j = 0; j < code.blocks[i].Count; ++j)
+                {
+                    var line = code.blocks[i][j];
+                    if (line.IsNot<Line.Operation>()) continue;
+
+                    var lineOp = line as Line.Operation;
+                    if (!lineOp.FirstParamIsNumber() && DefSetList[i].Contains(lineOp.first) && !lineOp.SecondParamIsNumber() && DefSetList[i].Contains(lineOp.second)//оба операнда переменные
+                        || lineOp.FirstParamIsNumber() && !lineOp.SecondParamIsNumber() && DefSetList[i].Contains(lineOp.second) //первый операнд число, а второй переменная
+                        || !lineOp.FirstParamIsNumber() && DefSetList[i].Contains(lineOp.first) && lineOp.SecondParamIsNumber() //первый операнд переменная, а второй число
+                        || lineOp.FirstParamIsNumber() && lineOp.second == ""// первый операнд число, а второй пуст
+                        || lineOp.SecondParamIsNumber() && lineOp.first == ""//второй операнд число, а первый пуст
+                        || lineOp.FirstParamIsNumber() && lineOp.SecondParamIsNumber() //оба операнда числа
+                        || !lineOp.FirstParamIsNumber() && DefSetList[i].Contains(lineOp.first) && lineOp.second == ""//первый операнд переменная, а второй пуст
+                        || !lineOp.SecondParamIsNumber() && DefSetList[i].Contains(lineOp.second) && lineOp.first == ""//второй операнд переменная, а первый пуст
+                        )
+                            
+                            leftIDSet.Add(lineOp.left);
+                    else
+                        throw new SemanticException("Одна или две переменные в правой части не определены в пределах одного базового блока");
+                }
+
+            //if (!isValid)
+            //{
+            //    throw new SemanticException("Тут будут подробности");
+            //}
         }
 
         private void EraseEmptyLines()
