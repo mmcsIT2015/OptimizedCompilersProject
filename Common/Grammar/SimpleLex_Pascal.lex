@@ -56,7 +56,7 @@ ID {Alpha}{AlphaDigit}*
 "<>" { return (int)Tokens.NOTEQUAL; }
 "." { return (int)Tokens.POINT; }
 
-[^ \r\n] {
+[^\t \r\n] {
 	LexError();
 }
 
