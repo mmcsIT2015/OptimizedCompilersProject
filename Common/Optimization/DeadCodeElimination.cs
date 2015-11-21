@@ -102,7 +102,8 @@ namespace Compiler
                 {
                     var line = dotLine[i] as Line.UnaryExpr;
 
-                    idLife[line.argument] = true;
+                    if (line.left != line.argument)
+                        idLife[line.argument] = true;
 
                     //если для переменной в левой части есть значение "живучести"
                     bool isAlive;
