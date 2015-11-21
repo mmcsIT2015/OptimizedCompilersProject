@@ -54,6 +54,7 @@
     <Compile Include="Code\Line\UnaryExpr.cs" />
     <Compile Include="Code\Line\СonditionalJump.cs" />
     <Compile Include="Code\Gen3AddrCodeVisitor.cs" />
+    <Compile Include="Code\SpanningTree.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="Grammar\ParserHelper.cs" />
     <Compile Include="Grammar\ProgramTree.cs" />

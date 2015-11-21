@@ -7,7 +7,6 @@ namespace Compiler
 {
     public interface IGraph<T>
     {
-        T EntryPoint();
         IEnumerable<T> OutEdges(T block);
         IEnumerable<T> InEdges(T block);
     }
