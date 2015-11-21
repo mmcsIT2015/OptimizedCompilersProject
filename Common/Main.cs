@@ -96,12 +96,12 @@ namespace SimpleCompiler
             {
                 List<string> files = new List<string>();
                 //files.Add(@"..\..\tests\test-validation3.cn");
-                //files.Add(@"..\..\tests\test-1.cn");
-                //files.Add(@"..\..\tests\test-dce2.cn");
+                //files.Add(@"..\..\tests\test-2.cn");
+                files.Add(@"..\..\tests\test-validation5.cn");
                 //files.Add(@"..\..\in.pasn");
-                files.Add(@"..\..\a.cn");
+                //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
-                files.Add(@"..\..\test-pas1.pasn");
+                //files.Add(@"..\..\test-pas1.pasn");
 
                 foreach (var file in files)
                 {
@@ -115,10 +115,12 @@ namespace SimpleCompiler
                         codeGenerator.Visit(root);
 
                         var code = codeGenerator.CreateCode();
-                        Console.WriteLine(code);
+                        
 
                         //DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code/*, 1*/);
-                        //deadCodeElimination.Optimize();                   
+                        //deadCodeElimination.Optimize();
+
+                        Console.WriteLine(code);
                     }
                     catch (FileNotFoundException)
                     {

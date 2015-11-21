@@ -46,17 +46,17 @@ namespace ProgramTree
             visitor.Visit(this);
         }
     }
-		
-		public class StringLiteralNode : ExprNode
-		{
-			public string Str { get; set; }
-			public StringLiteralNode(string str) { Str = str; }
-			
-			public override void Accept(IVisitor visitor)
-            {
-                visitor.Visit(this);
-            }
-		}
+
+    public class StringLiteralNode : ExprNode
+    {
+        public string Str { get; set; }
+        public StringLiteralNode(string str) { Str = str; }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
 
     public class FloatNumNode : ExprNode
     {
