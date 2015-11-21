@@ -132,18 +132,38 @@ namespace Compiler
         public void Visit(AssignNode node)
         {
             node.Id.Accept(this);
-            node.Expr.Accept(this);
-
-            string expression = mStack.Pop();
             string variable = mStack.Pop();
+
+            if (node.Expr is UnaryNode)
+            {
+                var unary = node.Expr as UnaryNode;
+                if (unary.Expr is IntNumNode)
+                {
+                    mLines.Add(new Line.UnaryExpr(variable, unary.Op, (unary.Expr as IntNumNode).Num.ToString()));
+                    return;
+                }
+                else if (unary.Expr is FloatNumNode)
+                {
+                    mLines.Add(new Line.UnaryExpr(variable, unary.Op, (unary.Expr as FloatNumNode).Num.ToString()));
+                    return;
+                }
+                else if (unary.Expr is IdNode)
+                {
+                    mLines.Add(new Line.UnaryExpr(variable, unary.Op, (unary.Expr as IdNode).Name));
+                    return;
+                }
+            }
+
+            node.Expr.Accept(this);
+            string expression = mStack.Pop();
 
             if (node.AssOp != AssignType.Assign)
             {
-                throw new ArgumentException("permissible only `AssignType.Assign`!");
+                throw new ArgumentException("Разрешено только присваивание типа `AssignType.Assign`!");
             }
             else if (node.Expr is BinaryNode)
             {
-                (mLines.Last() as Line.BinaryExpr).left = variable;                
+                (mLines.Last() as Line.BinaryExpr).left = variable;
             }
             else
             {
@@ -299,8 +319,14 @@ namespace Compiler
 
         public void Visit(UnaryNode node)
         {
-            node.Expr.Accept(this);
+            if (node.Expr is StringLiteralNode)
+            {
+                var desc = "Унарный оператор " + node.Op + " не может быть применен в операнду типа `string`!\n";
+                desc += "> " + node.Op + (node.Expr as StringLiteralNode).Str;
+                throw new SemanticException(desc);
+            }
 
+            node.Expr.Accept(this);
             string expr = mStack.Pop();
 
             string temp = UniqueIdsGenerator.Instance().Get("t");
