@@ -88,7 +88,7 @@ namespace Compiler
 
             for (int i = funcs.Length - 2; i >= 0; --i)
             {
-                 tf = tf.Map(funcs[i]) as TransferFunction<T>;
+                 tf = funcs[i].Map(tf) as TransferFunction<T>;
             }
 
             return tf;
