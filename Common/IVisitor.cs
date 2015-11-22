@@ -9,7 +9,6 @@ namespace Compiler
     public interface IVisitor
     {
         void Visit(BlockNode node);
-        void Visit(VarNode node);
         void Visit(AssignNode node);
         void Visit(IfNode node);
         void Visit(CoutNode node);

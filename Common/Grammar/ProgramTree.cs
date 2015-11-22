@@ -6,11 +6,10 @@ namespace ProgramTree
 {
     public enum AssignType { Assign, AssignPlus, AssignMinus, AssignMult, AssignDivide };
 		
-		public enum SimpleVarType { Int, Float, Str, Bool };
+	public enum SimpleVarType { Int, Float, Str, Bool };
 
     public enum BinaryOperation { None, Plus, Minus, Mult, Div, Less, Greater, Equal, NotEqual, LessEqual, GreaterEqual };
 
-    public enum VarType { Int, Bool, Double };
 	public enum UnaryOperation { Not, Minus } ;
 	
     public class Node // базовый класс для всех узлов    
@@ -74,11 +73,11 @@ namespace ProgramTree
 			public AssignNode ValueAssignment { get; set; }
 			public SimpleVarType VariableType { get; set; }
 			public IdNode Id { get; set; }
-            public bool isAssigned { get; private set; }
+            public bool IsAssigned { get; private set; }
 			
 			public IdNode GetID()
 			{
-				if (isAssigned)
+				if (IsAssigned)
 					return ValueAssignment.Id;
 				else
 					return Id;
@@ -89,7 +88,7 @@ namespace ProgramTree
 				Id = null;
 				ValueAssignment = Assignment;
 				VariableType = type;
-				isAssigned = true;
+				IsAssigned = true;
 			}
 			
 			public VarDeclNode(SimpleVarType type, IdNode ident)
@@ -97,7 +96,7 @@ namespace ProgramTree
 				ValueAssignment = null;
 				Id = ident;
 				VariableType = type;
-				isAssigned = false;
+				IsAssigned = false;
 			}
 			
 			public override void Accept(IVisitor visitor)
@@ -169,23 +168,6 @@ namespace ProgramTree
             Id = id;
             Expr = expr;
             AssOp = assop;
-        }
-
-        public override void Accept(IVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-    }
-
-    public class VarNode : StatementNode
-    {
-        public VarType Type { get; set; }
-        public IdNode Id { get; set; }
-
-        public VarNode(VarType type, IdNode id)
-        {
-            Type = type;
-            Id = id;
         }
 
         public override void Accept(IVisitor visitor)

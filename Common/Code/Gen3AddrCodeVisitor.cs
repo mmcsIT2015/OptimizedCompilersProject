@@ -124,11 +124,6 @@ namespace Compiler
             }
         }
 
-        public void Visit(VarNode node)
-        {
-            // TODO
-        }
-
         public void Visit(AssignNode node)
         {
             node.Id.Accept(this);
