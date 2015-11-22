@@ -61,8 +61,8 @@ cout	: COUT LSHIFT expr { $$ = new CoutNode($3); }
 
 params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
     |	params COMMA expr
-      {
-         $1.Add($3);
+		{
+			$1.Add($3);
 			$$ = $1;
 		}
     ;
@@ -78,24 +78,24 @@ statement: assign SEMICOLON { $$ = $1; }
     ;
 
 decl_assign: TYPE assign { $$ = new VarDeclNode($1, $2 as AssignNode); }
-		| TYPE ident { $$ = new VarDeclNode($1, $2 as IdNode); }
-		;
+	| TYPE ident { $$ = new VarDeclNode($1, $2 as IdNode); }
+	;
 
 funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }
-		;
+	;
 
 funcall	: ID LBRACKET params RBRACKET
-		{
-			$$ = new FunctionNode($1);
-			$$.Parameters = $3;
-		}
-		;
+	{
+		$$ = new FunctionNode($1);
+		$$.Parameters = $3;
+	}
+	;
 
 ident 	: ID { $$ = new IdNode($1); }
-		;
+	;
 
 assign 	: ident ASSIGN expr { $$ = new AssignNode($1 as IdNode, $3); }
-		;
+	;
 
 expr : S { $$ = $1; }
     | expr LESS S { $$ = new BinaryNode($1, $3, BinaryOperation.Less); }
@@ -121,7 +121,8 @@ U : F { $$ = $1; }
 
 F : ident { $$ = $1 as IdNode; }
     | INUM { $$ = new IntNumNode($1); }
-		| STRING_L { $$ = new StringLiteralNode($1); }
+    | RNUM { $$ = new FloatNumNode($1); }
+	| STRING_L { $$ = new StringLiteralNode($1); }
     | LBRACKET expr RBRACKET { $$ = $2; }
     | funcall { $$ = $1; }
     ;
@@ -131,10 +132,10 @@ if	: IF LBRACKET expr RBRACKET statement { $$ = new IfNode($3, $5); }
     ;
 
 block	: BEGIN stlist END { $$ = $2; }
-		;
+	;
 
 do_while	: DO statement WHILE LBRACKET expr RBRACKET { $$ = new DoWhileNode($5, $2); }
-		;
+	;
 
 while	: WHILE LBRACKET expr RBRACKET statement { $$ = new WhileNode($3, $5); }
     ;

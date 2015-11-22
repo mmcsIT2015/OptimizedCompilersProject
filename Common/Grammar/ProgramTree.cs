@@ -67,43 +67,43 @@ namespace ProgramTree
             visitor.Visit(this);
         }
     }
-		
-		public class VarDeclNode: StatementNode
-		{
-			public AssignNode ValueAssignment { get; set; }
-			public SimpleVarType VariableType { get; set; }
-			public IdNode Id { get; set; }
-            public bool IsAssigned { get; private set; }
-			
-			public IdNode GetID()
-			{
-				if (IsAssigned)
-					return ValueAssignment.Id;
-				else
-					return Id;
-			}
-			
-			public VarDeclNode(SimpleVarType type, AssignNode Assignment)
-			{
-				Id = null;
-				ValueAssignment = Assignment;
-				VariableType = type;
-				IsAssigned = true;
-			}
-			
-			public VarDeclNode(SimpleVarType type, IdNode ident)
-			{
-				ValueAssignment = null;
-				Id = ident;
-				VariableType = type;
-				IsAssigned = false;
-			}
-			
-			public override void Accept(IVisitor visitor)
-            {
-                visitor.Visit(this);
-            }
-		}
+
+    public class VarDeclNode : StatementNode
+    {
+        public AssignNode ValueAssignment { get; set; }
+        public SimpleVarType VariableType { get; set; }
+        public IdNode Id { get; set; }
+        public bool IsAssigned { get; private set; }
+
+        public IdNode GetID()
+        {
+            if (IsAssigned)
+                return ValueAssignment.Id;
+            else
+                return Id;
+        }
+
+        public VarDeclNode(SimpleVarType type, AssignNode Assignment)
+        {
+            Id = null;
+            ValueAssignment = Assignment;
+            VariableType = type;
+            IsAssigned = true;
+        }
+
+        public VarDeclNode(SimpleVarType type, IdNode ident)
+        {
+            ValueAssignment = null;
+            Id = ident;
+            VariableType = type;
+            IsAssigned = false;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
 
     public class BinaryNode : ExprNode
     {
