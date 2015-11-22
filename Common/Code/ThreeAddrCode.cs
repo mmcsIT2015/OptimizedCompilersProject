@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ProgramTree;
 using System.Diagnostics;
 
 namespace Compiler
@@ -86,6 +87,7 @@ namespace Compiler
         public List<Block> blocks; // содержит массив с блоками
 
         public ControlFlowGraph graph; // граф потока управления
+        public Dictionary<string, SimpleVarType> tableOfNames; // таблица с типами переменных
 
         public ThreeAddrCode()
         {
@@ -93,6 +95,7 @@ namespace Compiler
             labels = new Dictionary<string, Label>();
             
             graph = null;
+            tableOfNames = null;
         }
 
         public ThreeAddrCode(Block lines)
@@ -104,6 +107,7 @@ namespace Compiler
 
             BaseBlocksPartition.Partition(this);
             graph = new ControlFlowGraph(this.blocks);
+            tableOfNames = null;
         }
 
         public void NewBlock()
@@ -121,10 +125,21 @@ namespace Compiler
             foreach (var block in blocks)
             {
                 builder.Append(block.ToString());
-                //builder.Append("Count of blocks to transition: " + cfg.GetOutBlocks(block).Count()+'\n');
-                //builder.Append("Count of blocks to transition from: " + cfg.GetInBlocks(block).Count());
                 builder.Append("\n");
             }
+            return builder.ToString();
+        }
+
+        public string TableOfNamesToString() {
+            var builder = new StringBuilder();
+            foreach (var record in tableOfNames)
+            {
+                builder.Append(record.Value);
+                builder.Append('\t', 1);
+                builder.Append(record.Key);
+                builder.Append("\n");
+            }
+
             return builder.ToString();
         }
 
@@ -293,8 +308,6 @@ namespace Compiler
 
             return result;
         }
-
-
 
         /// <summary>
         /// Функция возвращает список объектов DefUseInfo для каждого блока

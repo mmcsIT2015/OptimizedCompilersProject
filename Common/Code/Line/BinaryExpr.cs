@@ -61,6 +61,18 @@ namespace Compiler.Line
             return double.TryParse(second, out temp);
         }
 
+        public virtual bool FirstParamIsIntNumber() // является ли первый параметр правой части целым числом
+        {
+            int temp;
+            return int.TryParse(first, out temp);
+        }
+
+        public virtual bool SecondParamIsIntNumber() // является ли второй параметр правой части целым числом
+        {
+            int temp;
+            return int.TryParse(second, out temp);
+        }
+
         private static string ToString(BinaryOperation operation)
         {
             switch (operation)

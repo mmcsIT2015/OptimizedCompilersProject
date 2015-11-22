@@ -28,18 +28,122 @@ namespace Compiler
         /// <returns></returns>
         public Compiler.ThreeAddrCode CreateCode()
         {
-            EraseEmptyLines(); 
+            EraseEmptyLines();
+            CompleteTableOfNames();
             //VerifyCorrectnessOfProgram();
-            return new Compiler.ThreeAddrCode(mLines); ;
+            var code = new Compiler.ThreeAddrCode(mLines);
+            code.tableOfNames = mTableOfNames;
+            return code;
         }
 
         private Compiler.Block mLines = new Compiler.Block();
         private Stack<string> mStack = new Stack<string>();
-        private HashSet<String> leftIDSet = new HashSet<string>();
+        private Dictionary<string, SimpleVarType> mTableOfNames = new Dictionary<string, SimpleVarType>();
 
         public Gen3AddrCodeVisitor()
         {
             UniqueIdsGenerator.Instance().Reset();
+        }
+
+        private SimpleVarType Cast(SimpleVarType lhs, SimpleVarType rhs)
+        {
+            if (lhs == rhs) return lhs;
+            else if (lhs == SimpleVarType.Bool || rhs == SimpleVarType.Bool)
+            {
+                return SimpleVarType.Bool;
+            }
+            else if (lhs == SimpleVarType.Float || rhs == SimpleVarType.Float)
+            {
+                return SimpleVarType.Float;
+            }
+
+            return SimpleVarType.Int;
+        }
+
+        private void CompleteTableOfNames()
+        {
+            // тип переменных в услови СonditionalJump - bool
+            foreach (var line in mLines.Where(e => e is Line.СonditionalJump).Select(e => e as Line.СonditionalJump))
+            {
+                if (mTableOfNames.ContainsKey(line.condition))
+                {
+                    mTableOfNames[line.condition] = SimpleVarType.Bool;
+                }
+                else
+                {
+                    mTableOfNames.Add(line.condition, SimpleVarType.Bool);
+                }
+            }
+
+            foreach (var line in mLines)
+            {
+                if (line is Line.UnaryExpr)
+                {
+                    var unary = line as Line.UnaryExpr;
+                    if (unary.left[0] != '@') continue; // определяем типы для временных переменных
+                    if (unary.ParamIsNumber()) continue;
+                    if (mTableOfNames.ContainsKey(unary.left)) continue;
+
+                    if (unary.IsBoolExpr()) {
+                        mTableOfNames.Add(unary.left, SimpleVarType.Bool);
+                    }
+                    else
+                    {
+                        mTableOfNames.Add(unary.left, mTableOfNames[unary.argument]);
+                    }
+                }
+                else if (line is Line.Identity)
+                {
+                    var identity = line as Line.Identity;
+                    if (identity.left[0] != '@') continue;
+                    if (identity.RightIsNumber()) continue;
+                    if (mTableOfNames.ContainsKey(identity.left)) continue;
+
+                    mTableOfNames.Add(identity.left, mTableOfNames[identity.right]);
+                }
+                else if (line is Line.BinaryExpr)
+                {
+                    var expr = line as Line.BinaryExpr;
+                    if (expr.left[0] != '@') continue;
+                    if (mTableOfNames.ContainsKey(expr.left)) continue;
+
+                    if (expr.IsBoolExpr())
+                    {
+                        mTableOfNames.Add(expr.left, SimpleVarType.Bool);
+                    }
+                    else
+                    {
+                        if (expr.FirstParamIsNumber() && expr.SecondParamIsNumber())
+                        {
+                            if (!expr.FirstParamIsIntNumber() || !expr.SecondParamIsIntNumber())
+                            {
+                                mTableOfNames.Add(expr.left, SimpleVarType.Float);
+                            }
+                            else
+                            {
+                                mTableOfNames.Add(expr.left, SimpleVarType.Int);
+                            }
+                        }
+                        else if (!expr.FirstParamIsNumber() && !expr.SecondParamIsNumber())
+                        {
+                            var type = Cast(mTableOfNames[expr.first], mTableOfNames[expr.second]);
+                            mTableOfNames.Add(expr.left, type);
+                        }
+                        else if (!expr.FirstParamIsNumber())
+                        {
+                            var secondType = expr.SecondParamIsIntNumber() ? SimpleVarType.Int : SimpleVarType.Float;
+                            var resultType = Cast(mTableOfNames[expr.first], secondType);
+                            mTableOfNames.Add(expr.left, resultType);
+                        }
+                        else //if (!expr.SecondParamIsNumber())
+                        {
+                            var firstType = expr.FirstParamIsIntNumber() ? SimpleVarType.Int : SimpleVarType.Float;
+                            var resultType = Cast(firstType, mTableOfNames[expr.second]);
+                            mTableOfNames.Add(expr.left, resultType);
+                        }
+                    }
+                }
+            }
         }
 
         private void ReplaceAllReferencesToLabel(string what, string forWhat)
@@ -52,6 +156,8 @@ namespace Compiler
         }
 
         private void VerifyCorrectnessOfProgram() {
+            HashSet<String> leftIDs = new HashSet<string>();
+
             //bool isValid = true;
             for (int i = 0; i < mLines.Count; ++i)
             {
@@ -62,13 +168,13 @@ namespace Compiler
                 {
                     var lineBinExpr = line as Line.BinaryExpr;
 
-                    if (leftIDSet.Contains(lineBinExpr.first) && leftIDSet.Contains(lineBinExpr.second) //если обе переменные определены ранее
-                        || leftIDSet.Contains(lineBinExpr.first) && lineBinExpr.SecondParamIsNumber() // если первая переменная определена и второй операнд число
-                        || leftIDSet.Contains(lineBinExpr.second) && lineBinExpr.FirstParamIsNumber() // если вторая переменная определена и первый операнд число
+                    if (leftIDs.Contains(lineBinExpr.first) && leftIDs.Contains(lineBinExpr.second) //если обе переменные определены ранее
+                        || leftIDs.Contains(lineBinExpr.first) && lineBinExpr.SecondParamIsNumber() // если первая переменная определена и второй операнд число
+                        || leftIDs.Contains(lineBinExpr.second) && lineBinExpr.FirstParamIsNumber() // если вторая переменная определена и первый операнд число
                         || lineBinExpr.FirstParamIsNumber() && lineBinExpr.SecondParamIsNumber() // если оба операнда числа
                         )
                     {
-                        leftIDSet.Add(lineBinExpr.left);
+                        leftIDs.Add(lineBinExpr.left);
                     }
                     else
                         throw new SemanticException("Одна или две переменные в правой части BinaryExpr не определены. Выражение " + lineBinExpr.ToString());
@@ -76,20 +182,20 @@ namespace Compiler
                 else if (line.Is<Line.UnaryExpr>())
                 {
                     var lineUnExpr = line as Line.UnaryExpr;
-                    if (lineUnExpr.ParamIsNumber() || leftIDSet.Contains(lineUnExpr.argument)) //если операнд число или переменная, определенная ранее
-                        leftIDSet.Add(lineUnExpr.left);
+                    if (lineUnExpr.ParamIsNumber() || leftIDs.Contains(lineUnExpr.argument)) //если операнд число или переменная, определенная ранее
+                        leftIDs.Add(lineUnExpr.left);
                     else
                         throw new SemanticException("Переменная в правой части UnaryExpr не определена. Выражение " + lineUnExpr.ToString());
                 }
                 else //if (line.Is<Line.Identity>())
                 {
                     var lineIdentExpr = line as Line.Identity;
-                    if (!(lineIdentExpr.RightIsNumber() || leftIDSet.Contains(lineIdentExpr.right))) //если не число и не переменная, определенная ранее
+                    if (!(lineIdentExpr.RightIsNumber() || leftIDs.Contains(lineIdentExpr.right))) //если не число и не переменная, определенная ранее
                         throw new SemanticException("Переменная в правой части Identity не определена. Выражение " + lineIdentExpr.ToString());
                     else if (lineIdentExpr.left == lineIdentExpr.right) // если выражение вида x = x
                         throw new SemanticException("Неожиданно встретилось выражение вида x = x. Выражение " + lineIdentExpr.ToString());
                     else
-                        leftIDSet.Add(lineIdentExpr.left);
+                        leftIDs.Add(lineIdentExpr.left);
                 }
             }
 
@@ -173,7 +279,12 @@ namespace Compiler
 
         public void Visit(VarDeclNode node)
         {
-            throw new NotImplementedException();
+            if (node.IsAssigned)
+            {
+                Visit(node.ValueAssignment);
+            }
+
+            mTableOfNames.Add(node.GetID().Name, node.VariableType);
         }
 
         public void Visit(IfNode node)
