@@ -1,0 +1,9 @@
+begin
+	a := 4.5;
+	b := 89;
+	if (a > b) then
+		write(a)
+	else
+		write(b);
+	a := f(b)
+end.

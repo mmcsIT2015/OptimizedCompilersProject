@@ -15,21 +15,24 @@ ID {Alpha}{AlphaDigit}*
 %%
 
 {INTNUM} { 
-  bool isIntNum = int.TryParse(yytext, out yylval.iVal); 
-  if (isIntNum) {
-	return (int)Tokens.INUM; 
-  }
+	bool isIntNum = int.TryParse(yytext, out yylval.iVal); 
+	if (isIntNum) {
+		return (int)Tokens.INUM; 
+	}
 
-  throw new SyntaxException(yytext + " isn't a value of type `INTNUM`");
+	throw new SyntaxException(yytext + " isn't a value of type `INTNUM`");
 }
 
 {REALNUM} { 
-  bool isRealNum = double.TryParse(yytext, out yylval.dVal); 
-  if (isRealNum) {
-	return (int)Tokens.RNUM; 
-  }
+	var style = System.Globalization.NumberStyles.Any;
+    NumberFormatInfo nfi = new NumberFormatInfo();
+    nfi.NumberDecimalSeparator = ".";
+	bool isRealNum = double.TryParse(yytext, style, nfi, out yylval.dVal); 
+	if (isRealNum) {
+		return (int)Tokens.RNUM; 
+	}
   
-  throw new SyntaxException(yytext + " isn't a value of type `REALNUM`");
+	throw new SyntaxException(yytext + " isn't a value of type `REALNUM`");
 }
 
 {ID}  { 

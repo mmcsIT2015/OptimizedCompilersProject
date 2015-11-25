@@ -97,7 +97,7 @@ namespace SimpleCompiler
                 List<string> files = new List<string>();
                 //files.Add(@"..\..\tests\test-validation3.cn");
                 //files.Add(@"..\..\tests\test-2.cn");
-                files.Add(@"..\..\tests\test-dce3.cn");
+                files.Add(@"..\..\tests\test-realnum1.pasn");
                 //files.Add(@"..\..\in.pasn");
                 //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений

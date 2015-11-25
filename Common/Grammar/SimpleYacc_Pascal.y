@@ -16,6 +16,7 @@
 			public FunctionNode funVal;
 			public FunctionNodeSt funStVal;
 			public List<ExprNode> paramVal;
+			public SimpleVarType typeVal;
        }
 
 %using ProgramTree;
@@ -25,10 +26,11 @@
 %token BEGIN END ASSIGN SEMICOLON PLUS MINUS PROD DIV LB RB COMMA IF ELSE THEN WHILE DO REPEAT UNTIL LESS MORE LESSEQUAL MOREEQUAL EQUAL NOTEQUAL NOT POINT
 %token <iVal> INUM 
 %token <dVal> RNUM 
-%token <sVal> ID
+%token <sVal> ID STRING_L
+%token <typeVal> TYPE
 
 %type <eVal> expr ident S T U F
-%type <stVal> assign statement if while repeatuntil
+%type <stVal> assign statement if while repeatuntil decl_assign
 %type <blVal> stlist block
 %type <funVal> funcall
 %type <funStVal> funcallst
@@ -52,8 +54,8 @@ stlist	: statement
 		
 params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
     |	params COMMA expr
-      {
-         $1.Add($3);
+		{
+			$1.Add($3);
 			$$ = $1;
 		}
     ;
@@ -64,6 +66,7 @@ statement: assign { $$ = $1; }
 		| while { $$ = $1; }
 		| repeatuntil { $$ = $1; }
 		| funcallst { $$ = $1; }
+		| decl_assign SEMICOLON { $$ = $1; }
 	;
 	
 funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }
@@ -75,6 +78,10 @@ funcall	: ID LB params RB
 			$$.Parameters = $3;
 		}
 		;
+		
+decl_assign: TYPE assign { $$ = new VarDeclNode($1, $2 as AssignNode); }
+	| TYPE ident { $$ = new VarDeclNode($1, $2 as IdNode); }
+	;
 
 ident 	: ID { $$ = new IdNode($1); }	
 		;
@@ -108,6 +115,8 @@ U : F { $$ = $1; }
 
 F : ident { $$ = $1 as IdNode; }
     | INUM { $$ = new IntNumNode($1); }
+	| RNUM { $$ = new FloatNumNode($1); }
+	| STRING_L { $$ = new StringLiteralNode($1); }
     | LB expr RB { $$ = $2; }
     | funcall { $$ = $1; }
     ;
