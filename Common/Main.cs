@@ -126,11 +126,12 @@ namespace SimpleCompiler
                 //files.Add(@"..\..\tests\test-validation3.cn");
                 //files.Add(@"..\..\tests\test-2.cn");
                 files.Add(@"..\..\tests\test-realnum1.pasn");
+                files.Add(@"..\..\tests\test-dce3.cn");
                 //files.Add(@"..\..\in.pasn");
                 //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
                 //files.Add(@"..\..\test-pas1.pasn");
-                files.Add(@"..\..\tests\test-exprgenkill-1.cn");
+                //files.Add(@"..\..\tests\test-exprgenkill-3.cn");
 
                 foreach (var file in files)
                 {
@@ -148,7 +149,7 @@ namespace SimpleCompiler
                         //DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code/*, 1*/);
                         //deadCodeElimination.Optimize();
 
-                        TestExprGenKill(root);
+                        Console.WriteLine(code);
                     }
                     catch (FileNotFoundException)
                     {
