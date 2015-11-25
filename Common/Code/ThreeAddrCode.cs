@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 using System.Diagnostics;
+using Compiler.Line;
 
 namespace Compiler
 {
@@ -81,6 +82,12 @@ namespace Compiler
         {
             public HashSet<String> Def = new HashSet<String>();
             public HashSet<String> Use = new HashSet<String>();
+        }
+
+        public class GenKill<T>
+        {
+            public HashSet<T> Gen = new HashSet<T>();
+            public HashSet<T> Kill = new HashSet<T>();
         }
 
         public Dictionary<string, Label> labels; // содержит список меток и адресом этих меток в blocks
@@ -202,6 +209,138 @@ namespace Compiler
             }
 
             return genKillInfoList;
+        }
+
+        private class ExpressionsGenKillComparer : IEqualityComparer<Line.Line>
+        {
+            public bool Equals(Line.Line obj1, Line.Line obj2)
+            {
+                if (obj1.Is<Line.BinaryExpr>() && obj2.Is<Line.BinaryExpr>())
+                {
+                    Line.BinaryExpr expr1 = obj1 as Line.BinaryExpr;
+                    Line.BinaryExpr expr2 = obj2 as Line.BinaryExpr;
+
+                    return expr1.first == expr2.first && expr1.operation == expr2.operation
+                        && expr1.second == expr2.second;
+                }
+                else if (obj1.Is<Line.UnaryExpr>() && obj2.Is<Line.UnaryExpr>())
+                {
+                    Line.UnaryExpr expr1 = obj1 as Line.UnaryExpr;
+                    Line.UnaryExpr expr2 = obj2 as Line.UnaryExpr;
+
+                    return expr1.argument == expr2.argument && expr1.operation == expr2.operation;
+                }
+                else if (obj1.Is<Line.Identity>() && obj2.Is<Line.Identity>())
+                {
+                    Line.Identity expr1 = obj1 as Line.Identity;
+                    Line.Identity expr2 = obj2 as Line.Identity;
+
+                    return expr1.right == expr2.right;
+                }
+
+                return false;
+            }
+
+            public int GetHashCode(Line.Line obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
+
+        public List<GenKill<Line.Line>> buildExprGenKillInfo()
+        {
+            ExpressionsGenKillComparer regeneratedExpressionFilter = new ExpressionsGenKillComparer();
+
+            List<GenKill<Line.Line>> exprGenKillList = new List<GenKill<Line.Line>>();
+
+            for (int i = 0; i < blocks.Count; ++i)
+            {
+                GenKill<Line.Line> blockGenKill = new GenKill<Line.Line>();
+                exprGenKillList.Add(blockGenKill);
+
+                HashSet<String> redifined = new HashSet<String>();
+
+                for (int j = blocks[i].Count - 1; j >= 0; --j)
+                {
+                    if (blocks[i][j].Is<Line.BinaryExpr>())
+                    {
+                        Line.BinaryExpr expr = blocks[i][j] as Line.BinaryExpr;
+
+                        redifined.Add(expr.left);
+
+                        if (!redifined.Contains(expr.first) && !redifined.Contains(expr.second))
+                        {
+                            blockGenKill.Gen.Add(blocks[i][j]);
+                        }
+                    }
+                    else if (blocks[i][j].Is<Line.UnaryExpr>())
+                    {
+                        Line.UnaryExpr expr = blocks[i][j] as Line.UnaryExpr;
+
+                        redifined.Add(expr.left);
+
+                        if (!redifined.Contains(expr.argument))
+                        {
+                            blockGenKill.Gen.Add(blocks[i][j]);
+                        }
+                    }
+                    else if (blocks[i][j].Is<Line.Identity>())
+                    {
+                        Line.Identity expr = blocks[i][j] as Line.Identity;
+
+                        redifined.Add(expr.left);
+
+                        if (!redifined.Contains(expr.right))
+                        {
+                            blockGenKill.Gen.Add(blocks[i][j]);
+                        }
+                    }
+                }
+
+                for (int k = 0; k < blocks.Count; ++k)
+                {
+                    if (k == i)
+                    {
+                        continue;
+                    }
+
+                    for (int j = 0; j < blocks[k].Count; ++j)
+                    {
+                        if (blocks[k][j].Is<Line.BinaryExpr>())
+                        {
+                            Line.BinaryExpr expr = blocks[k][j] as Line.BinaryExpr;
+
+                            if ((redifined.Contains(expr.first) || redifined.Contains(expr.second))
+                                && !blockGenKill.Gen.Contains(expr, regeneratedExpressionFilter))
+                            {
+                                blockGenKill.Kill.Add(expr);
+                            }
+                        }
+                        else if (blocks[k][j].Is<Line.UnaryExpr>())
+                        {
+                            Line.UnaryExpr expr = blocks[k][j] as Line.UnaryExpr;
+
+                            if (redifined.Contains(expr.argument)
+                                && !blockGenKill.Gen.Contains(expr, regeneratedExpressionFilter))
+                            {
+                                blockGenKill.Kill.Add(expr);
+                            }
+                        }
+                        else if (blocks[k][j].Is<Line.Identity>())
+                        {
+                            Line.Identity expr = blocks[k][j] as Line.Identity;
+
+                            if (redifined.Contains(expr.right)
+                                && !blockGenKill.Gen.Contains(expr, regeneratedExpressionFilter))
+                            {
+                                blockGenKill.Kill.Add(expr);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return exprGenKillList;
         }
 
         /// <summary>
