@@ -126,11 +126,11 @@ namespace ProgramTree
 
     public class StatementNode : Node // базовый класс для всех операторов
     {
-        public string label = null;
+        public IdNode Label { get; set; }
 
-        public void AddLabel(string label)
+        public void AddLabel(IdNode label)
         {
-            this.label = label;
+            this.Label = label;
         }
     }
 
@@ -182,7 +182,18 @@ namespace ProgramTree
         }
     }
 
-	public class UnaryNode : ExprNode
+    public class GotoNode : StatementNode
+    {
+        public IdNode Id { get; set; }
+
+        public GotoNode(IdNode id)
+        {
+            Id = id;
+        }
+    }
+
+
+    public class UnaryNode : ExprNode
     {
         public ExprNode Expr { get; set; }
         public UnaryOperation Op { get; set; }

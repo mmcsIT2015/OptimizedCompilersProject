@@ -24,14 +24,14 @@
 
 %namespace SimpleParserC
 
-%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA COLON NOT LESSEQUAL GREATEREQUAL
+%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA COLON NOT LESSEQUAL GREATEREQUAL GOTO
 %token <iVal> INUM
 %token <dVal> RNUM
 %token <sVal> ID STRING_L
 %token <typeVal> TYPE
 
 %type <eVal> expr ident T F S U
-%type <stVal> assign statement st do_while while if decl_assign
+%type <stVal> assign statement st do_while while if decl_assign goto
 %type <blVal> stlist block
 %type <ioVal> cout
 %type <funVal> funcall
@@ -67,7 +67,7 @@ params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
 		}
     ;
 	
-statement: ID COLON st { $3.AddLabel($1); $$ = $3;}
+statement: ident COLON st { $3.AddLabel($1 as IdNode); $$ = $3;}
 	| st { $$ = $1; }
 	;
 
@@ -78,9 +78,13 @@ st: assign SEMICOLON { $$ = $1; }
     | cout SEMICOLON { $$ = $1; }
     | if { $$ = $1; }
     | funcallst SEMICOLON { $$ = $1; }
-		| decl_assign SEMICOLON { $$ = $1; }
+	| decl_assign SEMICOLON { $$ = $1; }
+	| goto SEMICOLON { $$ = $1; }
     ;
 
+goto: GOTO ident { $$ = new GotoNode($2 as IdNode); }
+	;
+	
 decl_assign: TYPE assign { $$ = new VarDeclNode($1, $2 as AssignNode); }
 	| TYPE ident { $$ = new VarDeclNode($1, $2 as IdNode); }
 	;
