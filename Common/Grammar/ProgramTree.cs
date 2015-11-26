@@ -126,6 +126,12 @@ namespace ProgramTree
 
     public class StatementNode : Node // базовый класс для всех операторов
     {
+        public string label = null;
+
+        public void AddLabel(string label)
+        {
+            this.label = label;
+        }
     }
 
     public class FunctionNode : IdNode

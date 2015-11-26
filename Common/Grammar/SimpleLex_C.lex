@@ -71,6 +71,7 @@ STRING_LITERAL \"([^\"]|\\.)*\"
 "<=" { return (int)Tokens.LESSEQUAL; }
 ">=" { return (int)Tokens.GREATEREQUAL; }
 "," { return (int)Tokens.COMMA; }
+":" { return (int)Tokens.COLON; }
 "!" { return (int)Tokens.NOT; }
 
 [^\t \r\n] {

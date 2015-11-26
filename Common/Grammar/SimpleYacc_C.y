@@ -24,14 +24,14 @@
 
 %namespace SimpleParserC
 
-%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA NOT LESSEQUAL GREATEREQUAL
+%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA COLON NOT LESSEQUAL GREATEREQUAL
 %token <iVal> INUM
 %token <dVal> RNUM
 %token <sVal> ID STRING_L
 %token <typeVal> TYPE
 
 %type <eVal> expr ident T F S U
-%type <stVal> assign statement do_while while if decl_assign
+%type <stVal> assign statement st do_while while if decl_assign
 %type <blVal> stlist block
 %type <ioVal> cout
 %type <funVal> funcall
@@ -66,8 +66,12 @@ params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
 			$$ = $1;
 		}
     ;
+	
+statement: ID COLON st { $3.AddLabel($1); $$ = $3;}
+	| st { $$ = $1; }
+	;
 
-statement: assign SEMICOLON { $$ = $1; }
+st: assign SEMICOLON { $$ = $1; }
     | block { $$ = $1; }
     | do_while SEMICOLON { $$ = $1; }
     | while { $$ = $1; }
