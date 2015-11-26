@@ -68,6 +68,8 @@ STRING_LITERAL \"([^\"]|\\.)*\"
 ">" { return (int)Tokens.GREAT; }
 "==" { return (int)Tokens.EQUAL; }
 "!=" { return (int)Tokens.INEQUAL; }
+"<=" { return (int)Tokens.LESSEQUAL; }
+">=" { return (int)Tokens.GREATEREQUAL; }
 "," { return (int)Tokens.COMMA; }
 "!" { return (int)Tokens.NOT; }
 

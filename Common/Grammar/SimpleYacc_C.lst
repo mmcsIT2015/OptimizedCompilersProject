@@ -1,3 +1,14 @@
+
+// ==========================================================================
+//  GPPG error listing for yacc source file <SimpleYacc_C.y>
+// ==========================================================================
+//  Version:  1.3.6
+//  Machine:  UNREAL-PC
+//  DateTime: 27.11.2015 1:30:10
+//  UserName: Vladislav
+// ==========================================================================
+
+
 %{
     public BlockNode root;
     public Parser(AbstractScanner<ValueType, LexLocation> scanner) : base(scanner) { }
@@ -39,6 +50,12 @@
 %type <paramVal> params
 
 %%
+// Error: NonTerminal symbol "GREATEQUAL" has no productions
+// Warning: Terminating GREATEQUAL fixes the following size-1 NonTerminal set
+   // {GREATEQUAL}
+// Error: There are 1 non-terminating NonTerminal Symbols
+   //  {GREATEQUAL}
+// --------------------------------------------------------------------------
 
 progr   : block { root = $1; }
 		;
@@ -103,7 +120,7 @@ expr : S { $$ = $1; }
     | expr EQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
     | expr INEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
 	| expr LESSEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.LessEqual); }
-	| expr GREATEREQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.GreaterEqual); }
+	| expr GREATEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.GreaterEqual); }
     ;
 
 S : T { $$ = $1; }
@@ -143,3 +160,5 @@ while	: WHILE LBRACKET expr RBRACKET statement { $$ = new WhileNode($3, $5); }
     ;
 
 %%
+// ==========================================================================
+
