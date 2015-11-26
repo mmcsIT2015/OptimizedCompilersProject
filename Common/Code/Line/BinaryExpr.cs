@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Compiler.Line
 {
-    class BinaryExpr : NonEmptyLine
+    class BinaryExpr : Expr
     {
         private static ISet<BinaryOperation> mBoolOps = new HashSet<BinaryOperation> {
             BinaryOperation.Equal,
@@ -25,15 +25,14 @@ namespace Compiler.Line
             BinaryOperation.Mult
         };
 
-        public string left;
         public string first;
         public string second;
         public BinaryOperation operation;
 
         // Конструктор для бинарного выражения в правой части
-        public BinaryExpr(string left, string first, BinaryOperation op, string second)
+        public BinaryExpr(string left, string first, BinaryOperation op, string second) :
+            base(left)
         {
-            this.left = left;
             this.first = first;
             this.operation = op;
             this.second = second;

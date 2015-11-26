@@ -7,15 +7,14 @@ using System.Diagnostics;
 
 namespace Compiler.Line
 {
-    class Identity : NonEmptyLine
+    class Identity : Expr
     {
-        public string left;
         public string right;
 
         // Конструктор для создания тождества
-        public Identity(string left, string right)
+        public Identity(string left, string right) :
+            base(left)
         {
-            this.left = left;
             this.right = right;
         }
 

@@ -7,16 +7,15 @@ using System.Diagnostics;
 
 namespace Compiler.Line
 {
-    class UnaryExpr : NonEmptyLine
+    class UnaryExpr : Expr
     {
-        public string left;
         public UnaryOperation operation;
         public string argument;
 
         // Конструктор для унарного выражения
-        public UnaryExpr(string left, UnaryOperation op, string arg)
+        public UnaryExpr(string left, UnaryOperation op, string arg) :
+            base(left)
         {
-            this.left = left;
             this.operation = op;
             this.argument = arg;
         }

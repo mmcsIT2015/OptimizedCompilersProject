@@ -59,4 +59,14 @@ namespace Compiler.Line
             return "<empty statement>\n";
         }
     }
+
+    abstract class Expr : NonEmptyLine
+    {
+        public string left;
+
+        public Expr(string left)
+        {
+            this.left = left;
+        }
+    }
 }
