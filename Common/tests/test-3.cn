@@ -1,17 +1,17 @@
 ﻿	{
-	  a1 = 1;
-	  a2 = 2;
-	  a3 = 3; 
+	  int a1 = 1;
+	  int a2 = 2;
+	  int a3 = 3; 
 	  do 
 	  {
-		c1 = 8 + a2;
-		c2 = a2;
+		int c1 = 8 + a2;
+		int c2 = a2;
 		if (a1 == 1)
 		{
 		  a1 = a3;
 		  a2 = a1 * c1 + c2;
 		}
-		c3 = c1 + a1;
+		int c3 = c1 + a1;
 		
 	  } while (a1 > 5);
 	}

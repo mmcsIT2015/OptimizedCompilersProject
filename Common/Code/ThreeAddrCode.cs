@@ -178,7 +178,7 @@ namespace Compiler
                     if (line.IsEmpty()) continue;
                     if (line is Line.GoTo || line is Line.FunctionParam || line is Line.FunctionCall) continue;
 
-                    var left = (line as Line.BinaryExpr).left;
+                    var left = (line as Line.Expr).left;
                     Index currentInd = new Index(i, j, left);
                     if (genKillInfoList[i].Gen.Contains(currentInd, new Index.IndexVariableNameComparer()))
                     {
@@ -464,11 +464,10 @@ namespace Compiler
 
                     //DEF
                     var line = blocks[i][j];
-                    if (line.IsEmpty())
-                        continue;
+                    if (line.IsEmpty()) continue;
                     if (line is Line.GoTo || line is Line.FunctionParam || line is Line.FunctionCall || line is Line.UnaryExpr) continue;
 
-                    String currentIndDef = (line as Line.BinaryExpr).left;
+                    String currentIndDef = (line as Line.Expr).left;
 
                     if (defUseInfoList[i].Def.Contains(currentIndDef))
                         defUseInfoList[i].Def.Remove(currentIndDef);
@@ -477,26 +476,41 @@ namespace Compiler
 
                     //USE
                     String usedVar = "";
-
-                    if (!(line as Line.BinaryExpr).FirstParamIsNumber() && !"".Equals((line as Line.BinaryExpr).first))
+                    if (line is Line.BinaryExpr && (line as Line.BinaryExpr).FirstParamIsNumber())
                     {
                         usedVar = (line as Line.BinaryExpr).first;
+                    }
+                    else if (line is Line.UnaryExpr && (line as Line.UnaryExpr).ParamIsNumber())
+                    {
+                        usedVar = (line as Line.UnaryExpr).argument;
+                    }
+                    else if (line is Line.Identity && (line as Line.Identity).RightIsNumber())
+                    {
+                        usedVar = (line as Line.Identity).right;
+                    }
 
+                    if (usedVar.Length > 0)
+                    {
                         if (defUseInfoList[i].Use.Contains(usedVar))
+                        {
                             defUseInfoList[i].Use.Remove(usedVar);
+                        }
 
                         defUseInfoList[i].Use.Add(usedVar);
                     }
 
-
-                    if (!(line as Line.BinaryExpr).SecondParamIsNumber() && !"".Equals((line as Line.BinaryExpr).second))
+                    if (line is Line.BinaryExpr) // второй операнд есть только у BinaryExpr
                     {
-                        usedVar = (line as Line.BinaryExpr).second;
+                        var expr = (line as Line.BinaryExpr);
+                        if (!expr.SecondParamIsNumber() && !"".Equals(expr.second))
+                        {
+                            usedVar = expr.second;
 
-                        if (defUseInfoList[i].Use.Contains(usedVar))
-                            defUseInfoList[i].Use.Remove(usedVar);
+                            if (defUseInfoList[i].Use.Contains(usedVar))
+                                defUseInfoList[i].Use.Remove(usedVar);
 
-                        defUseInfoList[i].Use.Add(usedVar);
+                            defUseInfoList[i].Use.Add(usedVar);
+                        }
                     }
 
                 }
