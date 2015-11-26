@@ -166,6 +166,10 @@ namespace SimpleCompiler
                     catch (Exception e)
                     {
                         Console.WriteLine("Unexpected error: " + e.Message);
+                        Console.WriteLine("Call stack:");
+                        var stackObject = new System.Diagnostics.StackTrace(e);
+                        string stackTrace = stackObject.ToString();
+                        Console.WriteLine(stackTrace);
                     }
                 }
             }
