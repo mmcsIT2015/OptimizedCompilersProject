@@ -1,0 +1,46 @@
+private string Type2String(SimpleVarType type)
+        {
+            switch(type)
+            {
+                case SimpleVarType.Bool:
+                    return "bool";
+                case SimpleVarType.Float:
+                    return "float32";
+                case SimpleVarType.Int:
+                    return "int32";
+                default:
+                    return "string";
+            }
+        }
+        public string GenILCode()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(".assembly program {}\n");
+            sb.AppendLine(".method static public void main() cil managed");
+            sb.AppendLine("{");
+            sb.AppendLine("\t.entrypoint");
+            sb.Append("\t.maxstack "); sb.AppendLine(tableOfNames.Count.ToString());
+            if (tableOfNames.Count > 0)
+            {
+                sb.Append("\t.locals init (");
+                List<string> vars = new List<string>(tableOfNames.Keys);
+                sb.Append(Type2String(tableOfNames[vars[0]]) + " " + vars[0]);
+                for (int i = 1; i < vars.Count; ++i)
+                    sb.Append(", " + Type2String(tableOfNames[vars[i]]) + " " + vars[i]);
+                sb.AppendLine(")");
+            }
+            sb.AppendLine();
+
+            foreach (Block b in blocks)
+            {
+                foreach (Line.Line l in b)
+                {
+                    if (!l.label.Equals(""))
+                        sb.AppendLine(l.label + ":");
+                }
+            }
+
+            sb.AppendLine("\tret");
+            sb.AppendLine("}");
+            return sb.ToString();
+        }
