@@ -95,7 +95,7 @@ namespace SimpleCompiler
             }
 
             Console.WriteLine("Reversed Edges");
-            List<DomGraph.BlocksPair> listEdges = DomGraph.ReverseEdges(blockDoms) as List<DomGraph.BlocksPair>;
+            List<DomGraph.BlocksPair> listEdges = DomGraph.ReverseEdges(blockDoms, code.graph) as List<DomGraph.BlocksPair>;
 
             if (listEdges.Count == 0)
             {
