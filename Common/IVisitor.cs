@@ -23,5 +23,6 @@ namespace Compiler
         void Visit(UnaryNode node);
         void Visit(StringLiteralNode node);
         void Visit(VarDeclNode node);
+        void Visit(GotoNode node);     
     }
 }

@@ -205,6 +205,20 @@ namespace Compiler
             //}
         }
 
+        private void CheckRealLabel(StatementNode node, int index = -1)
+        {
+            if (node.HasLabel())
+            {
+                if (index == -1) index = mLines.Count() - 1;
+                var oldLabel = mLines.Last().label;
+                mLines[index].label = node.Label.Name;
+                if (oldLabel.Length > 0)
+                {
+                    ReplaceAllReferencesToLabel(oldLabel, node.Label.Name);
+                }
+            }
+        }
+
         private void EraseEmptyLines()
         {
             Debug.Assert(mLines.Count != 0);
@@ -241,19 +255,24 @@ namespace Compiler
                 if (unary.Expr is IntNumNode)
                 {
                     mLines.Add(new Line.UnaryExpr(variable, unary.Op, (unary.Expr as IntNumNode).Num.ToString()));
+                    CheckRealLabel(node);
                     return;
                 }
                 else if (unary.Expr is FloatNumNode)
                 {
                     mLines.Add(new Line.UnaryExpr(variable, unary.Op, (unary.Expr as FloatNumNode).Num.ToString()));
+                    CheckRealLabel(node);
                     return;
                 }
                 else if (unary.Expr is IdNode)
                 {
                     mLines.Add(new Line.UnaryExpr(variable, unary.Op, (unary.Expr as IdNode).Name));
+                    CheckRealLabel(node);
                     return;
                 }
             }
+
+            int nextLine = mLines.Count();
 
             node.Expr.Accept(this);
             string expression = mStack.Pop();
@@ -265,10 +284,12 @@ namespace Compiler
             else if (node.Expr is BinaryNode)
             {
                 (mLines.Last() as Line.BinaryExpr).left = variable;
+                CheckRealLabel(node, nextLine);
             }
             else
             {
                 mLines.Add(new Line.Identity(variable, expression));
+                CheckRealLabel(node, nextLine);
             }
         }
 
@@ -287,22 +308,32 @@ namespace Compiler
             mTableOfNames.Add(node.GetID().Name, node.VariableType);
         }
 
+        public void Visit(GotoNode node)
+        {
+            mLines.Add(new Line.GoTo(node.Target.Name));
+            CheckRealLabel(node);
+        }
+
         public void Visit(IfNode node)
         {
+            int nextLine = mLines.Count();
+
             node.Expr.Accept(this);
             string condition = mStack.Pop();
             var labelForTrue = UniqueIdsGenerator.Instance().Get("l");
             var labelForFalse = UniqueIdsGenerator.Instance().Get("l");
 
-            Line.СonditionalJump conditionalLine = new Line.СonditionalJump(condition, labelForTrue);
+            var conditionalLine = new Line.СonditionalJump(condition, labelForTrue);
             mLines.Add(conditionalLine);
+            CheckRealLabel(node, nextLine);
 
             if (node.StatElse != null)
             {
                 node.StatElse.Accept(this); //тело для false/else
             }
-            
+
             mLines.Add(new Line.GoTo(labelForFalse));
+
             var gotoPosition = mLines.Count - 1;
 
             node.Stat.Accept(this); //тело для true
@@ -319,6 +350,8 @@ namespace Compiler
 
         public void Visit(CoutNode node)
         {
+            int nextLine = mLines.Count();
+
             // TODO Представить cout как вызов функции в грамматике
             List<string> parameters = new List<string>();
             foreach (var expr in node.ExprList)
@@ -334,6 +367,7 @@ namespace Compiler
             }
 
             mLines.Add(new Line.FunctionCall("cout", parameters.Count));
+            CheckRealLabel(node, nextLine);
         }
 
         public void Visit(FunctionNode node)
@@ -358,6 +392,8 @@ namespace Compiler
 
         public void Visit(FunctionNodeSt node)
         {
+            int nextLine = mLines.Count();
+
             List<string> parameters = new List<string>();
             foreach (var expr in node.Function.Parameters)
             {
@@ -370,26 +406,32 @@ namespace Compiler
             {
                 mLines.Add(new Line.FunctionParam(param));
             }
-            
+
             mLines.Add(new Line.FunctionCall(node.Function.Name, parameters.Count));
+            CheckRealLabel(node, nextLine);
         }
 
         public void Visit(WhileNode node)
         {
-            string gotoLabel = UniqueIdsGenerator.Instance().Get("l");
+            string jumpLabel;
+            if (node.HasLabel()) {
+                jumpLabel = node.Label.Name;
+            }
+            else jumpLabel = UniqueIdsGenerator.Instance().Get("l");
+
             string labelForTrue = UniqueIdsGenerator.Instance().Get("l");
             string labelForFalse = UniqueIdsGenerator.Instance().Get("l");
 
-            var gotoPosition = mLines.Count();
+            var jumpPosition = mLines.Count();
             node.Expr.Accept(this);
             string condition = mStack.Pop();
             mLines.Add(new Line.СonditionalJump(condition, labelForTrue));
-            mLines[gotoPosition].label = gotoLabel;
+            mLines[jumpPosition].label = jumpLabel;
 
             mLines.Add(new Line.GoTo(labelForFalse));
             var truePosition = mLines.Count();
             node.Stat.Accept(this);
-            mLines.Add(new Line.GoTo(gotoLabel));
+            mLines.Add(new Line.GoTo(jumpLabel));
             mLines[truePosition].label = labelForTrue;
 
             mLines.Add(new Line.EmptyLine());
@@ -398,15 +440,21 @@ namespace Compiler
 
         public void Visit(DoWhileNode node)
         {
+            string firstStLabel;
+            if (node.HasLabel())
+            {
+                firstStLabel = node.Label.Name;
+            }
+            else firstStLabel = UniqueIdsGenerator.Instance().Get("l");
+
             var firstStPosition = mLines.Count();
-            string firstStLabel = UniqueIdsGenerator.Instance().Get("l");
 
             node.Stat.Accept(this);
             node.Expr.Accept(this);
             string condition = mStack.Pop();
 
-            mLines[firstStPosition].label = firstStLabel;
             mLines.Add(new Line.СonditionalJump(condition, firstStLabel));
+            mLines[firstStPosition].label = firstStLabel;
         }
 
         public void Visit(BinaryNode node)

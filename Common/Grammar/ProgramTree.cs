@@ -132,6 +132,11 @@ namespace ProgramTree
         {
             this.Label = label;
         }
+
+        public bool HasLabel()
+        {
+            return Label != null && Label.Name.Length > 0;
+        }
     }
 
     public class FunctionNode : IdNode
@@ -184,14 +189,18 @@ namespace ProgramTree
 
     public class GotoNode : StatementNode
     {
-        public IdNode Id { get; set; }
+        public IdNode Target { get; set; }
 
         public GotoNode(IdNode id)
         {
-            Id = id;
+            Target = id;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
-
 
     public class UnaryNode : ExprNode
     {
@@ -210,8 +219,7 @@ namespace ProgramTree
         }
 
     }
-	
-		
+			
     public class IfNode : StatementNode
     {
         public ExprNode Expr { get; set; }
@@ -246,7 +254,6 @@ namespace ProgramTree
         }
     }
 
-	
     public class WhileNode : StatementNode
     {
         public ExprNode Expr { get; set; }
