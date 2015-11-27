@@ -465,7 +465,7 @@ namespace Compiler
                     //DEF
                     var line = blocks[i][j];
                     if (line.IsEmpty()) continue;
-                    if (line is Line.GoTo || line is Line.FunctionParam || line is Line.FunctionCall || line is Line.UnaryExpr) continue;
+                    if (line is Line.GoTo || line is Line.FunctionParam || line is Line.FunctionCall) continue;
 
                     String currentIndDef = (line as Line.Expr).left;
 
@@ -476,15 +476,15 @@ namespace Compiler
 
                     //USE
                     String usedVar = "";
-                    if (line is Line.BinaryExpr && (line as Line.BinaryExpr).FirstParamIsNumber())
+                    if (line is Line.BinaryExpr && !(line as Line.BinaryExpr).FirstParamIsNumber())
                     {
                         usedVar = (line as Line.BinaryExpr).first;
                     }
-                    else if (line is Line.UnaryExpr && (line as Line.UnaryExpr).ParamIsNumber())
+                    else if (line is Line.UnaryExpr && !(line as Line.UnaryExpr).ParamIsNumber())
                     {
                         usedVar = (line as Line.UnaryExpr).argument;
                     }
-                    else if (line is Line.Identity && (line as Line.Identity).RightIsNumber())
+                    else if (line is Line.Identity && !(line as Line.Identity).RightIsNumber())
                     {
                         usedVar = (line as Line.Identity).right;
                     }
