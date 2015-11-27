@@ -65,6 +65,36 @@ namespace SimpleCompiler
             }
         }
 
+        public static void TestDomIterativeAlogrithm(ProgramTree.BlockNode root)
+        {
+            Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+            codeGenerator.Visit(root);
+
+            var code = codeGenerator.CreateCode();
+
+            int blockIndex = 0;
+            foreach (Block block in code.blocks)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Block {0} :", ++blockIndex);
+                Console.WriteLine(block);
+            }
+
+            Console.WriteLine("Doms");
+            Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.generateDomOut(code);
+            foreach (Block block in blockDoms.Keys)
+            {
+                Console.Write("Dom({0}) =", code.blocks.IndexOf(block) + 1);
+
+                foreach(Block domBlock in blockDoms[block])
+                {
+                    Console.Write(" {0};", code.blocks.IndexOf(domBlock) + 1);
+                }
+
+                Console.WriteLine();
+            }
+        }
+
         public static void RunAllTests()
         {
             var extensions = new string[] { "*.cn", "*.pasn" };
@@ -125,13 +155,14 @@ namespace SimpleCompiler
                 List<string> files = new List<string>();
                 //files.Add(@"..\..\tests\test-validation3.cn");
                 //files.Add(@"..\..\tests\test-2.cn");
-                files.Add(@"..\..\tests\test-realnum1.pasn");
-                files.Add(@"..\..\tests\test-dce3.cn");
+                //files.Add(@"..\..\tests\test-realnum1.pasn");
+                //files.Add(@"..\..\tests\test-dce3.cn");
                 //files.Add(@"..\..\in.pasn");
                 //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
                 //files.Add(@"..\..\test-pas1.pasn");
                 //files.Add(@"..\..\tests\test-exprgenkill-3.cn");
+                files.Add(@"..\..\tests\test-dom-2.cn");
 
                 foreach (var file in files)
                 {
@@ -141,15 +172,17 @@ namespace SimpleCompiler
 
                         Console.WriteLine("Syntax tree ready");
 
-                        Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
-                        codeGenerator.Visit(root);
+                        //Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+                        //codeGenerator.Visit(root);
 
-                        var code = codeGenerator.CreateCode();
+                        //var code = codeGenerator.CreateCode();
 
                         //DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code/*, 1*/);
                         //deadCodeElimination.Optimize();
 
-                        Console.WriteLine(code);
+                        //Console.WriteLine(code);
+
+                        TestDomIterativeAlogrithm(root);
                     }
                     catch (FileNotFoundException)
                     {
@@ -163,14 +196,14 @@ namespace SimpleCompiler
                     {
                         Console.WriteLine("Syntax error: " + e.Message);
                     }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Unexpected error: " + e.Message);
-                        Console.WriteLine("Call stack:");
-                        var stackObject = new System.Diagnostics.StackTrace(e);
-                        string stackTrace = stackObject.ToString();
-                        Console.WriteLine(stackTrace);
-                    }
+                    //catch (Exception e)
+                    //{
+                    //    Console.WriteLine("Unexpected error: " + e.Message);
+                    //    Console.WriteLine("Call stack:");
+                    //    var stackObject = new System.Diagnostics.StackTrace(e);
+                    //    string stackTrace = stackObject.ToString();
+                    //    Console.WriteLine(stackTrace);
+                    //}
                 }
             }
 

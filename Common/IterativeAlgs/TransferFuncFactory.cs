@@ -43,6 +43,19 @@ namespace Compiler
             return funcs;
         }
 
+        public static Dictionary<Block, TransferFunction<Block>> TransferFuncsForDom(ThreeAddrCode code)
+        {
+            var funcs = new Dictionary<Block, TransferFunction<Block>>();
 
+            var emptyKill = new HashSet<Block>();
+
+            foreach (var block in code.blocks)
+            {
+                var blockFuncGen = new HashSet<Block>() { block };
+                funcs[block] = new TransferFunction<Block>(blockFuncGen, emptyKill);
+            }
+
+            return funcs;
+        }
     }
 }
