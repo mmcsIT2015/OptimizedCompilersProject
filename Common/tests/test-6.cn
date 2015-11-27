@@ -23,9 +23,9 @@
 	{
 		while (a3 < 5)
 		{
-			int c1 = 8 + a2;
-			int c2 = a2;
-			int c3 = c1 + a1;
+			c1 = 8 + a2;
+			c2 = a2;
+			c3 = c1 + a1;
 			if (a1 == 7)
 				a3 = a4;
 			c2 = a5;
