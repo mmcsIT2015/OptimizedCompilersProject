@@ -93,6 +93,19 @@ namespace SimpleCompiler
 
                 Console.WriteLine();
             }
+
+            Console.WriteLine("Reversed Edges");
+            List<DomGraph.BlocksPair> listEdges = DomGraph.ReverseEdges(blockDoms) as List<DomGraph.BlocksPair>;
+
+            if (listEdges.Count == 0)
+            {
+                Console.WriteLine("There are no reversed edges");
+                return;
+            }
+
+            for (int i = 0; i < listEdges.Count; ++i)
+                Console.WriteLine("Reversed edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].blockBegin) + 1,
+                    code.blocks.IndexOf(listEdges[i].blockEnd) + 1);
         }
 
         public static void RunAllTests()
@@ -162,7 +175,7 @@ namespace SimpleCompiler
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
                 //files.Add(@"..\..\test-pas1.pasn");
                 //files.Add(@"..\..\tests\test-exprgenkill-3.cn");
-                files.Add(@"..\..\tests\test-dom-2.cn");
+                files.Add(@"..\..\tests\test-dom2k-1.cn");
 
                 foreach (var file in files)
                 {
