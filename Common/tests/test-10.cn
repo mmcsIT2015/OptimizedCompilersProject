@@ -1,7 +1,7 @@
-﻿{
-	i = m - 1;
-	j = n;
-	a = u1;
+{
+	int i = m - 1;
+	int j = n;
+	int a = u1;
 	do 
 	{
 		i = i + 1;

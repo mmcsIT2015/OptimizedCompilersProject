@@ -1,8 +1,8 @@
 {
-  a = 2;
-  b = 3;
-  x = a + b;
-  y = a * b;
+  int a = 2;
+  int b = 3;
+  int x = a + b;
+  int y = a * b;
   while (y > a) 
   {
  	a = a + 1;

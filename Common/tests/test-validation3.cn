@@ -1,6 +1,6 @@
 {
-	x = 3;
-	i = 6;
-	y = x;
+	int x = 3;
+	int i = 6;
+	int y = x;
 	y = x + i;
 }

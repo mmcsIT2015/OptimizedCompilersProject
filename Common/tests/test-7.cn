@@ -1,16 +1,16 @@
-﻿{
-  a1 = 1;
-  a2 = 2;
-  a3 = 3;
-  a4 = 4; 
-  a5 = 5;
+{
+  int a1 = 1;
+  int a2 = 2;
+  int a3 = 3;
+  int a4 = 4; 
+  int a5 = 5;
 	do
 	{ 
 		if (a > 7) 
 		{
-			c1 = 8 + a2;
-			c2 = a2;	
-			c3 = c1 + a1;
+			int c1 = 8 + a2;
+			int c2 = a2;	
+			int c3 = c1 + a1;
 			if (a1 == 7)
 			{
 				a3 = a4;
@@ -23,9 +23,9 @@
 		}
 		else 
 		{
-			c1 = 8 + a2;
-			c2 = a2;
-			c3 = c1 + a1;
+			int c1 = 8 + a2;
+			int c2 = a2;
+			int c3 = c1 + a1;
 			c2 = a5;
 		}
 	} while (a3 < 5);

@@ -1,5 +1,5 @@
 {
-	j = 0;
-	x = 8;
-	k = j;
+	int j = 0;
+	int x = 8;
+	int k = j;
 }

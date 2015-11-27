@@ -1,10 +1,10 @@
 {
-  x1 = 2;
-  x2 = 2;
-  y1 = x1 * 5;
-  y2 = x2 * 5;
-  c = 6;
-  z = y1 - c;
+  int x1 = 2;
+  int x2 = 2;
+  int y1 = x1 * 5;
+  int y2 = x2 * 5;
+  int c = 6;
+  int z = y1 - c;
   while (z < 9)
   {
 	if (z > 8)
@@ -17,7 +17,7 @@
 	}
            z = z + 1;
   }	
-  c1 = x1 * 5;
-  c2 = x2 * 5;
+  int c1 = x1 * 5;
+  int c2 = x2 * 5;
   z = y1 - c;
 }

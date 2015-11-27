@@ -1,9 +1,9 @@
 {
   if (1)
   {
-    p = b + c;
+    int p = b + c;
   }
 
-  b = a - d;
-  u = b + c;
+  int b = a - d;
+  int u = b + c;
 }

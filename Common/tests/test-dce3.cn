@@ -1,12 +1,12 @@
 {
-	x = u;
+	int x = u;
 	x = x;
+	int u = !u;
 	u = !u;
-	u = !u;
-	l = l;
-	a = 89;
+	int l = l;
+	int a = 89;
 	a = 90;
 	a = 7;
-	k = a;
+	int k = a;
 	l = k;
 }

@@ -1,8 +1,8 @@
 {
-  a = 4;
-  b = 3;
-  c = a + b;
-  d = 1;
+  int a = 4;
+  int b = 3;
+  int c = a + b;
+  int d = 1;
   do
   {
   	d = d + 2;
@@ -12,5 +12,5 @@
 	}
   }
   while (d < 11);	
-  c1 = a + b;
+  int c1 = a + b;
 }

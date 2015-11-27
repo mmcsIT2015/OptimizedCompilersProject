@@ -1,8 +1,8 @@
 {
   if (1)
   {
-    d = u;
+    int d = u;
   }
 
-  b = a - d;
+  int b = a - d;
 }

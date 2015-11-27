@@ -1,11 +1,11 @@
 {
-  x = 2;
-  y = 10;
-  a = 1;
-  b = x;
+  int x = 2;
+  int y = 10;
+  int a = 1;
+  int b = x;
   while (a != y)
   {
-  	t = a * 2;
+  	int t = a * 2;
 	if (t < y)
 	{
 		b = b * b;

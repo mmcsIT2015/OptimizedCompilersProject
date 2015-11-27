@@ -1,5 +1,5 @@
 {
-	x = 2;
-	y = x;
-	h = y;
+	int x = 2;
+	int y = x;
+	int h = y;
 }
