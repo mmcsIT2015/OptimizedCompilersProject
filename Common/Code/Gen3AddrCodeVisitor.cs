@@ -80,7 +80,14 @@ namespace Compiler
                 if (line is Line.UnaryExpr)
                 {
                     var unary = line as Line.UnaryExpr;
-                    if (unary.left[0] != '@') continue; // определяем типы для временных переменных
+                    if (unary.left[0] != '@')
+                    {
+                        if (!mTableOfNames.ContainsKey(unary.left))
+                        {
+                            throw new SemanticException("Используется необъявленная переменная: " + unary.left);
+                        }
+                    }
+
                     if (unary.ParamIsNumber()) continue;
                     if (mTableOfNames.ContainsKey(unary.left)) continue;
 
@@ -95,7 +102,14 @@ namespace Compiler
                 else if (line is Line.Identity)
                 {
                     var identity = line as Line.Identity;
-                    if (identity.left[0] != '@') continue;
+                    if (identity.left[0] != '@')
+                    {
+                        if (!mTableOfNames.ContainsKey(identity.left))
+                        {
+                            throw new SemanticException("Используется необъявленная переменная: " + identity.left);
+                        }
+                    }
+
                     if (identity.RightIsNumber()) continue;
                     if (mTableOfNames.ContainsKey(identity.left)) continue;
 
@@ -104,7 +118,14 @@ namespace Compiler
                 else if (line is Line.BinaryExpr)
                 {
                     var expr = line as Line.BinaryExpr;
-                    if (expr.left[0] != '@') continue;
+                    if (expr.left[0] != '@')
+                    {
+                        if (!mTableOfNames.ContainsKey(expr.left))
+                        {
+                            throw new SemanticException("Используется необъявленная переменная: " + expr.left);
+                        }
+                    }
+
                     if (mTableOfNames.ContainsKey(expr.left)) continue;
 
                     if (expr.IsBoolExpr())
