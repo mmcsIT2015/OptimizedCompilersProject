@@ -1,0 +1,9 @@
+{
+  int z;
+  int a1 = z;
+  int a2;
+  int a = a1 + a2;
+  int b = a1 + a2;
+  int c = a1;
+  int d = c + a2;
+}

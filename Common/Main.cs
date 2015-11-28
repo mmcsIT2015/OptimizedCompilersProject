@@ -209,6 +209,10 @@ namespace SimpleCompiler
                     {
                         Console.WriteLine("Syntax error: " + e.Message);
                     }
+                    catch (SemanticException e)
+                    {
+                        Console.WriteLine("Semantic error: " + e.Message);
+                    }
                     //catch (Exception e)
                     //{
                     //    Console.WriteLine("Unexpected error: " + e.Message);

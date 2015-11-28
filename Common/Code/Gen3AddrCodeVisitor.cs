@@ -327,6 +327,12 @@ namespace Compiler
                 throw new SemanticException(desc);
             }
 
+            if (mTableOfNames.ContainsKey(node.GetID().Name))
+            {
+                string desc = "Повторное объявление переменной: " + node.GetID().Name + "!";
+                throw new SemanticException(desc);
+            }
+
             if (node.IsAssigned)
             {
                 Visit(node.ValueAssignment);
