@@ -321,6 +321,12 @@ namespace Compiler
 
         public void Visit(VarDeclNode node)
         {
+            if (node.HasLabel())
+            {
+                string desc = "Некорректная метка: " + node.Label.Name + "! Запрещено использование меток при объявлении переменной!";
+                throw new SemanticException(desc);
+            }
+
             if (node.IsAssigned)
             {
                 Visit(node.ValueAssignment);
