@@ -58,6 +58,7 @@ ID {Alpha}{AlphaDigit}*
 "=" { return (int)Tokens.EQUAL; }
 "<>" { return (int)Tokens.NOTEQUAL; }
 "." { return (int)Tokens.POINT; }
+":" { return (int)Tokens.COLON; }
 
 [^\t \r\n] {
 	LexError();
@@ -103,6 +104,8 @@ class ScannerHelper
 	keywords.Add("until",(int)Tokens.UNTIL);
 	
 	keywords.Add("not",(int)Tokens.NOT);
+	keywords.Add("goto", (int)Tokens.GOTO);
+	
   }
   public static int GetIDToken(string s)
   {

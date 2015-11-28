@@ -23,14 +23,14 @@
 
 %namespace SimpleParserPascal
 
-%token BEGIN END ASSIGN SEMICOLON PLUS MINUS PROD DIV LB RB COMMA IF ELSE THEN WHILE DO REPEAT UNTIL LESS MORE LESSEQUAL MOREEQUAL EQUAL NOTEQUAL NOT POINT
+%token BEGIN END ASSIGN SEMICOLON PLUS MINUS PROD DIV LB RB GOTO COMMA IF ELSE THEN WHILE DO REPEAT UNTIL LESS MORE LESSEQUAL MOREEQUAL EQUAL NOTEQUAL NOT POINT COLON
 %token <iVal> INUM 
 %token <dVal> RNUM 
 %token <sVal> ID STRING_L
 %token <typeVal> TYPE
 
 %type <eVal> expr ident S T U F
-%type <stVal> assign statement if while repeatuntil decl_assign
+%type <stVal> assign statement st if while repeatuntil decl_assign goto
 %type <blVal> stlist block
 %type <funVal> funcall
 %type <funStVal> funcallst
@@ -59,15 +59,23 @@ params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
 			$$ = $1;
 		}
     ;
-		
-statement: assign { $$ = $1; }
+
+statement: ident COLON st { $3.AddLabel($1 as IdNode); $$ = $3;}
+			| st { $$ = $1; }
+;
+	
+st: 	assign { $$ = $1; }
 		| block   { $$ = $1; }
 		| if   { $$ = $1; }
 		| while { $$ = $1; }
 		| repeatuntil { $$ = $1; }
 		| funcallst { $$ = $1; }
-		| decl_assign SEMICOLON { $$ = $1; }
+		| decl_assign { $$ = $1; }
+		| goto { $$ = $1; }
 	;
+	
+goto: GOTO ident { $$ = new GotoNode($2 as IdNode); }
+	;	
 	
 funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }
 		;
