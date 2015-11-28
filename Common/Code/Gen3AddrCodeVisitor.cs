@@ -248,7 +248,7 @@ namespace Compiler
             {
                 if (mLines[i].Is<Line.EmptyLine>())
                 {
-                    string forWhat = mLines[i + 1].label.Count() != 0 ? mLines[i + 1].label : mLines[i].label;
+                    string forWhat = mLines[i + 1].HasLabel() ? mLines[i + 1].label : mLines[i].label;
                     mLines[i + 1].label = forWhat;
                     ReplaceAllReferencesToLabel(mLines[i].label, forWhat);
 
@@ -446,25 +446,30 @@ namespace Compiler
 
         public void Visit(WhileNode node)
         {
-            string jumpLabel;
-            if (node.HasLabel()) {
-                jumpLabel = node.Label.Name;
-            }
-            else jumpLabel = UniqueIdsGenerator.Instance().Get("l");
-
             string labelForTrue = UniqueIdsGenerator.Instance().Get("l");
             string labelForFalse = UniqueIdsGenerator.Instance().Get("l");
 
             var jumpPosition = mLines.Count();
+
             node.Expr.Accept(this);
             string condition = mStack.Pop();
+
             mLines.Add(new Line.СonditionalJump(condition, labelForTrue));
+
+            string jumpLabel;
+            if (node.HasLabel()) jumpLabel = node.Label.Name;
+            else if (mLines[jumpPosition].HasLabel()) jumpLabel = mLines[jumpPosition].label;
+            else jumpLabel = UniqueIdsGenerator.Instance().Get("l");
             mLines[jumpPosition].label = jumpLabel;
 
             mLines.Add(new Line.GoTo(labelForFalse));
             var truePosition = mLines.Count();
             node.Stat.Accept(this);
             mLines.Add(new Line.GoTo(jumpLabel));
+            if (mLines[truePosition].HasLabel())
+            {
+                ReplaceAllReferencesToLabel(mLines[truePosition].label, labelForTrue);
+            }
             mLines[truePosition].label = labelForTrue;
 
             mLines.Add(new Line.EmptyLine());
@@ -473,21 +478,19 @@ namespace Compiler
 
         public void Visit(DoWhileNode node)
         {
-            string firstStLabel;
-            if (node.HasLabel())
-            {
-                firstStLabel = node.Label.Name;
-            }
-            else firstStLabel = UniqueIdsGenerator.Instance().Get("l");
-
-            var firstStPosition = mLines.Count();
+            var entryPoint = mLines.Count();
 
             node.Stat.Accept(this);
             node.Expr.Accept(this);
             string condition = mStack.Pop();
 
-            mLines.Add(new Line.СonditionalJump(condition, firstStLabel));
-            mLines[firstStPosition].label = firstStLabel;
+            string label;
+            if (node.HasLabel()) label = node.Label.Name;
+            else if (mLines[entryPoint].HasLabel()) label = mLines[entryPoint].label;
+            else label = UniqueIdsGenerator.Instance().Get("l");
+
+            mLines.Add(new Line.СonditionalJump(condition, label));
+            mLines[entryPoint].label = label;
         }
 
         public void Visit(BinaryNode node)

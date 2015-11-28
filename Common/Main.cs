@@ -185,17 +185,17 @@ namespace SimpleCompiler
 
                         Console.WriteLine("Syntax tree ready");
 
-                        //Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
-                        //codeGenerator.Visit(root);
+                        Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+                        codeGenerator.Visit(root);
 
-                        //var code = codeGenerator.CreateCode();
+                        var code = codeGenerator.CreateCode();
 
                         //DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code/*, 1*/);
                         //deadCodeElimination.Optimize();
 
-                        //Console.WriteLine(code);
+                        Console.WriteLine(code);
 
-                        TestDomIterativeAlogrithm(root);
+                        //TestDomIterativeAlogrithm(root);
                     }
                     catch (FileNotFoundException)
                     {
