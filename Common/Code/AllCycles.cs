@@ -20,12 +20,20 @@ namespace Compiler
         bool FirstDomSeccond(T a, T b);
     }
 
+    public abstract class AbstractTestDominatorTree: IDominatorRelation<int>
+    {
+        protected Dictionary<int, List<int>> data;
+        public bool FirstDomSeccond(int a, int b)
+        {
+            return data[b].Any(x => x == a);
+        }
+    }
+
     /// <summary>
     /// Граф доминатора из лекции
     /// </summary>
-    public class TestDominatorTree : IDominatorRelation<int>
+    public class TestDominatorTree : AbstractTestDominatorTree
     {
-        private Dictionary<int, List<int>> data;
         public TestDominatorTree()
         {
             data = new Dictionary<int, List<int>>();
@@ -42,19 +50,13 @@ namespace Compiler
             data[9].AddRange(new int[] { 1, 3, 4, 7, 8, 9 });
             data[10].AddRange(new int[] { 1, 3, 4, 7, 8, 10 });
         }
-
-        public bool FirstDomSeccond(int a, int b)
-        {
-            return data[b].Any(x => x == a);
-        }
     }
 
     /// <summary>
     /// Пример2: граф доминатора из лекции
     /// </summary>
-    public class TestDominatorTree1 : IDominatorRelation<int>
+    public class TestDominatorTree1 : AbstractTestDominatorTree
     {
-        private Dictionary<int, List<int>> data;
         public TestDominatorTree1()
         {
             data = new Dictionary<int, List<int>>();
@@ -65,20 +67,13 @@ namespace Compiler
             data[3].AddRange(new int[] { 1, 2, 3 });
             data[4].AddRange(new int[] { 1, 3, 4 });
         }
-
-        public bool FirstDomSeccond(int a, int b)
-        {
-            return data[b].Any(x => x == a);
-        }
     }
 
     /// <summary>
     /// Пример2: CFG граф из лекции
     /// </summary>
-    public class TestGraph1 : IGraph<int>
+    public class TestGraph1 : AbstarctTestGraph
     {
-        private Dictionary<int, IList<int>> Data;
-        private Dictionary<int, IList<int>> ReversedData;
         public TestGraph1()
         {
             Data = new Dictionary<int, IList<int>>();
@@ -90,41 +85,6 @@ namespace Compiler
             Data[3].Add(1);
             Data[4].Add(1);
             ReversedData = getReversedIndexedGraph(Data);
-        }
-
-        public IEnumerable<int> OutEdges(int block)
-        {
-            return Data[block];
-        }
-
-        public IEnumerable<int> InEdges(int block)
-        {
-            return ReversedData[block];
-        }
-
-        private static Dictionary<int, IList<int>> getReversedIndexedGraph(Dictionary<int, IList<int>> graph)
-        {
-            bool[,] graphTable = new bool[graph.Count() + 1, graph.Count() + 1];
-            graphTable.Initialize();
-            for (int i = 1; i <= graph.Count(); i++)
-            {
-                foreach (int j in graph[i])
-                {
-                    graphTable[i, j] = true;
-                }
-            }
-
-            Dictionary<int, IList<int>> reversedGraph = new Dictionary<int, IList<int>>();
-            for (int i = 1; i <= graph.Count(); i++) reversedGraph[i] = new List<int>(2);
-            for (int i = 1; i <= graph.Count(); i++)
-            {
-                for (int j = 1; j <= graph.Count(); j++)
-                {
-                    if (graphTable[i, j]) reversedGraph[j].Add(i);
-                }
-            }
-
-            return reversedGraph;
         }
     }
 

@@ -38,37 +38,10 @@ namespace Compiler
         }
     }
 
-    /// <summary>
-    /// Управляющий граф из лекции
-    /// </summary>
-    public class TestGraph : IGraph<int>
+    public abstract class AbstarctTestGraph: IGraph<int>
     {
-        private Dictionary<int, IList<int>> Data;
-        private Dictionary<int, IList<int>> ReversedData;
-        public TestGraph()
-        {
-            Data = new Dictionary<int, IList<int>>();
-            for (int i = 1; i <= 10; i++)
-                Data[i] = new List<int>();
-            Data[1].Add(2);
-            Data[1].Add(3);
-            Data[2].Add(3);
-            Data[3].Add(4);
-            Data[4].Add(5);
-            Data[4].Add(6);
-            Data[4].Add(3);
-            Data[5].Add(7);
-            Data[6].Add(7);
-            Data[7].Add(8);
-            Data[7].Add(4);
-            Data[8].Add(9);
-            Data[8].Add(10);
-            Data[8].Add(3);
-            Data[9].Add(1);
-            Data[10].Add(7);
-            ReversedData = getReversedIndexedGraph(Data);
-        }
-
+        protected Dictionary<int, IList<int>> Data;
+        protected Dictionary<int, IList<int>> ReversedData;
         public IEnumerable<int> OutEdges(int block)
         {
             return Data[block];
@@ -79,7 +52,7 @@ namespace Compiler
             return ReversedData[block];
         }
 
-        private static Dictionary<int, IList<int>> getReversedIndexedGraph(Dictionary<int, IList<int>> graph)
+        protected static Dictionary<int, IList<int>> getReversedIndexedGraph(Dictionary<int, IList<int>> graph)
         {
             bool[,] graphTable = new bool[graph.Count() + 1, graph.Count() + 1];
             graphTable.Initialize();
@@ -102,6 +75,36 @@ namespace Compiler
             }
 
             return reversedGraph;
+        }
+    }
+
+    /// <summary>
+    /// Управляющий граф из лекции
+    /// </summary>
+    public class TestGraph : AbstarctTestGraph
+    {
+        public TestGraph()
+        {
+            Data = new Dictionary<int, IList<int>>();
+            for (int i = 1; i <= 10; i++)
+                Data[i] = new List<int>();
+            Data[1].Add(2);
+            Data[1].Add(3);
+            Data[2].Add(3);
+            Data[3].Add(4);
+            Data[4].Add(5);
+            Data[4].Add(6);
+            Data[4].Add(3);
+            Data[5].Add(7);
+            Data[6].Add(7);
+            Data[7].Add(8);
+            Data[7].Add(4);
+            Data[8].Add(9);
+            Data[8].Add(10);
+            Data[8].Add(3);
+            Data[9].Add(1);
+            Data[10].Add(7);
+            ReversedData = getReversedIndexedGraph(Data);
         }
     }
 
