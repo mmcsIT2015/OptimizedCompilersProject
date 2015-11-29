@@ -1,6 +1,7 @@
 # Folders
 .vs/
-bin/
+Common/bin/
+GUI/bin/
 obj/
 
 # Visual studio files.
