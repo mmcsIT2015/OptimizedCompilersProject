@@ -5,12 +5,25 @@ using System.Text;
 
 namespace Compiler
 {
+    /// <summary>
+    /// Интерфейс для дерева доминатора
+    /// </summary>
+    /// <typeparam name="T">Тип данных</typeparam>
     public interface IDominatorRelation<T>
     {
+        /// <summary>
+        /// Отношение доминирования первой вершины над второй
+        /// </summary>
+        /// <param name="a">Первая вершина</param>
+        /// <param name="b">Вторая вершина</param>
+        /// <returns></returns>
         bool FirstDomSeccond(T a, T b);
     }
 
-    public class TestDominatorTree: IDominatorRelation<int>
+    /// <summary>
+    /// Граф доминатора из лекции
+    /// </summary>
+    public class TestDominatorTree : IDominatorRelation<int>
     {
         private Dictionary<int, List<int>> data;
         public TestDominatorTree()
@@ -36,6 +49,9 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Пример2: граф доминатора из лекции
+    /// </summary>
     public class TestDominatorTree1 : IDominatorRelation<int>
     {
         private Dictionary<int, List<int>> data;
@@ -56,6 +72,9 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Пример2: CFG граф из лекции
+    /// </summary>
     public class TestGraph1 : IGraph<int>
     {
         private Dictionary<int, IList<int>> Data;
@@ -109,6 +128,9 @@ namespace Compiler
         }
     }
 
+    /// <summary>
+    /// Тест алгоритма определения всех естественных циклов на 2-х премерах из лекций
+    /// </summary>
     public static class TestAllCycles
     {
         public static void Test()
@@ -126,7 +148,7 @@ namespace Compiler
 
             TestGraph1 graph1 = new TestGraph1();
             TestDominatorTree1 domTree1 = new TestDominatorTree1();
-            int[] blocks1 = { 1, 2, 3, 4};
+            int[] blocks1 = { 1, 2, 3, 4 };
             List<DomGraph.BlocksPair<int>> reverseEdges1 = new List<DomGraph.BlocksPair<int>>();
             reverseEdges1.Add(new DomGraph.BlocksPair<int>(3, 1));
             reverseEdges1.Add(new DomGraph.BlocksPair<int>(4, 1));
@@ -136,7 +158,7 @@ namespace Compiler
         private static void CalcAndPrint(IEnumerable<int> blocks, IGraph<int> graph, List<DomGraph.BlocksPair<int>> reverseEdges, IDominatorRelation<int> domTree)
         {
             Console.WriteLine("New example");
-            AllCycles allCycles = new AllCycles(blocks, graph, reverseEdges, domTree);
+            AllCycles<int> allCycles = new AllCycles<int>(blocks, graph, reverseEdges, domTree);
             foreach (var cycle in allCycles.cycles)
             {
                 Console.Write("n:" + cycle.n + "  ");
@@ -148,46 +170,71 @@ namespace Compiler
         }
     }
 
-    public class Cycle
+    /// <summary>
+    /// Класс цикла, содержащий вход в цикл (n) 
+    /// и список всех вершин, пренадлежащих циклу
+    /// </summary>
+    /// <typeparam name="T">Тип вершин</typeparam>
+    public class Cycle<T>
     {
-        public Cycle(int n, List<int> data)
+        public Cycle(T n, List<T> data)
         {
             this.n = n;
             this.data = data;
         }
 
-        public int n { get; set; }
+        public T n { get; set; }
 
-        public List<int> data { get; set; }
+        public List<T> data { get; set; }
     }
 
-    public class AllCycles
+    /// <summary>
+    /// Обределяет и хранит все циклы CFG, в том числе вложенные
+    /// Использование
+    ///     Инициализация
+    ///     AllCycles<Block> allCycles = new AllCycles<Block>(code.blocks, code.graph, reverseEdges, domTree);
+    ///     
+    ///     Получить все циклы
+    ///     List<Cycle<Block>> cycles = allCycles.cycles;
+    /// </summary>
+    /// <typeparam name="T">Тип вершин</typeparam>
+    public class AllCycles<T> where T : IComparable<T>
     {
-        public List<Cycle> cycles { get; private set; }
+        /// <summary>
+        /// Все циклы
+        /// </summary>
+        public List<Cycle<T>> cycles { get; private set; }
 
-        public AllCycles(IEnumerable<int> blocks, IGraph<int> graph, List<DomGraph.BlocksPair<int>> reverseEdges, IDominatorRelation<int> domTree)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blocks">Список блоков</param>
+        /// <param name="graph">CFG</param>
+        /// <param name="reverseEdges">Список обратных дуг</param>
+        /// <param name="domTree">Дерево доминирования</param>
+        public AllCycles(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.BlocksPair<T>> reverseEdges, IDominatorRelation<T> domTree)
         {
-            cycles = new List<Cycle>();
-            foreach(int n in blocks)
+            cycles = new List<Cycle<T>>();
+            foreach (T n in blocks)
             {
-                foreach(int d in reverseEdges.FindAll(pair => pair.blockEnd == n).Select(pair => pair.blockBegin))
+                foreach (T d in reverseEdges.FindAll(pair => pair.blockEnd.CompareTo(n) == 0).Select(pair => pair.blockBegin))
                 {
-                    Dictionary<int, bool> mark = new Dictionary<int, bool>();
-                    foreach (int bl in blocks)
+                    Dictionary<T, bool> mark = new Dictionary<T, bool>();
+                    foreach (T bl in blocks)
                         mark[bl] = false;
-                    cycles.Add(new Cycle(n, Find(n, d, d, mark, graph, domTree)));
+                    cycles.Add(new Cycle<T>(n, Find(n, d, d, mark, graph, domTree)));
                 }
             }
         }
 
-        private static List<int> Find(int n, int d, int x, Dictionary<int, bool> mark, IGraph<int> graph, IDominatorRelation<int> domTree)
+        private static List<T> Find(T n, T d, T x, Dictionary<T, bool> mark, IGraph<T> graph, IDominatorRelation<T> domTree)
         {
-            List<int> verts = new List<int>();
+            List<T> verts = new List<T>();
             if (mark[x])
             {
                 return verts;
             }
-            else if (n == x)
+            else if (n.CompareTo(x) == 0)
             {
                 mark[n] = true;
                 verts.Add(n);
@@ -195,7 +242,7 @@ namespace Compiler
             }
             mark[x] = true;
             verts.Add(x);
-            foreach(int prev in graph.InEdges(x).Where(e => !domTree.FirstDomSeccond(d, e)))
+            foreach (T prev in graph.InEdges(x).Where(e => !domTree.FirstDomSeccond(d, e)))
             {
                 verts.AddRange(Find(n, d, prev, mark, graph, domTree));
             }
