@@ -1,7 +1,10 @@
 begin
-	a := 5.6;
+	var a : integer := 5.6;
+	var b : integer;
+	var d : float;
 label1:
 	b := 89;
+	var c : integer;
 	c := 78;
 label2:
 	d := 23.78;

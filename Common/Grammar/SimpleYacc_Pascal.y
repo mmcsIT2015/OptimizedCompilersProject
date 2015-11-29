@@ -23,7 +23,7 @@
 
 %namespace SimpleParserPascal
 
-%token BEGIN END ASSIGN SEMICOLON PLUS MINUS PROD DIV LB RB GOTO COMMA IF ELSE THEN WHILE DO REPEAT UNTIL LESS MORE LESSEQUAL MOREEQUAL EQUAL NOTEQUAL NOT POINT COLON
+%token BEGIN END ASSIGN SEMICOLON PLUS VAR MINUS PROD DIV LB RB GOTO COMMA IF ELSE THEN WHILE DO REPEAT UNTIL LESS MORE LESSEQUAL MOREEQUAL EQUAL NOTEQUAL NOT POINT COLON
 %token <iVal> INUM 
 %token <dVal> RNUM 
 %token <sVal> ID STRING_L
@@ -87,8 +87,8 @@ funcall	: ID LB params RB
 		}
 		;
 		
-decl_assign: TYPE assign { $$ = new VarDeclNode($1, $2 as AssignNode); }
-	| TYPE ident { $$ = new VarDeclNode($1, $2 as IdNode); }
+decl_assign: VAR ident COLON TYPE ASSIGN expr { $$ = new VarDeclNode($4, new AssignNode($2 as IdNode, $6)); }
+	| VAR ident COLON TYPE { $$ = new VarDeclNode($4, $2 as IdNode); }
 	;
 
 ident 	: ID { $$ = new IdNode($1); }	

@@ -11,6 +11,9 @@ AlphaDigit {Alpha}|{Digit}
 INTNUM  {Digit}+
 REALNUM {INTNUM}\.{INTNUM}
 ID {Alpha}{AlphaDigit}* 
+TYPEDESC integer|float|string|boolean
+
+STRING_LITERAL \"([^\"]|\\.)*\"
 
 %%
 
@@ -21,6 +24,14 @@ ID {Alpha}{AlphaDigit}*
 	}
 
 	throw new SyntaxException(yytext + " isn't a value of type `INTNUM`");
+}
+
+{STRING_LITERAL} {
+	return (int)Tokens.STRING_L;
+}
+
+{TYPEDESC}	{
+	return (int)Tokens.TYPE;		
 }
 
 {REALNUM} { 
@@ -105,6 +116,7 @@ class ScannerHelper
 	
 	keywords.Add("not",(int)Tokens.NOT);
 	keywords.Add("goto", (int)Tokens.GOTO);
+	keywords.Add("var", (int)Tokens.VAR);
 	
   }
   public static int GetIDToken(string s)

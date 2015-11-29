@@ -173,9 +173,9 @@ namespace SimpleCompiler
                 //files.Add(@"..\..\in.pasn");
                 //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
-                //files.Add(@"..\..\test-pas1.pasn");
+                files.Add(@"..\..\tests\test-realnum1.pasn");
                 //files.Add(@"..\..\tests\test-exprgenkill-3.cn");
-                files.Add(@"..\..\tests\test-dom2k-1.cn");
+                //files.Add(@"..\..\tests\test-dom2k-1.cn");
 
                 foreach (var file in files)
                 {

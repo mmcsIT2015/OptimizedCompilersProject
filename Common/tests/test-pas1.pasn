@@ -1,4 +1,8 @@
 begin
+	var u : integer;
+	var y : integer;
+	var j : integer;
+	
 	u := 6;
 	y := u;
 	j := 89

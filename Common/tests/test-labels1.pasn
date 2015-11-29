@@ -1,4 +1,8 @@
 begin
+	var a : integer;
+	var b : integer;
+	var c : integer;
+	var d : integer;
 	a := 5.6;
 label1:
 	b := 89;

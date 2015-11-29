@@ -1,4 +1,7 @@
 begin
+	var a : float;
+	var b : integer;
+	
 	a := 4.5;
 	b := 89;
 	if (a > b) then
