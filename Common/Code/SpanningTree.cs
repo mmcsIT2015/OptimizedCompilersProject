@@ -44,6 +44,7 @@ namespace Compiler
     public class TestGraph : IGraph<int>
     {
         private Dictionary<int, IList<int>> Data;
+        private Dictionary<int, IList<int>> ReversedData;
         public TestGraph()
         {
             Data = new Dictionary<int, IList<int>>();
@@ -65,6 +66,7 @@ namespace Compiler
             Data[8].Add(3);
             Data[9].Add(1);
             Data[10].Add(7);
+            ReversedData = getReversedIndexedGraph(Data);
         }
 
         public IEnumerable<int> OutEdges(int block)
@@ -74,9 +76,33 @@ namespace Compiler
 
         public IEnumerable<int> InEdges(int block)
         {
-            throw new Exception();
+            return ReversedData[block];
         }
 
+        private static Dictionary<int, IList<int>> getReversedIndexedGraph(Dictionary<int, IList<int>> graph)
+        {
+            bool[,] graphTable = new bool[graph.Count() + 1, graph.Count() + 1];
+            graphTable.Initialize();
+            for (int i = 1; i <= graph.Count(); i++)
+            {
+                foreach (int j in graph[i])
+                {
+                    graphTable[i, j] = true;
+                }
+            }
+
+            Dictionary<int, IList<int>> reversedGraph = new Dictionary<int, IList<int>>();
+            for (int i = 1; i <= graph.Count(); i++) reversedGraph[i] = new List<int>(2);
+            for (int i = 1; i <= graph.Count(); i++)
+            {
+                for (int j = 1; j <= graph.Count(); j++)
+                {
+                    if (graphTable[i, j]) reversedGraph[j].Add(i);
+                }
+            }
+
+            return reversedGraph;
+        }
     }
 
     /// <summary>

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 namespace Compiler
 {
 
-    static class DomGraph
+    public static class DomGraph
     {
-        public struct BlocksPair
+        public struct BlocksPair<T>
         {
-            public Block blockBegin;
-            public Block blockEnd;
-            public BlocksPair(Block begin, Block end)
+            public T blockBegin;
+            public T blockEnd;
+            public BlocksPair(T begin, T end)
             {
                 blockBegin = begin;
                 blockEnd = end;
@@ -36,9 +36,9 @@ namespace Compiler
         /// <param name="Dom"></param>
         /// <param name="CFG"></param>
         /// <returns></returns>
-        public static IEnumerable<BlocksPair> ReverseEdges(Dictionary<Block, IEnumerable<Block>> Dom, ControlFlowGraph CFG)
+        public static IEnumerable<BlocksPair<Block>> ReverseEdges(Dictionary<Block, IEnumerable<Block>> Dom, ControlFlowGraph CFG)
         {
-            List<BlocksPair> listEdges = new List<BlocksPair>();
+            List<BlocksPair<Block>> listEdges = new List<BlocksPair<Block>>();
 /*            List<Block> inputCFG = new List<Block>();
 
             foreach (Block block in Dom.Keys)
@@ -50,7 +50,7 @@ namespace Compiler
                 foreach (Block b in Dom[a])
                     //if a -> b
                     if ((CFG.OutEdges(a) as List<Block>).Contains(b))
-                        listEdges.Add(new BlocksPair(a, b));
+                        listEdges.Add(new BlocksPair<Block>(a, b));
 
             return listEdges;
 
