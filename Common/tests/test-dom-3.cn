@@ -1,0 +1,15 @@
+{
+    int i1 = 1;
+    if (1)
+    {
+        int i3 = 3;
+        while (3)
+        {
+            int iu = 0;
+        }
+        if (0)
+        {
+            int pu = 0;
+        }
+    }
+}

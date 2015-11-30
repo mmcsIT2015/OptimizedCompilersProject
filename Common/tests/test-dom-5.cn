@@ -1,0 +1,30 @@
+{
+    int i2 = 2;
+    do
+    {
+        do
+        {
+            iu = iu - 1;
+            int a = 7 * 4;
+        }
+        while(iu);
+        
+        if (1)
+        {
+            i2 = 14;
+        }
+        
+        int b = 1;
+        int i = 7;
+        while (i)
+        {
+            if (b)
+                i = i - 1;
+        }
+    }
+    while (3);
+    
+    while (i2)
+        if (i2)
+            i2 = 0;
+}

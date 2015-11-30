@@ -1,0 +1,25 @@
+{
+    int i1 = 1;
+    int i2 = 2;
+    while (3)
+    {
+        int iu = 0;
+        if (8)
+        {
+            int i8 = 7 - 14;
+        }
+        else
+        {
+            do
+            {
+                iu = iu - 1;
+            }
+            while(iu);
+        }
+        
+        if (1)
+        {
+            i2 = 14;
+        }
+    }
+}
