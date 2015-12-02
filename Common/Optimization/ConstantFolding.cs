@@ -48,16 +48,16 @@ namespace iCompiler
                     double y = double.Parse(line.second);
                     switch (line.operation)
                     {
-                        case BinaryOperation.Minus:
+                        case Operator.Minus:
                             block.ReplaceLines(line, new Line.Identity(line.left, (x - y).ToString()));
                             break;
-                        case BinaryOperation.Plus:
+                        case Operator.Plus:
                             block.ReplaceLines(line, new Line.Identity(line.left, (x + y).ToString()));
                             break;
-                        case BinaryOperation.Mult:
+                        case Operator.Mult:
                             block.ReplaceLines(line, new Line.Identity(line.left, (x * y).ToString()));
                             break;
-                        case BinaryOperation.Div:
+                        case Operator.Div:
                             block.ReplaceLines(line, new Line.Identity(line.left, (x / y).ToString()));
                             break;
                     }
@@ -83,24 +83,24 @@ namespace iCompiler
                     {
                         if (first == 0) //мы сравниваем double
                         {
-                            if (line.operation == BinaryOperation.Plus)
+                            if (line.operation == Operator.Plus)
                             {
                                 block.ReplaceLines(line, new Line.Identity(line.left, line.second));
                             }
-                            else if (line.operation == BinaryOperation.Minus)
+                            else if (line.operation == Operator.Minus)
                             {
                                 block.ReplaceLines(line, new Line.Identity(line.left, "-" + second));
                             }
-                            else if (line.operation == BinaryOperation.Mult)
+                            else if (line.operation == Operator.Mult)
                             {
                                 block.ReplaceLines(line, new Line.Identity(line.left, "0"));
                             }
-                            else if (line.operation == BinaryOperation.Div)
+                            else if (line.operation == Operator.Div)
                                 block.ReplaceLines(line, new Line.Identity(line.left, "0"));
                         }
                         else if (first == 1) 
                         {
-                            if (line.operation == BinaryOperation.Mult)
+                            if (line.operation == Operator.Mult)
                                 block.ReplaceLines(line, new Line.Identity(line.left, line.second));
                         }
                     }
@@ -108,18 +108,18 @@ namespace iCompiler
                     {
                         if (second == 0) 
                         {
-                            if (line.operation == BinaryOperation.Mult)
+                            if (line.operation == Operator.Mult)
                             {
                                 block.ReplaceLines(line, new Line.Identity(line.left, "0"));
                             }
-                            else if (line.operation == BinaryOperation.Plus || line.operation == BinaryOperation.Minus)
+                            else if (line.operation == Operator.Plus || line.operation == Operator.Minus)
                             {
                                 block.ReplaceLines(line, new Line.Identity(line.left, line.first));
                             }
                         }
                         else if (second == 1)
                         {
-                            if (line.operation == BinaryOperation.Mult || line.operation == BinaryOperation.Div)
+                            if (line.operation == Operator.Mult || line.operation == Operator.Div)
                             {
                                 block.ReplaceLines(line, new Line.Identity(line.left, line.first));
                             }

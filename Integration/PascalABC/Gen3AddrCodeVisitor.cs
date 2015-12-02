@@ -29,34 +29,35 @@ namespace ParsePABC
             OnEnter = Enter;
         }
 
-        ProgramTree.BinaryOperation Map(Operators op)
+        ProgramTree.Operator Map(Operators op)
         {
             switch (op)
             {
                 case Operators.Plus:
-                    return ProgramTree.BinaryOperation.Plus;
+                    return ProgramTree.Operator.Plus;
                 case Operators.Minus:
-                    return ProgramTree.BinaryOperation.Minus;
+                    return ProgramTree.Operator.Minus;
                 case Operators.Multiplication:
-                    return ProgramTree.BinaryOperation.Mult;
+                    return ProgramTree.Operator.Mult;
                 case Operators.Division:
-                    return ProgramTree.BinaryOperation.Div;
+                    return ProgramTree.Operator.Div;
+                case Operators.LogicalNOT:
+                    return ProgramTree.Operator.Not;
+                case Operators.Less:
+                    return ProgramTree.Operator.Less;
+                case Operators.LessEqual:
+                    return ProgramTree.Operator.LessEqual;
+                case Operators.Greater:
+                    return ProgramTree.Operator.Greater;
+                case Operators.GreaterEqual:
+                    return ProgramTree.Operator.GreaterEqual;
+                case Operators.Equal:
+                    return ProgramTree.Operator.Equal;
+                case Operators.NotEqual:
+                    return ProgramTree.Operator.NotEqual;
             }
 
-            Console.WriteLine("[ERROR]");
-            return ProgramTree.BinaryOperation.None;
-        }
-
-        ProgramTree.UnaryOperation MapUnary(Operators op)
-        {
-            switch (op)
-            {
-                case Operators.Minus:
-                    return ProgramTree.UnaryOperation.Minus;
-            }
-
-            Console.WriteLine("[ERROR]");
-            return ProgramTree.UnaryOperation.Not; 
+            throw new Exception("Неизвестный оператор: " + op);
         }
 
         public virtual void Leave(syntax_tree_node node)
@@ -114,7 +115,7 @@ namespace ParsePABC
             else if (node is un_expr)
             {
                 string arg = mStack.Pop();
-                var operation = MapUnary((node as un_expr).operation_type);
+                var operation = Map((node as un_expr).operation_type);
 
                 string temp = UniqueIdsGenerator.Instance().Get("t");
                 mStack.Push(temp);

@@ -9,11 +9,11 @@ namespace iCompiler.Line
 {
     public class UnaryExpr : Expr
     {
-        public UnaryOperation operation;
+        public Operator operation;
         public string argument;
 
         // Конструктор для унарного выражения
-        public UnaryExpr(string left, UnaryOperation op, string arg) :
+        public UnaryExpr(string left, Operator op, string arg) :
             base(left)
         {
             this.operation = op;
@@ -22,12 +22,12 @@ namespace iCompiler.Line
 
         public virtual bool IsBoolExpr() // является ли строка логическим выражением (!b)
         {
-            return operation == UnaryOperation.Not;
+            return operation == Operator.Not;
         }
 
         public virtual bool IsArithmExpr() // является ли строка арифметическим выражением (-b)
         {
-            return operation == UnaryOperation.Minus;
+            return operation == Operator.Minus;
         }
 
         public virtual bool ParamIsNumber() // является ли параметр числом
@@ -36,12 +36,12 @@ namespace iCompiler.Line
             return double.TryParse(argument, out temp);
         }
 
-        private static string ToString(UnaryOperation operation)
+        private static string ToString(Operator operation)
         {
             switch (operation)
             {
-                case UnaryOperation.Minus: return "-";
-                case UnaryOperation.Not: return "!";
+                case Operator.Minus: return "-";
+                case Operator.Not: return "!";
                 default: Debug.Assert(false, "[Not implemented]");  return "";
             }
         }

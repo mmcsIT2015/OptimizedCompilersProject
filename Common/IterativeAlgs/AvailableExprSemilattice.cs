@@ -11,10 +11,10 @@ namespace iCompiler
         public class Expression// : IEqualityComparer<Expression>
         {
             string first;
-            ProgramTree.BinaryOperation op;
+            ProgramTree.Operator op;
             string second;
 
-            public Expression(string first, ProgramTree.BinaryOperation op, string second)
+            public Expression(string first, ProgramTree.Operator op, string second)
             {
                 this.first = first;
                 this.op = op;

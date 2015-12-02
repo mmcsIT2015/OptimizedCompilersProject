@@ -45,7 +45,7 @@ namespace iCompiler
         class Operation : Value
         {
             public Value value1 = null, value2 = null;
-            public ProgramTree.BinaryOperation op_type = ProgramTree.BinaryOperation.None;
+            public ProgramTree.Operator op_type = ProgramTree.Operator.None;
 
             public override bool Equals(object obj)
             {
@@ -65,7 +65,7 @@ namespace iCompiler
         class UnaryOperation : Value
         {
             public Value value = null;
-            public ProgramTree.UnaryOperation op_type = ProgramTree.UnaryOperation.Minus;
+            public ProgramTree.Operator op_type = ProgramTree.Operator.Minus;
 
             public override bool Equals(object obj)
             {

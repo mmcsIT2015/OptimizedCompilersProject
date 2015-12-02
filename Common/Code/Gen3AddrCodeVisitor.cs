@@ -495,6 +495,12 @@ namespace iCompiler
 
         public void Visit(BinaryNode node)
         {
+            if (node.Operation == Operator.Not)
+            {
+                var desc = "Оператор " + node.Operation + " не является бинарным оператором!";
+                throw new SemanticException(desc);
+            }
+
             node.LeftOperand.Accept(this);
             node.RightOperand.Accept(this);
 
@@ -513,6 +519,13 @@ namespace iCompiler
             {
                 var desc = "Унарный оператор " + node.Op + " не может быть применен в операнду типа `string`!\n";
                 desc += "> " + node.Op + (node.Expr as StringLiteralNode).Str;
+                throw new SemanticException(desc);
+            }
+
+            if (node.Op != Operator.Minus || node.Op != Operator.Not || node.Op != Operator.Plus)
+            {
+                var desc = "Недопустимый унарный оператор: " + node.Op + "!\n";
+                desc += "Разрешены лишь операторы " + Operator.Minus + ", " + Operator.Not + " и " + Operator.Plus + ".";
                 throw new SemanticException(desc);
             }
 

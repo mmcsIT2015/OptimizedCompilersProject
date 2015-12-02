@@ -9,28 +9,28 @@ namespace iCompiler.Line
 {
     public class BinaryExpr : Expr
     {
-        private static ISet<BinaryOperation> mBoolOps = new HashSet<BinaryOperation> {
-            BinaryOperation.Equal,
-            BinaryOperation.Less,
-            BinaryOperation.LessEqual,
-            BinaryOperation.Greater,
-            BinaryOperation.GreaterEqual,
-            BinaryOperation.NotEqual,
+        private static ISet<Operator> mBoolOps = new HashSet<Operator> {
+            Operator.Equal,
+            Operator.Less,
+            Operator.LessEqual,
+            Operator.Greater,
+            Operator.GreaterEqual,
+            Operator.NotEqual,
         };
 
-        private static ISet<BinaryOperation> mArithmOps = new HashSet<BinaryOperation> {
-            BinaryOperation.Plus,
-            BinaryOperation.Minus,
-            BinaryOperation.Div,
-            BinaryOperation.Mult
+        private static ISet<Operator> mArithmOps = new HashSet<Operator> {
+            Operator.Plus,
+            Operator.Minus,
+            Operator.Div,
+            Operator.Mult
         };
 
         public string first;
         public string second;
-        public BinaryOperation operation;
+        public Operator operation;
 
         // Конструктор для бинарного выражения в правой части
-        public BinaryExpr(string left, string first, BinaryOperation op, string second) :
+        public BinaryExpr(string left, string first, Operator op, string second) :
             base(left)
         {
             this.first = first;
@@ -72,21 +72,21 @@ namespace iCompiler.Line
             return int.TryParse(second, out temp);
         }
 
-        private static string ToString(BinaryOperation operation)
+        private static string ToString(Operator operation)
         {
             switch (operation)
             {
-                case BinaryOperation.Div: return "/";
-                case BinaryOperation.Equal: return "==";
-                case BinaryOperation.Greater: return ">";
-                case BinaryOperation.GreaterEqual: return ">=";
-                case BinaryOperation.Less: return "<";
-                case BinaryOperation.LessEqual: return "<=";
-                case BinaryOperation.Minus: return "-";
-                case BinaryOperation.Mult: return "*";
-                case BinaryOperation.None: return "";
-                case BinaryOperation.NotEqual: return "!=";
-                case BinaryOperation.Plus: return "+";
+                case Operator.Div: return "/";
+                case Operator.Equal: return "==";
+                case Operator.Greater: return ">";
+                case Operator.GreaterEqual: return ">=";
+                case Operator.Less: return "<";
+                case Operator.LessEqual: return "<=";
+                case Operator.Minus: return "-";
+                case Operator.Mult: return "*";
+                case Operator.None: return "";
+                case Operator.NotEqual: return "!=";
+                case Operator.Plus: return "+";
                 default: Debug.Assert(false, "[Not implemented]");  return "";
             }
         }

@@ -8,9 +8,7 @@ namespace ProgramTree
 		
 	public enum SimpleVarType { Int, Float, Str, Bool };
 
-    public enum BinaryOperation { None, Plus, Minus, Mult, Div, Less, Greater, Equal, NotEqual, LessEqual, GreaterEqual };
-
-	public enum UnaryOperation { Not, Minus } ;
+    public enum Operator { None, Plus, Minus, Mult, Div, Less, Greater, Equal, NotEqual, LessEqual, GreaterEqual, Not };
 	
     public class Node // базовый класс для всех узлов    
     {
@@ -109,9 +107,9 @@ namespace ProgramTree
     {
         public ExprNode LeftOperand { get; set; }
         public ExprNode RightOperand { get; set; }
-        public BinaryOperation Operation { get; set; }
+        public Operator Operation { get; set; }
 
-        public BinaryNode(ExprNode lhs, ExprNode rhs, BinaryOperation operation)
+        public BinaryNode(ExprNode lhs, ExprNode rhs, Operator operation)
         {
             LeftOperand = lhs;
             RightOperand = rhs;
@@ -205,9 +203,9 @@ namespace ProgramTree
     public class UnaryNode : ExprNode
     {
         public ExprNode Expr { get; set; }
-        public UnaryOperation Op { get; set; }
+        public Operator Op { get; set; }
 
-        public UnaryNode(ExprNode expr, UnaryOperation op)
+        public UnaryNode(ExprNode expr, Operator op)
         {
             Expr = expr;
             Op = op;

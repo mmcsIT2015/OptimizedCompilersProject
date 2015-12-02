@@ -98,27 +98,27 @@ assign 	: ident ASSIGN expr { $$ = new AssignNode($1 as IdNode, $3); }
 		;
 
 expr : S { $$ = $1; }
-	| expr LESS S { $$ = new BinaryNode($1, $3, BinaryOperation.Less); }
-	| expr MORE S { $$ = new BinaryNode($1, $3, BinaryOperation.Greater); }
-	| expr LESSEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.LessEqual); }
-	| expr MOREEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.GreaterEqual); }
-	| expr EQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
-	| expr NOTEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
+	| expr LESS S { $$ = new BinaryNode($1, $3, Operator.Less); }
+	| expr MORE S { $$ = new BinaryNode($1, $3, Operator.Greater); }
+	| expr LESSEQUAL S { $$ = new BinaryNode($1, $3, Operator.LessEqual); }
+	| expr MOREEQUAL S { $$ = new BinaryNode($1, $3, Operator.GreaterEqual); }
+	| expr EQUAL S { $$ = new BinaryNode($1, $3, Operator.Equal); }
+	| expr NOTEQUAL S { $$ = new BinaryNode($1, $3, Operator.NotEqual); }
 	;
 
 S : T { $$ = $1; }
-    | S PLUS T { $$ = new BinaryNode($1, $3, BinaryOperation.Plus); }
-    | S MINUS T { $$ = new BinaryNode($1, $3, BinaryOperation.Minus); }
+    | S PLUS T { $$ = new BinaryNode($1, $3, Operator.Plus); }
+    | S MINUS T { $$ = new BinaryNode($1, $3, Operator.Minus); }
     ;
 
 T : U { $$ = $1; }
-    | T PROD U { $$ = new BinaryNode($1, $3, BinaryOperation.Mult); }
-    | T DIV U { $$ = new BinaryNode($1, $3, BinaryOperation.Div); }
+    | T PROD U { $$ = new BinaryNode($1, $3, Operator.Mult); }
+    | T DIV U { $$ = new BinaryNode($1, $3, Operator.Div); }
     ;
 
 U : F { $$ = $1; }
-	| MINUS U { $$ = new UnaryNode($2, UnaryOperation.Minus); }
-	| NOT U { $$ = new UnaryNode($2, UnaryOperation.Not); }
+	| MINUS U { $$ = new UnaryNode($2, Operator.Minus); }
+	| NOT U { $$ = new UnaryNode($2, Operator.Not); }
 	;
 
 F : ident { $$ = $1 as IdNode; }
