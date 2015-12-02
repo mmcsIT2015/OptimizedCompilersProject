@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 
-namespace Compiler.Line
+namespace iCompiler.Line
 {
-    class FunctionCall : NonEmptyLine
+    public class FunctionCall : NonEmptyLine
     {
         public string name;
         public int parameters; //число параметров

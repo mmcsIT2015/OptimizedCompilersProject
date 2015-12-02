@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using System.IO;
 
 using CompilerExceptions;
-using Compiler;
+using iCompiler;
 
 namespace GUI
 {
@@ -61,7 +61,7 @@ namespace GUI
                 string content = WorkingArea.Text;                
                 var root = FileLoader.Parse(content, type);
 
-                var codeGenerator = new Compiler.Gen3AddrCodeVisitor();
+                var codeGenerator = new iCompiler.Gen3AddrCodeVisitor();
                 codeGenerator.Visit(root);
 
                 var code = codeGenerator.CreateCode();

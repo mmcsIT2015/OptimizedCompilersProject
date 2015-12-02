@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using Compiler;
+using iCompiler;
 using CompilerExceptions;
-using Compiler.Line;
+using iCompiler.Line;
 
 namespace SimpleCompiler
 {

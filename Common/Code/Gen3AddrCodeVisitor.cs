@@ -8,7 +8,7 @@ using CompilerExceptions;
 
 using Label = System.Collections.Generic.KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
 
-namespace Compiler
+namespace iCompiler
 {
     /// <summary>
     /// Выполняет обход дерева и возвращает полученный трехадресный код
@@ -26,17 +26,17 @@ namespace Compiler
         /// Код, возвращаемый этой ф-ей, уже разбит на блоки
         /// </summary>
         /// <returns></returns>
-        public Compiler.ThreeAddrCode CreateCode()
+        public iCompiler.ThreeAddrCode CreateCode()
         {
             EraseEmptyLines();
             CompleteTableOfNames();
             //VerifyCorrectnessOfProgram();
-            var code = new Compiler.ThreeAddrCode(mLines);
+            var code = new iCompiler.ThreeAddrCode(mLines);
             code.tableOfNames = mTableOfNames;
             return code;
         }
 
-        private Compiler.Block mLines = new Compiler.Block();
+        private iCompiler.Block mLines = new iCompiler.Block();
         private Stack<string> mStack = new Stack<string>();
         private Dictionary<string, SimpleVarType> mTableOfNames = new Dictionary<string, SimpleVarType>();
 

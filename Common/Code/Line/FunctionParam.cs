@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 
-namespace Compiler.Line
+namespace iCompiler.Line
 {
-    class FunctionParam : NonEmptyLine
+    public class FunctionParam : NonEmptyLine
     {
         public string param;
 

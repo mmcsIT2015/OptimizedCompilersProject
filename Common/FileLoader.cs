@@ -7,7 +7,7 @@ using System.IO;
 
 using ProgramTree;
 
-namespace Compiler
+namespace iCompiler
 {
     public static class FileLoader
     {

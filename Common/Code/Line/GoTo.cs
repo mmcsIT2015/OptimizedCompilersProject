@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 
-namespace Compiler.Line
+namespace iCompiler.Line
 {
-    class GoTo : NonEmptyLine
+    public class GoTo : NonEmptyLine
     {
         public string target;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Compiler
+namespace iCompiler
 {
     /// <summary>
     /// Класс изменяет входящий threeAddrCode - на выходе этот код будет разбит на блоки.

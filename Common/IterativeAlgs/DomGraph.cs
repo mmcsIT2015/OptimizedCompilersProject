@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Compiler
+namespace iCompiler
 {
 
     public static class DomGraph

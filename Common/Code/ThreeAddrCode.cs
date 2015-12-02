@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 using System.Diagnostics;
-using Compiler.Line;
+using iCompiler.Line;
 
-namespace Compiler
+namespace iCompiler
 {
     using Label = KeyValuePair<int, int>; // хранит номер блока и номер строки в этом блоке
 

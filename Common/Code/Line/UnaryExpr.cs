@@ -5,9 +5,9 @@ using System.Text;
 using ProgramTree;
 using System.Diagnostics;
 
-namespace Compiler.Line
+namespace iCompiler.Line
 {
-    class UnaryExpr : Expr
+    public class UnaryExpr : Expr
     {
         public UnaryOperation operation;
         public string argument;

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
-namespace Compiler
+namespace iCompiler
 {
     using Prefix = String;
 
-    class UniqueIdsGenerator
+    public class UniqueIdsGenerator
     {
         private static UniqueIdsGenerator mInstance;                
 

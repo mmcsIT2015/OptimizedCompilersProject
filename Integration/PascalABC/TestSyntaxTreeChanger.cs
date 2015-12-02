@@ -9,7 +9,7 @@ using PascalABCCompiler.SyntaxTree;
 
 using SyntaxVisitors;
 
-namespace ParsePABC1
+namespace ParsePABC
 {
     public class IfChangerVisitor : BaseChangeVisitor
     {
@@ -36,13 +36,18 @@ namespace ParsePABC1
     {
         public void Change(syntax_tree_node sn)
         {
-            sn.visit(new SimplePrettyPrinterVisitor());
+            //sn.visit(new SimplePrettyPrinterVisitor());
 
             sn.visit(new LoweringVisitor());
-            //sn.visit(new TestVisitor());
 
             Console.WriteLine("\nafter:\n---");
             sn.visit(new SimplePrettyPrinterVisitor());
+
+            var generator = new Gen3AddrCodeVisitor();
+            sn.visit(generator);
+
+            Console.WriteLine("code:\n---");
+            Console.WriteLine(generator.CreateCode());
         }
     }
 }

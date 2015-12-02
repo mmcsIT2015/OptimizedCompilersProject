@@ -5,7 +5,7 @@ using System.Text;
 
 
 
-namespace Compiler
+namespace iCompiler
 {
 
     /// <summary>
@@ -13,7 +13,7 @@ namespace Compiler
     /// Примечание: Использовать после разбиения на внутренние блоки
     /// 
     /// Пример применения:
-    /// Compiler.DraggingConstantsOptimization dco = new Compiler.DraggingConstantsOptimization(codeGenerator.Code);
+    /// iCompiler.DraggingConstantsOptimization dco = new iCompiler.DraggingConstantsOptimization(codeGenerator.Code);
     // / dco.Optimize();
     /// Console.WriteLine("Optimization:\n" + codeGenerator.Code);
     /// 

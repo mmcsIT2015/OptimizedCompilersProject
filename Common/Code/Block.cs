@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
-namespace Compiler
+namespace iCompiler
 {
     public class Block : List<Line.Line>
     {

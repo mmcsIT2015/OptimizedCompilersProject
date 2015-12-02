@@ -5,7 +5,7 @@ using System.Text;
 using ProgramTree;
 using System.Diagnostics;
 
-namespace Compiler.Line
+namespace iCompiler.Line
 {
     public class Line
     {
@@ -44,7 +44,7 @@ namespace Compiler.Line
         }
     }
 
-    class NonEmptyLine : Line
+    public class NonEmptyLine : Line
     {
         public override bool IsEmpty()
         {
@@ -52,7 +52,7 @@ namespace Compiler.Line
         }
     }
 
-    class EmptyLine : Line
+    public class EmptyLine : Line
     {
         public override string ToString()
         {
@@ -60,7 +60,7 @@ namespace Compiler.Line
         }
     }
 
-    abstract class Expr : NonEmptyLine
+    public abstract class Expr : NonEmptyLine
     {
         public string left;
 

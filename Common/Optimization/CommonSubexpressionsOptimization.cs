@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
-using Compiler;
+using iCompiler;
 
-namespace Compiler
+namespace iCompiler
 {
     /// <summary>
     /// Оптимизация: Устранение общих подвыражений

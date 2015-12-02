@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 
-namespace Compiler
+namespace iCompiler
 {
     public interface IVisitor
     {

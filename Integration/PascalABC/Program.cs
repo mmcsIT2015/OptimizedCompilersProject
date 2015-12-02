@@ -11,7 +11,7 @@ using PascalABCCompiler.ParserTools;
 
 using SyntaxVisitors;
 
-namespace ParsePABC1
+namespace ParsePABC
 {
     class Program
     {

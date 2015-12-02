@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using Compiler;
+using iCompiler;
 
 namespace ProgramTree
 {

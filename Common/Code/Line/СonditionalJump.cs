@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 
-namespace Compiler.Line
+namespace iCompiler.Line
 {
-    class СonditionalJump : GoTo
+    public class СonditionalJump : GoTo
     {
         public string condition;
 

@@ -3,11 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compiler", "Common\Compiler.csproj", "{12B9D996-7B4A-4EE4-9AD8-2E24EAF3F574}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCompiler", "Common\iCompiler.csproj", "{12B9D996-7B4A-4EE4-9AD8-2E24EAF3F574}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{4F553A9A-6254-4078-88B7-10F930082588}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PascalABC", "Integration\PascalABC\PascalABC.csproj", "{D1B107ED-E2BB-4D21-98D0-A2F99C08D2B0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{12B9D996-7B4A-4EE4-9AD8-2E24EAF3F574} = {12B9D996-7B4A-4EE4-9AD8-2E24EAF3F574}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyntaxVisitors", "Integration\SyntaxVisitors\SyntaxVisitors.csproj", "{A9AB4282-83B4-41A7-86C3-E5BF6A45E7E2}"
 EndProject

@@ -5,9 +5,9 @@ using System.Text;
 using ProgramTree;
 using System.Diagnostics;
 
-namespace Compiler.Line
+namespace iCompiler.Line
 {
-    class Identity : Expr
+    public class Identity : Expr
     {
         public string right;
 
