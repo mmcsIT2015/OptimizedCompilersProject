@@ -8,7 +8,7 @@ using iCompiler.Line;
 namespace SimpleCompiler
 {
     public class SimpleCompilerMain
-    {
+    {        
         public static void TestIterativeAlgo(ThreeAddrCode code) 
         {
             var semilattice = new ReachDefSemilattice(code);
@@ -45,13 +45,7 @@ namespace SimpleCompiler
 
             var code = codeGenerator.CreateCode();
 
-            int blockIndex = 0;
-            foreach (Block block in code.blocks)
-            {
-                Console.WriteLine();
-                Console.WriteLine("Block {0} :", ++blockIndex);
-                Console.WriteLine(block);
-            }
+            WriteBlocksToConsole(code);
 
             Console.WriteLine("Doms");
             Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.GenerateDomOut(code);
@@ -79,6 +73,76 @@ namespace SimpleCompiler
             for (int i = 0; i < listEdges.Count; ++i)
                 Console.WriteLine("Reversed edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].blockBegin) + 1,
                     code.blocks.IndexOf(listEdges[i].blockEnd) + 1);
+        }
+
+        public static void TestExpressionsGenKill(ProgramTree.BlockNode root)
+        {
+            Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+            codeGenerator.Visit(root);
+
+            var code = codeGenerator.CreateCode();
+
+            WriteBlocksToConsole(code);
+
+            var exprGenKill = ReachableExpressionsGenerator.BuildReachableExpressionsGenKill(code);
+            foreach (Block block in code.blocks)
+            {
+                Console.WriteLine();
+                Console.WriteLine("block: {0}", code.blocks.IndexOf(block) + 1);
+
+                Console.WriteLine("gen:");
+                foreach (Expr expr in exprGenKill.In[block])
+                {
+                    Console.WriteLine("\t" + expr.ToString());
+                }
+
+                Console.WriteLine("kill:");
+                foreach (Expr expr in exprGenKill.Out[block])
+                                {
+                    Console.WriteLine("\t" + expr.ToString());
+                }
+            }
+        }
+
+        public static void TestReachableExpressions(ProgramTree.BlockNode root)
+        {
+            Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+            codeGenerator.Visit(root);
+
+            var code = codeGenerator.CreateCode();
+
+            WriteBlocksToConsole(code);
+
+            InOutData<Expr> reachableExpressions = ReachableExpressionsGenerator.BuildReachableExpressions(code);
+
+            foreach (Block block in code.blocks)
+            {
+                Console.WriteLine();
+                Console.WriteLine("block: {0}", code.blocks.IndexOf(block) + 1);
+
+                Console.WriteLine("in:");
+                foreach (Expr expr in reachableExpressions.In[block])
+                {
+                    Console.WriteLine("\t" + expr.ToString());
+                }
+
+                Console.WriteLine("out:");
+                foreach (Expr expr in reachableExpressions.Out[block])
+                {
+                    Console.WriteLine("\t" + expr.ToString());
+                }
+            }
+        }
+
+        private static void WriteBlocksToConsole(ThreeAddrCode code)
+        {
+            int blockIndex = 0;
+            foreach (Block block in code.blocks)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Block {0} :", ++blockIndex);
+                Console.WriteLine(block);
+            }
         }
 
         public static void RunAllTests()
@@ -146,9 +210,9 @@ namespace SimpleCompiler
                 //files.Add(@"..\..\in.pasn");
                 //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
-                files.Add(@"..\..\tests\test-goto1.pasn");
+                //files.Add(@"..\..\tests\test-goto1.pasn");
                 //files.Add(@"..\..\tests\test-exprgenkill-3.cn");
-                //files.Add(@"..\..\tests\test-dom2k-1.cn");
+                files.Add(@"..\..\tests\test-exprgenkill-5.cn");
 
                 foreach (var file in files)
                 {
@@ -161,14 +225,14 @@ namespace SimpleCompiler
                         Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
                         codeGenerator.Visit(root);
 
-                        var code = codeGenerator.CreateCode();
+                        //var code = codeGenerator.CreateCode();
 
                         //DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code/*, 1*/);
                         //deadCodeElimination.Optimize();
 
-                        Console.WriteLine(code);
+                        //Console.WriteLine(code);
 
-                        //TestDomIterativeAlogrithm(root);
+                        TestReachableExpressions(root);
                     }
                     catch (FileNotFoundException)
                     {
