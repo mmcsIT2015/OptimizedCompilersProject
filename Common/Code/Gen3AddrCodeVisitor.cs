@@ -550,7 +550,9 @@ namespace iCompiler
 
         public void Visit(FloatNumNode node)
         {
-            mStack.Push(node.Num.ToString());
+            string str = node.Num.ToString();
+            str = str.Replace(',', '.');
+            mStack.Push(str);
         }
     }
 }

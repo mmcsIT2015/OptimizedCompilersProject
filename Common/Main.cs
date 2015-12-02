@@ -173,7 +173,7 @@ namespace SimpleCompiler
                 //files.Add(@"..\..\in.pasn");
                 //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
-                files.Add(@"..\..\tests\test-realnum1.pasn");
+                files.Add(@"..\..\tests\test-goto1.pasn");
                 //files.Add(@"..\..\tests\test-exprgenkill-3.cn");
                 //files.Add(@"..\..\tests\test-dom2k-1.cn");
 
