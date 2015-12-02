@@ -1,0 +1,26 @@
+{
+  int b = 0;
+  int k = 0;
+  int vu = 0;
+  
+  if (1)
+  {
+    int p = b + c;
+    int j = b - c;
+  }
+  else
+  {
+    b = a - d;
+    k = 14 + a;
+  }
+
+  int v = b + c;
+  b = a - d;
+  
+  if (2)
+  {
+    k = k + 1;
+    int c = 12;
+    int i = b + c;
+  }
+}

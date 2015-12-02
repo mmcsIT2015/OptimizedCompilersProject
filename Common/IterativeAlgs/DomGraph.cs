@@ -17,7 +17,7 @@ namespace iCompiler
             }
         }
        
-        public static Dictionary<Block, IEnumerable<Block>> generateDomOut(ThreeAddrCode code)
+        public static Dictionary<Block, IEnumerable<Block>> GenerateDomOut(ThreeAddrCode code)
         {
             HashSet<Block> semilatticeTop = new HashSet<Block>(code.blocks);
             var semilattice = new IntersectSemilattice<Block>(semilatticeTop);

@@ -9,6 +9,13 @@ namespace iCompiler
     {
         public Dictionary<Block, IEnumerable<AData>> In;
         public Dictionary<Block, IEnumerable<AData>> Out;
+
+        public InOutData()
+        {
+            In = new Dictionary<Block, IEnumerable<AData>>();
+            Out = new Dictionary<Block, IEnumerable<AData>>();
+        }
+            
     }
 
     static class DataFlowAnalysis

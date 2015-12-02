@@ -90,6 +90,7 @@
     <Compile Include="IterativeAlgs\IntersectSemilattice.cs" />
     <Compile Include="IterativeAlgs\IterativeAlgo.cs" />
     <Compile Include="IterativeAlgs\ITransferFunction.cs" />
+    <Compile Include="IterativeAlgs\ReachableExpressionsGenerator.cs" />
     <Compile Include="IterativeAlgs\ReachDefSemilattice.cs" />
     <Compile Include="IterativeAlgs\TransferFuncFactory.cs" />
     <Compile Include="IterativeAlgs\TransferFunction.cs" />

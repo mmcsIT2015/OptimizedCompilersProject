@@ -38,33 +38,6 @@ namespace SimpleCompiler
             }
         }
 
-        public static void TestExprGenKill(ProgramTree.BlockNode root)
-        {
-            Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
-            codeGenerator.Visit(root);
-
-            var code = codeGenerator.CreateCode();
-
-            Console.WriteLine(code);
-
-            List<ThreeAddrCode.GenKill<Line>> exprGenKill = code.buildExprGenKillInfo();
-            foreach (ThreeAddrCode.GenKill<Line> blockGenKill in exprGenKill)
-            {
-                Console.WriteLine();
-                Console.WriteLine("block gen:");
-                foreach (Line expr in blockGenKill.Gen)
-                {
-                    Console.WriteLine("\t" + expr.ToString());
-                }
-
-                Console.WriteLine("block kill:");
-                foreach (Line expr in blockGenKill.Kill)
-                {
-                    Console.WriteLine("\t" + expr.ToString());
-                }
-            }
-        }
-
         public static void TestDomIterativeAlogrithm(ProgramTree.BlockNode root)
         {
             Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
@@ -81,7 +54,7 @@ namespace SimpleCompiler
             }
 
             Console.WriteLine("Doms");
-            Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.generateDomOut(code);
+            Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.GenerateDomOut(code);
             foreach (Block block in blockDoms.Keys)
             {
                 Console.Write("Dom({0}) =", code.blocks.IndexOf(block) + 1);
