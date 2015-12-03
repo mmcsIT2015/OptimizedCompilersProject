@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\AllCyclesTesting.cs" />
     <Compile Include="Code\BaseBlocksPartition.cs" />
     <Compile Include="Code\Block.cs" />
     <Compile Include="Code\ControlFlowGraph.cs" />

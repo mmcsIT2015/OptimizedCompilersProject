@@ -34,181 +34,72 @@ namespace iCompiler
         IEnumerable<T> DownDominators(T a);
     }
 
-    public abstract class AbstractTestDominatorTree: IDominatorRelation<int>
-    {
-        protected Dictionary<int, List<int>> data;
-        public bool FirstDomSeccond(int a, int b)
-        {
-            return data[b].Any(x => x == a);
-        }
-
-        public IEnumerable<int> UpperDominators(int a)
-        {
-            return data[a];
-        }
-
-        public IEnumerable<int> DownDominators(int a)
-        {
-            return data.Where(e => e.Value.Any(x => x == a)).Select(e => e.Key).Aggregate(new List<int>(), (l, e) => { l.Add(e); return l; });
-        }
-    }
-
     /// <summary>
-    /// Граф доминатора из лекции
-    /// </summary>
-    public class TestDominatorTree : AbstractTestDominatorTree
-    {
-        public TestDominatorTree()
-        {
-            data = new Dictionary<int, List<int>>();
-            for (int i = 1; i <= 10; i++)
-                data[i] = new List<int>();
-            data[1].AddRange(new int[] { 1 });
-            data[2].AddRange(new int[] { 1, 2 });
-            data[3].AddRange(new int[] { 1, 3 });
-            data[4].AddRange(new int[] { 1, 3, 4 });
-            data[5].AddRange(new int[] { 1, 3, 4, 5 });
-            data[6].AddRange(new int[] { 1, 3, 4, 6 });
-            data[7].AddRange(new int[] { 1, 3, 4, 7 });
-            data[8].AddRange(new int[] { 1, 3, 4, 7, 8 });
-            data[9].AddRange(new int[] { 1, 3, 4, 7, 8, 9 });
-            data[10].AddRange(new int[] { 1, 3, 4, 7, 8, 10 });
-        }
-    }
-
-    /// <summary>
-    /// Пример2: граф доминатора из лекции
-    /// </summary>
-    public class TestDominatorTree1 : AbstractTestDominatorTree
-    {
-        public TestDominatorTree1()
-        {
-            data = new Dictionary<int, List<int>>();
-            for (int i = 1; i <= 4; i++)
-                data[i] = new List<int>();
-            data[1].AddRange(new int[] { 1 });
-            data[2].AddRange(new int[] { 1, 2 });
-            data[3].AddRange(new int[] { 1, 2, 3 });
-            data[4].AddRange(new int[] { 1, 2, 4 });
-        }
-    }
-
-    /// <summary>
-    /// Пример2: CFG граф из лекции
-    /// </summary>
-    public class TestGraph1 : AbstarctTestGraph
-    {
-        public TestGraph1()
-        {
-            Data = new Dictionary<int, IList<int>>();
-            for (int i = 1; i <= 4; i++)
-                Data[i] = new List<int>();
-            Data[1].Add(2);
-            Data[2].Add(3);
-            Data[2].Add(4);
-            Data[3].Add(1);
-            Data[4].Add(1);
-            ReversedData = getReversedIndexedGraph(Data);
-        }
-    }
-
-    /// <summary>
-    /// Тест алгоритма определения всех естественных циклов на 2-х премерах из лекций
-    /// </summary>
-    public static class TestAllCycles
-    {
-        public static void Test()
-        {
-            TestGraph graph = new TestGraph();
-            TestDominatorTree domTree = new TestDominatorTree();
-            int[] blocks = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            List<DomGraph.BlocksPair<int>> reverseEdges = new List<DomGraph.BlocksPair<int>>();
-            reverseEdges.Add(new DomGraph.BlocksPair<int>(9, 1));
-            reverseEdges.Add(new DomGraph.BlocksPair<int>(4, 3));
-            reverseEdges.Add(new DomGraph.BlocksPair<int>(8, 3));
-            reverseEdges.Add(new DomGraph.BlocksPair<int>(7, 4));
-            reverseEdges.Add(new DomGraph.BlocksPair<int>(10, 7));
-            
-            TestGraph1 graph1 = new TestGraph1();
-            TestDominatorTree1 domTree1 = new TestDominatorTree1();
-            int[] blocks1 = { 1, 2, 3, 4 };
-            List<DomGraph.BlocksPair<int>> reverseEdges1 = new List<DomGraph.BlocksPair<int>>();
-            reverseEdges1.Add(new DomGraph.BlocksPair<int>(3, 1));
-            reverseEdges1.Add(new DomGraph.BlocksPair<int>(4, 1));
-
-            Console.WriteLine("Without special case");
-            AllCycles<int> allCycles = new AllCyclesWithSpecialCase<int>(blocks, graph, reverseEdges, domTree);
-            Print(allCycles);
-            AllCycles<int> allCycles1 = new AllCycles<int>(blocks1, graph1, reverseEdges1, domTree1);
-            Print(allCycles1);
-
-            Console.WriteLine("With special case");
-            AllCycles<int> allCycles3 = new AllCyclesWithSpecialCase<int>(blocks, graph, reverseEdges, domTree);
-            Print(allCycles3);
-            AllCycles<int> allCycles4 = new AllCyclesWithSpecialCase<int>(blocks1, graph1, reverseEdges1, domTree1);
-            Print(allCycles4);
-        }
-
-        private static void Print(AllCycles<int> allCycles)
-        {
-            Console.WriteLine("Example");
-            foreach (var cycle in allCycles.cycles)
-            {
-                Console.Write("n:" + cycle.n + " d:");
-                foreach (var d in cycle.ds)
-                    Console.Write(d + " ");
-                Console.Write("verts:");
-                foreach (var l in cycle.data)
-                    Console.Write(l + " ");
-                if (cycle.ds.Count == 2)
-                    Console.Write(" leastDomine: " + cycle.leastOuterDominator);
-                Console.WriteLine();
-            }
-            Console.WriteLine();
-        }
-    }
-
-    /// <summary>
-    /// Класс цикла в CFG
+    /// Абстрактный класс цикла
+    /// (2 вида циклов)
     /// </summary>
     /// <typeparam name="T">Тип вершин</typeparam>
-    public class Cycle<T> where T: new()
+    public abstract class CycleAbstract<T>
     {
-        public Cycle(T n, List<T> ds, List<T> data)
-        {
-            this.n = n;
-            this.data = data;
-            this.ds = ds;
-            this.leastOuterDominator = new T();
-        }
-
-        public Cycle(T n, List<T> ds, List<T> data, T leastOuterDominator)
-        {
-            this.n = n;
-            this.data = data;
-            this.ds = ds;
-            this.leastOuterDominator = leastOuterDominator;
-        }
-
         /// <summary>
         /// Вход в цикл
         /// </summary>
-        public T n { get; set; }
+        public T N { get; set; }
 
         /// <summary>
-        /// Все вершины, принадлежащие цику
+        /// Все вершины, принадлежащие циклу
         /// </summary>
-        public List<T> data { get; set; }
+        public List<T> DATA { get; set; }
+    }
+
+    /// <summary>
+    /// Цикл с одним выходом
+    /// </summary>
+    /// <typeparam name="T">Тип вершин</typeparam>
+    public class CycleUsual<T>: CycleAbstract<T>
+    {
+        public CycleUsual(T n, T d, List<T> data)
+        {
+            this.N = n;
+            this.DATA = data;
+            this.D = d;
+        }
 
         /// <summary>
-        /// Все выходы из цикла
+        /// Выход из цикла
         /// </summary>
-        public List<T> ds { get; set; }
+        public T D { get; set; }
+    }
+
+    /// <summary>
+    /// Цикл с двумя выходами
+    /// </summary>
+    /// <typeparam name="T">Тип вершин</typeparam>
+    public class CycleSpecialCase<T> : CycleAbstract<T>
+    {
+        public CycleSpecialCase(T n, T d1, T d2, List<T> data, T dom)
+        {
+            this.N = n;
+            this.DATA = data;
+            this.D1 = d1;
+            this.D2 = d2;
+            this.DOM = dom;
+        }
 
         /// <summary>
-        /// Ближайший общий доминатор для 2-х выходов из цикла (опционально)
+        /// Первый выход
         /// </summary>
-        public T leastOuterDominator { get; set; }
+        public T D1 { get; set; }
+
+        /// <summary>
+        /// Второй выход
+        /// </summary>
+        public T D2 { get; set; }
+
+        /// <summary>
+        /// Ближайший общий доминатор для 2-х выходов из цикла
+        /// </summary>
+        public T DOM { get; set; }
     }
 
     /// <summary>
@@ -219,15 +110,15 @@ namespace iCompiler
     ///     AllCycles < Block > allCycles = new AllCyclesWithSpecialCase<Block>(code.blocks, code.graph, reverseEdges, domTree);
     ///     
     ///     Получить все циклы
-    ///     List < Cycle < Block > > cycles = allCycles.cycles;
+    ///     List < CycleAbstract < Block > > cycles = allCycles.cycles;
     /// </summary>
     /// <typeparam name="T">Тип вершин</typeparam>
-    public class AllCycles<T> where T : IComparable<T>, new()
+    public class AllCycles<T> where T : IComparable<T>
     {
         /// <summary>
         /// Все циклы
         /// </summary>
-        public List<Cycle<T>> cycles { get; protected set; }
+        public List<CycleAbstract<T>> cycles { get; protected set; }
 
         /// <summary>
         /// 
@@ -243,7 +134,7 @@ namespace iCompiler
 
         protected virtual void InitCycles(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.BlocksPair<T>> reverseEdges, IDominatorRelation<T> domTree)
         {
-            cycles = new List<Cycle<T>>();
+            cycles = new List<CycleAbstract<T>>();
             foreach (T n in blocks)
             {
                 foreach (T d in reverseEdges.FindAll(pair => pair.blockEnd.CompareTo(n) == 0).Select(pair => pair.blockBegin))
@@ -251,9 +142,7 @@ namespace iCompiler
                     Dictionary<T, bool> mark = new Dictionary<T, bool>();
                     foreach (T bl in blocks)
                         mark[bl] = false;
-                    List<T> ds = new List<T>();
-                    ds.Add(d);
-                    cycles.Add(new Cycle<T>(n, ds, Find(n, d, d, mark, graph, domTree)));
+                    cycles.Add(new CycleUsual<T>(n, d, Find(n, d, d, mark, graph, domTree)));
                 }
             }
         }
@@ -288,77 +177,74 @@ namespace iCompiler
     /// Считает граф, подаваемый на вход, приводимым!
     /// </summary>
     /// <typeparam name="T">Тип вершин</typeparam>
-    public class AllCyclesWithSpecialCase<T> : AllCycles<T> where T: IComparable<T>, new()
+    public class AllCyclesWithSpecialCase<T> : AllCycles<T> where T: IComparable<T>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blocks">Список блоков</param>
+        /// <param name="graph">CFG</param>
+        /// <param name="reverseEdges">Список обратных дуг</param>
+        /// <param name="domTree">Дерево доминирования</param>
         public AllCyclesWithSpecialCase(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.BlocksPair<T>> reverseEdges, IDominatorRelation<T> domTree)
             : base(blocks, graph, reverseEdges, domTree) { }
         protected override void InitCycles(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.BlocksPair<T>> reverseEdges, IDominatorRelation<T> domTree)
         {
-            cycles = new List<Cycle<T>>();
+            cycles = new List<CycleAbstract<T>>();
             foreach (T n in blocks)
             {
                 List<T> Ds = reverseEdges.FindAll(pair => pair.blockEnd.CompareTo(n) == 0).Select(pair => pair.blockBegin).ToList();
-                List<KeyValuePair<List<T>, T>> DsGroupedInCycles = GroupingInCycles(n, Ds, domTree);
-                foreach(KeyValuePair<List<T>, T> group in DsGroupedInCycles)
+                List<CycleAbstract<T>> grouped = GroupingInCycles(n, Ds, domTree);
+                for (int i = 0; i < grouped.Count; i++ )
                 {
-                    System.Diagnostics.Debug.Assert(group.Key.Count() <= 2);
                     Dictionary<T, bool> mark = new Dictionary<T, bool>();
                     foreach (T bl in blocks)
                         mark[bl] = false;
-                    T leastBothDominator = n;
-                    List<T> ds = new List<T>();
-                    List<T> finded = null;
-                    if (group.Key.Count() == 1)
+                    if (grouped[i] is CycleUsual<T>)
                     {
-                        ds.Add(group.Key.First());
-                        finded = Find(n, group.Key.First(), group.Key.First(), mark, graph, domTree);
-                        cycles.Add(new Cycle<T>(n, ds, finded));
+                        CycleUsual<T> c = grouped[i] as CycleUsual<T>;
+                        c.DATA = Find(n, c.D, c.D, mark, graph, domTree);
                     }
-                    else if (group.Key.Count() == 2)
+                    else if (grouped[i] is CycleSpecialCase<T>)
                     {
-                        ds.Add(group.Key.First());
-                        ds.Add(group.Key[1]);
-                        finded = Find(n, group.Key.First(), group.Key.First(), mark, graph, domTree);
-                        finded.AddRange(Find(n, group.Key[1], group.Key[1], mark, graph, domTree));
-                        cycles.Add(new Cycle<T>(n, ds, finded, group.Value));
+                        CycleSpecialCase<T> c = grouped[i] as CycleSpecialCase<T>;
+                        List<T> finded = Find(n, c.D1, c.D1, mark, graph, domTree);
+                        finded.AddRange(Find(n, c.D2, c.D2, mark, graph, domTree));
+                        c.DATA = finded;
                     }
-                    else
-                        System.Diagnostics.Debug.Assert(false);
-                    
                 }
+                cycles.AddRange(grouped);
             }
         }
 
-        private List<KeyValuePair<List<T>, T>> GroupingInCycles(T n, List<T> Ds, IDominatorRelation<T> domTree)
+        private List<CycleAbstract<T>> GroupingInCycles(T n, List<T> Ds, IDominatorRelation<T> domTree)
         {
-            IComparer<T> domComparer = new DomComparor<T>(domTree);
             bool[] added = new bool[Ds.Count()];
-            List<KeyValuePair<List<T>, T>> groups = new List<KeyValuePair<List<T>, T>>();
+            List<CycleAbstract<T>> groups = new List<CycleAbstract<T>>();
             for (int i = 0; i < Ds.Count(); i++)
             {
                 if (added[i])
                     continue;
-                T leastBothDominator = new T();
-                List<T> l = new List<T>(2);
-                l.Add(Ds[i]);
+                bool ususalCycle = true;
+                T D1 = Ds[i];
                 for (int j = i; j < Ds.Count(); j++)
                 {
                     if (!domTree.FirstDomSeccond(Ds[i], Ds[j]) && !domTree.FirstDomSeccond(Ds[j], Ds[i]))
                     {
-                        IEnumerable<T> bothDomsUnderN = domTree.UpperDominators(Ds[i]).Intersect(domTree.UpperDominators(Ds[j])).Intersect(domTree.DownDominators(n));
-                        if (bothDomsUnderN.Count() > 0)
-                        {
-                            leastBothDominator = bothDomsUnderN.OrderBy(e => e, domComparer).Last();
-                            l.Add(Ds[j]);
-                            added[j] = true;
-                            break;
-                        }
+                        T leastDom = domTree.UpperDominators(Ds[i]).Intersect(domTree.UpperDominators(Ds[j])).Intersect(domTree.DownDominators(n)).OrderBy(e => e, new DomComparor<T>(domTree)).Last();
+                        T D2 = Ds[j];
+                        added[j] = true;
+                        ususalCycle = false;
+                        groups.Add(new CycleSpecialCase<T>(n, D1, D2, null, leastDom));
+                        break;
                     }
                 }
-                groups.Add(new KeyValuePair<List<T>, T>(l, leastBothDominator));
+                if (ususalCycle)
+                    groups.Add(new CycleUsual<T>(n, D1, null));
             }
             return groups;
         }
+
         class DomComparor<T1>: IComparer<T1> where T1: IComparable<T1>
         {
             public DomComparor(IDominatorRelation<T1> domTree)
