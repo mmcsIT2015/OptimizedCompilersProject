@@ -30,6 +30,41 @@ namespace iCompiler
             return alg.Out;
         }
 
+        public static Dictionary<Block, List<Block>> GenerateDomTree(ThreeAddrCode code)
+        {
+            Dictionary<Block, List<Block>> result = new Dictionary<Block, List<Block>>();
+            Dictionary<int, List<int>> resultIndexes = new Dictionary<int, List<int>>();
+
+            Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.GenerateDomOut(code);
+            Dictionary<int, SortedSet<int>> sets = new Dictionary<int, SortedSet<int>>();
+            foreach (Block block in blockDoms.Keys)
+            {
+                SortedSet<int> set = new SortedSet<int>();
+                //Console.Write("Dom({0}) =", code.blocks.IndexOf(block) + 1);
+                foreach (Block domBlock in blockDoms[block])
+                    set.Add(code.blocks.IndexOf(domBlock));
+                sets.Add(code.blocks.IndexOf(block), set);
+                result.Add(block, new List<Block>());
+                resultIndexes.Add(code.blocks.IndexOf(block), new List<int>());
+            }
+
+            foreach(int i in sets.Keys)
+            {
+                int j_prev = 0;
+                foreach(int j in sets[i])
+                {
+                    if(j_prev != j && !resultIndexes[j_prev].Contains(j))
+                    {
+                        resultIndexes[j_prev].Add(j);
+                        result[code.blocks[j_prev]].Add(code.blocks[j]);
+                    }
+                    j_prev = j;
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Returns all reversed edges of given CFG according to Dom-Graph
         /// </summary>

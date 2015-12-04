@@ -61,7 +61,21 @@ namespace SimpleCompiler
                 Console.WriteLine();
             }
 
-            Console.WriteLine("Reversed Edges");
+            Console.WriteLine("\nDom Tree");
+            Dictionary<Block, List<Block>> tree = DomGraph.GenerateDomTree(code);
+            foreach (Block block in tree.Keys)
+            {
+                Console.Write("Block({0}) <===> Childs:", code.blocks.IndexOf(block) + 1);
+
+                foreach (Block domBlock in tree[block])
+                {
+                    Console.Write(" {0};", code.blocks.IndexOf(domBlock) + 1);
+                }
+
+                Console.WriteLine();
+            }
+
+            Console.WriteLine("\nReversed Edges");
             List<DomGraph.BlocksPair<Block>> listEdges = DomGraph.ReverseEdges(blockDoms, code.graph) as List<DomGraph.BlocksPair<Block>>;
 
             if (listEdges.Count == 0)
@@ -232,7 +246,8 @@ namespace SimpleCompiler
 
                         //Console.WriteLine(code);
 
-                        TestReachableExpressions(root);
+                        TestDomIterativeAlogrithm(root);
+                        //TestReachableExpressions(root);
                     }
                     catch (FileNotFoundException)
                     {
