@@ -216,23 +216,20 @@ namespace iCompiler
                     Dictionary<T, bool> mark = new Dictionary<T, bool>();
                     foreach (T bl in blocks)
                         mark[bl] = false;
+                    List<T> verts = null;
                     if (grouped[i] is CycleUsual<T>)
                     {
                         CycleUsual<T> c = grouped[i] as CycleUsual<T>;
-                        List<T> verts = FindVerts(n, c.D, c.D, mark, graph, domTree);
-                        List<DomGraph.BlocksPair<T>> outs = FindOuts(n, graph, domTree, verts);
-                        c.DATA = verts;
-                        c.OUTS = outs;
+                        verts = FindVerts(n, c.D, c.D, mark, graph, domTree);
                     }
                     else if (grouped[i] is CycleSpecialCase<T>)
                     {
                         CycleSpecialCase<T> c = grouped[i] as CycleSpecialCase<T>;
-                        List<T> verts = FindVerts(n, c.D1, c.D1, mark, graph, domTree);
+                        verts = FindVerts(n, c.D1, c.D1, mark, graph, domTree);
                         verts.AddRange(FindVerts(n, c.D2, c.D2, mark, graph, domTree));
-                        List<DomGraph.BlocksPair<T>> outs = FindOuts(n, graph, domTree, verts);
-                        c.DATA = verts;
-                        c.OUTS = outs;
                     }
+                    grouped[i].DATA = verts;
+                    grouped[i].OUTS = FindOuts(n, graph, domTree, verts);
                 }
                 cycles.AddRange(grouped);
             }

@@ -29,7 +29,7 @@ namespace iCompiler
     ///     List<Block> blocks = tree.Data[b];
     /// </summary>
     /// <typeparam name="T">Тип данных вершин дерева</typeparam>
-    public class SpanningTree<T>
+    public abstract class SpanningTree<T>
     {
         public SpanningTree(IEnumerable<T> blocks, IGraph<T> graph)
         {

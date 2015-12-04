@@ -135,14 +135,8 @@ namespace iCompiler
             }
             public void TestSpanningTree()
             {
-                SpanningTree<int> t = new SpanningTree<int>(GetBlocks(), GetGraph());
-                Console.WriteLine("SpanningTree");
-                _spanningTree(t);
-            }
-            public void TestSpanningTreeWithoutRecursive()
-            {
                 SpanningTree<int> t = new SpanningTreeWithoutRecursive<int>(GetBlocks(), GetGraph());
-                Console.WriteLine("SpanningTreeWithoutRecursive");
+                Console.WriteLine("SpanningTree");
                 _spanningTree(t);
             }
         }
@@ -305,10 +299,8 @@ namespace iCompiler
         {
             AllCyclesTestExample ex = new AllCyclesTestExample();
             ex.TestSpanningTree();
-            ex.TestSpanningTreeWithoutRecursive();
             AllCyclesTestExample1 ex1 = new AllCyclesTestExample1();
             ex1.TestSpanningTree();
-            ex1.TestSpanningTreeWithoutRecursive();
         }
     }
 }
