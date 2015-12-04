@@ -1,7 +1,5 @@
 {	
-		int a;
-		int b;
-		int p;
+		int a = 3, b, p = 5;		
 l1:		a = 2; 
 l2:		b = 2 * 4 + 8; 
 l3:		p = -4;

@@ -18,6 +18,8 @@
 			public FunctionNodeSt funStVal;
 			public List<ExprNode> paramVal;
 			public SimpleVarType typeVal;
+			public VarDeclListNode listDeclVal;
+		  public List<VarDeclNode> listDeclRawVal;
         }
 
 %using ProgramTree;
@@ -31,12 +33,14 @@
 %token <typeVal> TYPE
 
 %type <eVal> expr ident T F S U
-%type <stVal> assign statement st do_while while if decl_assign goto
+%type <stVal> assign statement st do_while while if goto
 %type <blVal> stlist block
 %type <ioVal> cout
 %type <funVal> funcall
 %type <funStVal> funcallst
 %type <paramVal> params
+%type <listDeclVal> decl_type_list
+%type <listDeclRawVal> decl_list	
 
 %%
 
@@ -78,17 +82,24 @@ st: assign SEMICOLON { $$ = $1; }
     | cout SEMICOLON { $$ = $1; }
     | if { $$ = $1; }
     | funcallst SEMICOLON { $$ = $1; }
-	| decl_assign SEMICOLON { $$ = $1; }
+	| decl_type_list SEMICOLON { $$ = $1; }
 	| goto SEMICOLON { $$ = $1; }
     ;
 
 goto: GOTO ident { $$ = new GotoNode($2 as IdNode); }
 	;
 	
-decl_assign: TYPE assign { $$ = new VarDeclNode($1, $2 as AssignNode); }
-	| TYPE ident { $$ = new VarDeclNode($1, $2 as IdNode); }
+decl_type_list: 	
+	| TYPE decl_list { $$ = new VarDeclListNode($1); $$.VariablesList = $2; }	
 	;
 
+decl_list:
+	| ident { $$ = new List<VarDeclNode>(); $$.Add(new VarDeclNode($1 as IdNode)); }
+	| assign { $$ = new List<VarDeclNode>(); $$.Add(new VarDeclNode($1 as AssignNode)); }
+	| decl_list COMMA ident { $1.Add(new VarDeclNode($3 as IdNode)); $$ = $1; }
+	| decl_list COMMA assign { $1.Add(new VarDeclNode($3 as AssignNode)); $$ = $1; }
+	;
+	
 funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }
 	;
 

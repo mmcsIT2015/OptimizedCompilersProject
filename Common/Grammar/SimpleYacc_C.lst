@@ -3,9 +3,9 @@
 //  GPPG error listing for yacc source file <SimpleYacc_C.y>
 // ==========================================================================
 //  Version:  1.3.6
-//  Machine:  UNREAL-PC
-//  DateTime: 27.11.2015 1:30:10
-//  UserName: Vladislav
+//  Machine:  DESKTOP-U94NV7T
+//  DateTime: 04.12.2015 18:50:18
+//  UserName: jedik
 // ==========================================================================
 
 
@@ -29,33 +29,39 @@
 			public FunctionNodeSt funStVal;
 			public List<ExprNode> paramVal;
 			public SimpleVarType typeVal;
+			public VarDeclListNode listDeclVal;
+		  public List<VarDeclNode> listDeclRawVal;
         }
 
 %using ProgramTree;
 
 %namespace SimpleParserC
 
-%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA NOT LESSEQUAL GREATEREQUAL
+%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA COLON NOT LESSEQUAL GREATEREQUAL GOTO
 %token <iVal> INUM
 %token <dVal> RNUM
 %token <sVal> ID STRING_L
 %token <typeVal> TYPE
 
 %type <eVal> expr ident T F S U
-%type <stVal> assign statement do_while while if decl_assign
+%type <stVal> assign statement st do_while while if goto
 %type <blVal> stlist block
 %type <ioVal> cout
 %type <funVal> funcall
 %type <funStVal> funcallst
 %type <paramVal> params
+%type <listDeclVal> decl_type_list
+%type <listDeclRawVal> decl_list	
 
 %%
-// Error: NonTerminal symbol "GREATEQUAL" has no productions
-// Warning: Terminating GREATEQUAL fixes the following size-1 NonTerminal set
-   // {GREATEQUAL}
+// Warning: NonTerminal symbol "decl_list" is unreachable
+// Error: NonTerminal symbol "decl_assign" has no productions
+// Warning: NonTerminal symbol "decl_type_list" is unreachable
 // Error: There are 1 non-terminating NonTerminal Symbols
-   //  {GREATEQUAL}
-// --------------------------------------------------------------------------
+   //  {decl_assign}
+// Warning: Terminating decl_assign fixes the following size-1 NonTerminal set
+   // {decl_assign}
+// ---------------------------------------------------------------------------
 
 progr   : block { root = $1; }
 		;
@@ -83,21 +89,36 @@ params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
 			$$ = $1;
 		}
     ;
+	
+statement: ident COLON st { $3.AddLabel($1 as IdNode); $$ = $3;}
+	| st { $$ = $1; }
+	;
 
-statement: assign SEMICOLON { $$ = $1; }
+st: assign SEMICOLON { $$ = $1; }
     | block { $$ = $1; }
     | do_while SEMICOLON { $$ = $1; }
     | while { $$ = $1; }
     | cout SEMICOLON { $$ = $1; }
     | if { $$ = $1; }
     | funcallst SEMICOLON { $$ = $1; }
-		| decl_assign SEMICOLON { $$ = $1; }
+	| decl_assign SEMICOLON { $$ = $1; }
+	| goto SEMICOLON { $$ = $1; }
     ;
 
-decl_assign: TYPE assign { $$ = new VarDeclNode($1, $2 as AssignNode); }
-	| TYPE ident { $$ = new VarDeclNode($1, $2 as IdNode); }
+goto: GOTO ident { $$ = new GotoNode($2 as IdNode); }
+	;
+	
+decl_type_list: 	
+	| TYPE decl_list { $$ = new VarDeclListNode($1); $$.VariablesList = $2; }	
 	;
 
+decl_list:
+	| ident { $$ = new List<VarDeclNode>(); $$.Add(new VarDeclNode($1 as IdNode)); }
+	| assign { $$ = new List<VarDeclNode>(); $$.Add(new VarDeclNode($1 as AssignNode)); }
+	| decl_list COMMA ident { $1.Add(new VarDeclNode(new VarDeclNode($1 as IdNode))); $$ = $1; }
+	| decl_list COMMA assign { $1.Add(new VarDeclNode(new VarDeclNode($1 as AssignNode))); $$ = $1; }
+	;
+	
 funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }
 	;
 
@@ -115,27 +136,27 @@ assign 	: ident ASSIGN expr { $$ = new AssignNode($1 as IdNode, $3); }
 	;
 
 expr : S { $$ = $1; }
-    | expr LESS S { $$ = new BinaryNode($1, $3, BinaryOperation.Less); }
-    | expr GREAT S { $$ = new BinaryNode($1, $3, BinaryOperation.Greater); }
-    | expr EQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.Equal); }
-    | expr INEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.NotEqual); }
-	| expr LESSEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.LessEqual); }
-	| expr GREATEQUAL S { $$ = new BinaryNode($1, $3, BinaryOperation.GreaterEqual); }
+    | expr LESS S { $$ = new BinaryNode($1, $3, Operator.Less); }
+    | expr GREAT S { $$ = new BinaryNode($1, $3, Operator.Greater); }
+    | expr EQUAL S { $$ = new BinaryNode($1, $3, Operator.Equal); }
+    | expr INEQUAL S { $$ = new BinaryNode($1, $3, Operator.NotEqual); }
+	| expr LESSEQUAL S { $$ = new BinaryNode($1, $3, Operator.LessEqual); }
+	| expr GREATEREQUAL S { $$ = new BinaryNode($1, $3, Operator.GreaterEqual); }
     ;
 
 S : T { $$ = $1; }
-    | S PLUS T { $$ = new BinaryNode($1, $3, BinaryOperation.Plus); }
-    | S MINUS T { $$ = new BinaryNode($1, $3, BinaryOperation.Minus); }
+    | S PLUS T { $$ = new BinaryNode($1, $3, Operator.Plus); }
+    | S MINUS T { $$ = new BinaryNode($1, $3, Operator.Minus); }
     ;
 
 T : U { $$ = $1; }
-    | T MUL U { $$ = new BinaryNode($1, $3, BinaryOperation.Mult); }
-    | T DIV U { $$ = new BinaryNode($1, $3, BinaryOperation.Div); }
+    | T MUL U { $$ = new BinaryNode($1, $3, Operator.Mult); }
+    | T DIV U { $$ = new BinaryNode($1, $3, Operator.Div); }
     ;
 
 U : F { $$ = $1; }
-	| MINUS U { $$ = new UnaryNode($2, UnaryOperation.Minus); }
-	| NOT U { $$ = new UnaryNode($2, UnaryOperation.Not); }
+	| MINUS U { $$ = new UnaryNode($2, Operator.Minus); }
+	| NOT U { $$ = new UnaryNode($2, Operator.Not); }
 	;
 
 F : ident { $$ = $1 as IdNode; }

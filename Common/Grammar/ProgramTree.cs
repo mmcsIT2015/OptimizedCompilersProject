@@ -6,7 +6,7 @@ namespace ProgramTree
 {
     public enum AssignType { Assign, AssignPlus, AssignMinus, AssignMult, AssignDivide };
 		
-	public enum SimpleVarType { Int, Float, Str, Bool };
+	public enum SimpleVarType { Int, Float, Str, Bool,  };
 
     public enum Operator { None, Plus, Minus, Mult, Div, Less, Greater, Equal, NotEqual, LessEqual, GreaterEqual, Not };
 	
@@ -66,10 +66,21 @@ namespace ProgramTree
         }
     }
 
+		public class VarDeclListNode : StatementNode
+		{
+				public List<VarDeclNode> VariablesList { get; set; }
+				public SimpleVarType VariablesType { get; set; }
+				
+				public VarDeclListNode(SimpleVarType type)
+				{
+					VariablesType = type;
+					VariablesList = new List<VarDeclNode>();
+				}
+		}
+		
     public class VarDeclNode : StatementNode
     {
-        public AssignNode ValueAssignment { get; set; }
-        public SimpleVarType VariableType { get; set; }
+        public AssignNode ValueAssignment { get; set; }        
         public IdNode Id { get; set; }
         public bool IsAssigned { get; private set; }
 
@@ -81,19 +92,40 @@ namespace ProgramTree
                 return Id;
         }
 
-        public VarDeclNode(SimpleVarType type, AssignNode Assignment)
+        public VarDeclNode(AssignNode Assignment)
         {
             Id = null;
-            ValueAssignment = Assignment;
-            VariableType = type;
+            ValueAssignment = Assignment;            
             IsAssigned = true;
         }
 
-        public VarDeclNode(SimpleVarType type, IdNode ident)
+        public VarDeclNode(IdNode ident)
+        {
+            ValueAssignment = null;
+            Id = ident;            
+            IsAssigned = false;
+        }
+        /// <summary>
+        /// TODO: PASCAL GRAMMAR: REWORK!!! DEPRECATED!!
+        /// </summary>
+        /// <param name="var"></param>
+        /// <param name="Assignment"></param>
+        public VarDeclNode(SimpleVarType var, AssignNode Assignment)
+        {
+            Id = null;
+            ValueAssignment = Assignment;
+            IsAssigned = true;
+        }
+
+        /// <summary>
+        /// TODO: PASCAL GRAMMAR: REWORK!!! DEPRECATED!!
+        /// </summary>
+        /// <param name="var"></param>
+        /// <param name="Assignment"></param>
+        public VarDeclNode(SimpleVarType var, IdNode ident)
         {
             ValueAssignment = null;
             Id = ident;
-            VariableType = type;
             IsAssigned = false;
         }
 

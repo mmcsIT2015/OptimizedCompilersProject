@@ -338,7 +338,9 @@ namespace iCompiler
                 Visit(node.ValueAssignment);
             }
 
-            mTableOfNames.Add(node.GetID().Name, node.VariableType);
+            //REWORK!!! CHANGES IN GRAMMAR(BREAKING!!!)
+            //LOOK jknightmmcs LAST COMMIT
+            //mTableOfNames.Add(node.GetID().Name, node.VariableType);
         }
 
         public void Visit(GotoNode node)
