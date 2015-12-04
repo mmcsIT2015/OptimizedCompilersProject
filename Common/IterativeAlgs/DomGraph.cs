@@ -33,19 +33,18 @@ namespace iCompiler
         public static Dictionary<Block, List<Block>> GenerateDomTree(ThreeAddrCode code)
         {
             Dictionary<Block, List<Block>> result = new Dictionary<Block, List<Block>>();
-            Dictionary<int, List<int>> resultIndexes = new Dictionary<int, List<int>>();
 
             Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.GenerateDomOut(code);
-            Dictionary<int, SortedSet<int>> sets = new Dictionary<int, SortedSet<int>>();
+            Dictionary<int, List<int>> sets = new Dictionary<int, List<int>>();
             foreach (Block block in blockDoms.Keys)
             {
-                SortedSet<int> set = new SortedSet<int>();
-                //Console.Write("Dom({0}) =", code.blocks.IndexOf(block) + 1);
+                List<int> set = new List<int>();
+
                 foreach (Block domBlock in blockDoms[block])
-                    set.Add(code.blocks.IndexOf(domBlock));
+                    set.Insert(0, code.blocks.IndexOf(domBlock));
+
                 sets.Add(code.blocks.IndexOf(block), set);
                 result.Add(block, new List<Block>());
-                resultIndexes.Add(code.blocks.IndexOf(block), new List<int>());
             }
 
             foreach(int i in sets.Keys)
@@ -53,11 +52,8 @@ namespace iCompiler
                 int j_prev = 0;
                 foreach(int j in sets[i])
                 {
-                    if(j_prev != j && !resultIndexes[j_prev].Contains(j))
-                    {
-                        resultIndexes[j_prev].Add(j);
+                    if (j_prev != j && !result[code.blocks[j_prev]].Contains(code.blocks[j]))
                         result[code.blocks[j_prev]].Add(code.blocks[j]);
-                    }
                     j_prev = j;
                 }
             }
