@@ -78,6 +78,7 @@ namespace iCompiler
         /// </summary>
         public abstract class AllCyclesTestExampleAbstractFactory
         {
+            protected string exampleTitle;
             public abstract int[] GetBlocks();
             public abstract AbstarctTestGraph GetGraph();
             public abstract List<DomGraph.BlocksPair<int>> GetReverseArcs();
@@ -85,18 +86,27 @@ namespace iCompiler
             public void TestAllCycles()
             {
                 AllCycles<int> allCycles = new AllCycles<int>(GetBlocks(), GetGraph(), GetReverseArcs(), GetDomTree());
+                Console.WriteLine("AllCycles");
                 _cycles(allCycles);
             }
             public void TestAllCyclesWithSpecialCase()
             {
                 AllCycles<int> allCycles = new AllCyclesWithSpecialCase<int>(GetBlocks(), GetGraph(), GetReverseArcs(), GetDomTree());
+                Console.WriteLine("AllCyclesWithSpecialCase");
                 _cycles(allCycles);
             }
             private void _cycles(AllCycles<int> allCycles)
             {
+                Console.WriteLine(exampleTitle);
                 foreach (var cycle in allCycles.cycles)
                 {
-                    Console.Write("N:" + cycle.N + " ");
+                    Console.Write("IN:" + cycle.N + " VERTS:");
+                    foreach (var i in cycle.DATA)
+                        Console.Write(i + " ");
+                    Console.Write("OUTS:");
+                    foreach (DomGraph.BlocksPair<int> p in cycle.OUTS)
+                        Console.Write("(" + p.blockBegin + ">" + p.blockEnd + ") ");
+                    Console.Write(" ");
                     if (cycle is CycleUsual<int>)
                     {
                         CycleUsual<int> c = cycle as CycleUsual<int>;
@@ -107,15 +117,13 @@ namespace iCompiler
                         CycleSpecialCase<int> c = cycle as CycleSpecialCase<int>;
                         Console.Write("D1:" + c.D1 + " D2:" + c.D2 + " DOM:" + c.DOM);
                     }
-                    Console.Write(" DATA:");
-                    foreach (var i in cycle.DATA)
-                        Console.Write(i + " ");
                     Console.WriteLine();
                 }
                 Console.WriteLine();
             }
             private void _spanningTree(SpanningTree<int> t)
             {
+                Console.WriteLine(exampleTitle);
                 for (int i = GetBlocks().First(); i <= GetBlocks().Last(); i++)
                 {
                     Console.Write(i + "(" + t.Numbers[i] + "): ");
@@ -128,11 +136,13 @@ namespace iCompiler
             public void TestSpanningTree()
             {
                 SpanningTree<int> t = new SpanningTree<int>(GetBlocks(), GetGraph());
+                Console.WriteLine("SpanningTree");
                 _spanningTree(t);
             }
             public void TestSpanningTreeWithoutRecursive()
             {
                 SpanningTree<int> t = new SpanningTreeWithoutRecursive<int>(GetBlocks(), GetGraph());
+                Console.WriteLine("SpanningTreeWithoutRecursive");
                 _spanningTree(t);
             }
         }
@@ -141,10 +151,9 @@ namespace iCompiler
         /// </summary>
         public class AllCyclesTestExample : AllCyclesTestExampleAbstractFactory
         {
-            /// <summary>
-            /// Управляющий граф из лекции
-            /// </summary>
-            public class TestGraph : AbstarctTestGraph
+            public AllCyclesTestExample() { exampleTitle = "Example1"; }
+
+            private class TestGraph : AbstarctTestGraph
             {
                 public TestGraph()
                 {
@@ -197,10 +206,7 @@ namespace iCompiler
                 return new TestDominatorTree();
             }
 
-            /// <summary>
-            /// Граф доминатора из лекции
-            /// </summary>
-            public class TestDominatorTree : AbstractTestDominatorTree
+            private class TestDominatorTree : AbstractTestDominatorTree
             {
                 public TestDominatorTree()
                 {
@@ -219,37 +225,15 @@ namespace iCompiler
                     data[10].AddRange(new int[] { 1, 3, 4, 7, 8, 10 });
                 }
             }
-
-            public new void TestAllCycles()
-            {
-                Console.WriteLine("Example1");
-                base.TestAllCycles();
-            }
-            public new void TestAllCyclesWithSpecialCase()
-            {
-                Console.WriteLine("Example1");
-                base.TestAllCyclesWithSpecialCase();
-            }
-            public new void TestSpanningTree()
-            {
-                Console.WriteLine("Example1");
-                base.TestSpanningTree();
-            }
-            public new void TestSpanningTreeWithoutRecursive()
-            {
-                Console.WriteLine("Example1");
-                base.TestSpanningTreeWithoutRecursive();
-            }
         }
         /// <summary>
         /// Пример 2 из лекции
         /// </summary>
         public class AllCyclesTestExample1 : AllCyclesTestExampleAbstractFactory
         {
-            /// <summary>
-            /// Пример2: граф доминатора из лекции
-            /// </summary>
-            public class TestDominatorTree1 : AbstractTestDominatorTree
+            public AllCyclesTestExample1() { exampleTitle = "Example2"; }
+
+            private class TestDominatorTree1 : AbstractTestDominatorTree
             {
                 public TestDominatorTree1()
                 {
@@ -263,10 +247,7 @@ namespace iCompiler
                 }
             }
 
-            /// <summary>
-            /// Пример2: CFG граф из лекции
-            /// </summary>
-            public class TestGraph1 : AbstarctTestGraph
+            private class TestGraph1 : AbstarctTestGraph
             {
                 public TestGraph1()
                 {
@@ -304,26 +285,6 @@ namespace iCompiler
             {
                 return new TestDominatorTree1();
             }
-            public new void TestAllCycles()
-            {
-                Console.WriteLine("Example2");
-                base.TestAllCycles();
-            }
-            public new void TestAllCyclesWithSpecialCase()
-            {
-                Console.WriteLine("Example2");
-                base.TestAllCyclesWithSpecialCase();
-            }
-            public new void TestSpanningTree()
-            {
-                Console.WriteLine("Example2");
-                base.TestSpanningTree();
-            }
-            public new void TestSpanningTreeWithoutRecursive()
-            {
-                Console.WriteLine("Example2");
-                base.TestSpanningTreeWithoutRecursive();
-            }
         }
         /// <summary>
         /// Тесты для классов AllCycles
@@ -345,6 +306,9 @@ namespace iCompiler
             AllCyclesTestExample ex = new AllCyclesTestExample();
             ex.TestSpanningTree();
             ex.TestSpanningTreeWithoutRecursive();
+            AllCyclesTestExample1 ex1 = new AllCyclesTestExample1();
+            ex1.TestSpanningTree();
+            ex1.TestSpanningTreeWithoutRecursive();
         }
     }
 }
