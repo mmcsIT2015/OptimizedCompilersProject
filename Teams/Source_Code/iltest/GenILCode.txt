@@ -1,6 +1,6 @@
 private string Type2String(SimpleVarType type)
         {
-            switch(type)
+            switch (type)
             {
                 case SimpleVarType.Bool:
                     return "bool";
@@ -37,6 +37,14 @@ private string Type2String(SimpleVarType type)
                 {
                     if (!l.label.Equals(""))
                         sb.AppendLine(l.label + ":");
+
+                    if (l.IsEmpty())
+                        sb.AppendLine("nop");
+                    else if (l.Is<Line.BinaryExpr>())
+                    {
+                        Line.BinaryExpr be = l as Line.BinaryExpr;
+                        //SimpleVarType ft
+                    }
                 }
             }
 
