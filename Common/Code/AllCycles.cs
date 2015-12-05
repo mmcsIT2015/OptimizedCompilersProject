@@ -25,13 +25,6 @@ namespace iCompiler
         /// <param name="a">Вершина</param>
         /// <returns></returns>
         IEnumerable<T> UpperDominators(T a);
-
-        /// <summary>
-        /// Все вершины, над которыми доминирует текущая
-        /// </summary>
-        /// <param name="a">Вершина</param>
-        /// <returns></returns>
-        IEnumerable<T> DownDominators(T a);
     }
 
     /// <summary>
@@ -82,14 +75,13 @@ namespace iCompiler
     /// <typeparam name="T">Тип вершин</typeparam>
     public class CycleSpecialCase<T> : Cycle<T>
     {
-        public CycleSpecialCase(T n, List<T> data, List<DomGraph.BlocksPair<T>> outs, T d1, T d2, T dom)
+        public CycleSpecialCase(T n, List<T> data, List<DomGraph.BlocksPair<T>> outs, T d1, T d2)
         {
             this.N = n;
             this.DATA = data;
             this.OUTS = outs;
             this.D1 = d1;
             this.D2 = d2;
-            this.DOM = dom;
         }
 
         /// <summary>
@@ -101,11 +93,6 @@ namespace iCompiler
         /// Вершина из второго обратного ребра
         /// </summary>
         public T D2 { get; set; }
-
-        /// <summary>
-        /// Ближайший общий доминатор для D1 и D2
-        /// </summary>
-        public T DOM { get; set; }
     }
 
     /// <summary>
@@ -181,7 +168,7 @@ namespace iCompiler
         {
             return verts.Select(v => graph.OutEdges(v).Select(v1 => new DomGraph.BlocksPair<T>(v, v1)))
                 .Aggregate(new List<DomGraph.BlocksPair<T>>(), (l, e) => { l.AddRange(e); return l; })
-                .Where(e => verts.All(u => e.blockEnd.CompareTo(u) != 0) && domTree.DownDominators(n).Any(u => e.blockEnd.CompareTo(u) == 0))
+                .Where(e => verts.All(u => e.blockEnd.CompareTo(u) != 0) && domTree.UpperDominators(n).All(u => e.blockEnd.CompareTo(u) != 0))
                 .ToList();
         }
     }
@@ -249,11 +236,10 @@ namespace iCompiler
                 {
                     if (!domTree.FirstDomSeccond(Ds[i], Ds[j]) && !domTree.FirstDomSeccond(Ds[j], Ds[i]))
                     {
-                        T leastDom = domTree.UpperDominators(Ds[i]).Intersect(domTree.UpperDominators(Ds[j])).Intersect(domTree.DownDominators(n)).OrderBy(e => e, new DomComparor<T>(domTree)).Last();
                         T D2 = Ds[j];
                         added[j] = true;
                         ususalCycle = false;
-                        groups.Add(new CycleSpecialCase<T>(n, null, null, D1, D2, leastDom));
+                        groups.Add(new CycleSpecialCase<T>(n, null, null, D1, D2));
                         break;
                     }
                 }
@@ -261,20 +247,6 @@ namespace iCompiler
                     groups.Add(new CycleUsual<T>(n, null, null, D1));
             }
             return groups;
-        }
-
-        class DomComparor<T1>: IComparer<T1> where T1: IComparable<T1>
-        {
-            public DomComparor(IDominatorRelation<T1> domTree)
-            {
-                this.domTree = domTree;
-            }
-            int IComparer<T1>.Compare(T1 x, T1 y)
-            {
-                return x.CompareTo(y) == 0 ? 0 : domTree.FirstDomSeccond(x, y) ? -1 : 1;
-            }
-
-            public IDominatorRelation<T1> domTree { get; private set; }
         }
     }
 }

@@ -67,11 +67,6 @@ namespace iCompiler
             {
                 return data[a];
             }
-
-            public IEnumerable<int> DownDominators(int a)
-            {
-                return data.Where(e => e.Value.Any(x => x == a)).Select(e => e.Key).Aggregate(new List<int>(), (l, e) => { l.Add(e); return l; });
-            }
         }
         /// <summary>
         /// Фабрика для примеров
@@ -106,7 +101,6 @@ namespace iCompiler
                     Console.Write("OUTS:");
                     foreach (DomGraph.BlocksPair<int> p in cycle.OUTS)
                         Console.Write("(" + p.blockBegin + ">" + p.blockEnd + ") ");
-                    Console.Write(" ");
                     if (cycle is CycleUsual<int>)
                     {
                         CycleUsual<int> c = cycle as CycleUsual<int>;
@@ -115,7 +109,7 @@ namespace iCompiler
                     else if (cycle is CycleSpecialCase<int>)
                     {
                         CycleSpecialCase<int> c = cycle as CycleSpecialCase<int>;
-                        Console.Write("D1:" + c.D1 + " D2:" + c.D2 + " DOM:" + c.DOM);
+                        Console.Write("D1:" + c.D1 + " D2:" + c.D2);
                     }
                     Console.WriteLine();
                 }
