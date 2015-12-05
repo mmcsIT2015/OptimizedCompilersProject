@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace iCompiler.Line
 {
@@ -51,13 +52,19 @@ namespace iCompiler.Line
         public virtual bool FirstParamIsNumber() // является ли первый параметр правой части числом
         {
             double temp;
-            return double.TryParse(first, out temp);
+            var style = System.Globalization.NumberStyles.Any;
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = ".";
+            return double.TryParse(first, style, nfi, out temp);
         }
 
         public virtual bool SecondParamIsNumber() // является ли второй параметр правой части числом
         {
             double temp;
-            return double.TryParse(second, out temp);
+            var style = System.Globalization.NumberStyles.Any;
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = ".";
+            return double.TryParse(second, style, nfi, out temp);
         }
 
         public virtual bool FirstParamIsIntNumber() // является ли первый параметр правой части целым числом

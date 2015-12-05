@@ -1,4 +1,5 @@
 {
+	int a1 = 10, a2;
 	if (a1 > 5)
 	do 
 	  int c1 = 8 + a2;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace iCompiler.Line
 {
@@ -30,10 +31,13 @@ namespace iCompiler.Line
             return operation == Operator.Minus;
         }
 
-        public virtual bool ParamIsNumber() // является ли параметр числом
+        public virtual bool ArgIsNumber() // является ли параметр числом
         {
             double temp;
-            return double.TryParse(argument, out temp);
+            var style = System.Globalization.NumberStyles.Any;
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = ".";
+            return double.TryParse(argument, style, nfi, out temp);
         }
 
         private static string ToString(Operator operation)

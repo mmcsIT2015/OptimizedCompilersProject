@@ -6,7 +6,8 @@
 
 %output = SimpleYaccPascal.cs
 
-%union { 			public double dVal; 
+%union { 			
+			public double dVal; 
 			public int iVal; 
 			public string sVal; 
 			public Node nVal;
@@ -87,8 +88,22 @@ funcall	: ID LB params RB
 		}
 		;
 		
-decl_assign: VAR ident COLON TYPE ASSIGN expr { $$ = new VarDeclNode($4, new AssignNode($2 as IdNode, $6)); }
-	| VAR ident COLON TYPE { $$ = new VarDeclNode($4, $2 as IdNode); }
+decl_assign: VAR ident COLON TYPE ASSIGN expr 
+		{ 
+			List<VarDeclNode> ls = new List<VarDeclNode>();
+			ls.Add(new VarDeclNode(new AssignNode($2 as IdNode, $6)));
+			var listNode = new VarDeclListNode($4); 
+			listNode.VariablesList = ls;
+			$$ = listNode;
+		}
+	| VAR ident COLON TYPE 
+		{ 
+			var ls = new List<VarDeclNode>();
+			ls.Add(new VarDeclNode($2 as IdNode));
+			var listNode = new VarDeclListNode($4); 
+			listNode.VariablesList = ls;
+			$$ = listNode;
+		}
 	;
 
 ident 	: ID { $$ = new IdNode($1); }	

@@ -342,7 +342,7 @@ namespace iCompiler
                     {
                         usedVar = (line as Line.BinaryExpr).first;
                     }
-                    else if (line is Line.UnaryExpr && !(line as Line.UnaryExpr).ParamIsNumber())
+                    else if (line is Line.UnaryExpr && !(line as Line.UnaryExpr).ArgIsNumber())
                     {
                         usedVar = (line as Line.UnaryExpr).argument;
                     }

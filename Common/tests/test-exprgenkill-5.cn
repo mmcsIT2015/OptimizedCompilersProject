@@ -1,5 +1,5 @@
 {
-  int b = 0;
+  int a, b = 0, c, d;
   int k = 0;
   int vu = 0;
   
@@ -20,7 +20,7 @@
   if (2)
   {
     k = k + 1;
-    int c = 12;
+    c = 12;
     int i = b + c;
   }
 }
