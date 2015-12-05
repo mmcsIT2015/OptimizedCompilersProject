@@ -1,12 +1,13 @@
 {
+  int a, b, c, d;
   if (1)
   {
     int k = a - d;
     int p = b + c;
   }
 
-  int a = b + c;
-  int b = a - d;
-  int c = b + c;
+  a = b + c;
+  b = a - d;
+  c = b + c;
   int v = a - d;
 }

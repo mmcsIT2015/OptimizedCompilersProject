@@ -6,7 +6,7 @@
 	int l = 90;
 	int k = l;
 	l = 89;
-	int o = l;
+	int o = l, t, e;
 	o = t;
 	o = e;
 }

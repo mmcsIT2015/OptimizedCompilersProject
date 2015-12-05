@@ -1,4 +1,6 @@
 begin
+	var a : integer;
+	var b : integer;
 	a := 4 + f(4, g(6, 7, 8));
 	b := 90;
 	f(89)

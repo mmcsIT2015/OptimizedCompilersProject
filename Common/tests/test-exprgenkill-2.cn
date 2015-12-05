@@ -1,4 +1,5 @@
 {
+  float u = 2.0, a;
   if (1)
   {
     int d = u;
