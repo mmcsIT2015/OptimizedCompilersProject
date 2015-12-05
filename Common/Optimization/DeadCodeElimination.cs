@@ -55,7 +55,10 @@ namespace iCompiler
                 {
                     var temp = dotLine[i] as Line.Identity;
                     if (Out.Count<string>() > 0 && !Out.Contains<string>(temp.ToString()))
+                    {
                         removeIndexList.Add(i);
+                        continue;
+                    }
 
                     if (temp.left == temp.right)
                     {
@@ -86,7 +89,10 @@ namespace iCompiler
                     var line = dotLine[i] as Line.BinaryExpr;
 
                     if (Out.Count<string>() > 0 && !Out.Contains<string>(line.ToString()))
+                    {
                         removeIndexList.Add(i);
+                        continue;
+                    }
 
                     idLife[line.first] = true; //первый операнд правой части "живой"
                     idLife[line.second] = true; //второй операнд правой части "живой"
@@ -109,7 +115,10 @@ namespace iCompiler
                     var line = dotLine[i] as Line.UnaryExpr;
 
                     if (Out.Count<string>() > 0 && !Out.Contains<string>(line.ToString()))
+                    {
                         removeIndexList.Add(i);
+                        continue;
+                    }
 
                     if (line.left != line.argument)
                         idLife[line.argument] = true;
