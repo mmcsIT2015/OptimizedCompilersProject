@@ -148,6 +148,22 @@ namespace SimpleCompiler
             }
         }
 
+        public static bool IsGraphGiven(ProgramTree.BlockNode root)
+        {
+            Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+            codeGenerator.Visit(root);
+
+            var code = codeGenerator.CreateCode();
+
+            WriteBlocksToConsole(code);
+
+            Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.GenerateDomOut(code);
+            ControlFlowGraph CFG = new ControlFlowGraph(code.blocks);
+            SpanningTreeWithoutRecursive<Block> spanningTree = new SpanningTreeWithoutRecursive<Block>(code.blocks, CFG);
+            return spanningTree.IsGraphGiven(blockDoms);
+
+        }
+
         private static void WriteBlocksToConsole(ThreeAddrCode code)
         {
             int blockIndex = 0;
@@ -218,13 +234,13 @@ namespace SimpleCompiler
             {
                 List<string> files = new List<string>();
                 //files.Add(@"..\..\tests\test-validation3.cn");
-                files.Add(@"..\..\tests\test-activevars1.cn");
+                //files.Add(@"..\..\tests\test-activevars1.cn");
                 //files.Add(@"..\..\tests\test-realnum1.pasn");
                 //files.Add(@"..\..\tests\test-dce2.cn");
                 //files.Add(@"..\..\in.pasn");
                 //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
-                //files.Add(@"..\..\tests\test-goto1.pasn");
+                files.Add(@"..\..\tests\test-graph1.pasn");
                 //files.Add(@"..\..\tests\test-exprgenkill-3.cn");
                 //files.Add(@"..\..\tests\test-exprgenkill-5.cn");
 
@@ -236,18 +252,23 @@ namespace SimpleCompiler
 
                         Console.WriteLine("Syntax tree ready");
 
-                        Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
-                        codeGenerator.Visit(root);
+                        //Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+                        //codeGenerator.Visit(root);
 
-                        var code = codeGenerator.CreateCode();
+                        //var code = codeGenerator.CreateCode();
 
-                        ActiveVarsOptimization AVO = new ActiveVarsOptimization(code);
-                        AVO.Optimize();
+                        //ActiveVarsOptimization AVO = new ActiveVarsOptimization(code);
+                        //AVO.Optimize();
 
                         //DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code/*, 1*/);
                         //deadCodeElimination.Optimize();
 
-                        Console.WriteLine(code);
+                        //Console.WriteLine(code);
+
+                        if (IsGraphGiven(root))
+                            Console.WriteLine("Это приводимый граф");
+                        else
+                            Console.WriteLine("Это неприводимый граф");
 
                         //TestDomIterativeAlogrithm(root);
                         //TestReachableExpressions(root);

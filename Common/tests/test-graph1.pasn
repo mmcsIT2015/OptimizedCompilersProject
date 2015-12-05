@@ -1,0 +1,12 @@
+begin
+	var a : integer := 3;
+	var b : boolean;
+	var c : boolean;
+	var d : integer;
+	if (b) then goto label2;
+label3:	
+	c := 4;
+label2:	
+	d := 5;
+	goto label3
+end.
