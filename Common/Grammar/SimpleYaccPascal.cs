@@ -4,7 +4,7 @@
 
 // GPPG version 1.3.6
 // Machine:  DESKTOP-9C48I3Q
-// DateTime: 02.12.2015 20:23:56
+// DateTime: 05.12.2015 11:07:53
 // UserName: alexey
 // Input file <SimpleYacc_Pascal.y>
 
@@ -28,7 +28,8 @@ public enum Tokens {
     COLON=31,INUM=32,RNUM=33,ID=34,STRING_L=35,TYPE=36};
 
 public struct ValueType
-{ 			public double dVal; 
+{ 			
+			public double dVal; 
 			public int iVal; 
 			public string sVal; 
 			public Node nVal;
@@ -289,10 +290,22 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
 		}
         break;
       case 20: // decl_assign -> VAR, ident, COLON, TYPE, ASSIGN, expr
-{ CurrentSemanticValue.stVal = new VarDeclNode(ValueStack[ValueStack.Depth-3].typeVal, new AssignNode(ValueStack[ValueStack.Depth-5].eVal as IdNode, ValueStack[ValueStack.Depth-1].eVal)); }
+{ 
+			List<VarDeclNode> ls = new List<VarDeclNode>();
+			ls.Add(new VarDeclNode(new AssignNode(ValueStack[ValueStack.Depth-5].eVal as IdNode, ValueStack[ValueStack.Depth-1].eVal)));
+			var listNode = new VarDeclListNode(ValueStack[ValueStack.Depth-3].typeVal); 
+			listNode.VariablesList = ls;
+			CurrentSemanticValue.stVal = listNode;
+		}
         break;
       case 21: // decl_assign -> VAR, ident, COLON, TYPE
-{ CurrentSemanticValue.stVal = new VarDeclNode(ValueStack[ValueStack.Depth-1].typeVal, ValueStack[ValueStack.Depth-3].eVal as IdNode); }
+{ 
+			var ls = new List<VarDeclNode>();
+			ls.Add(new VarDeclNode(ValueStack[ValueStack.Depth-3].eVal as IdNode));
+			var listNode = new VarDeclListNode(ValueStack[ValueStack.Depth-1].typeVal); 
+			listNode.VariablesList = ls;
+			CurrentSemanticValue.stVal = listNode;
+		}
         break;
       case 22: // ident -> ID
 { CurrentSemanticValue.eVal = new IdNode(ValueStack[ValueStack.Depth-1].sVal); }

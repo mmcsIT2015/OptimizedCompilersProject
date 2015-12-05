@@ -60,6 +60,17 @@ namespace iCompiler
             return SimpleVarType.Int;
         }
 
+        private void CheckDefinitionVariable(string variable)
+        {
+            if (variable[0] != '@')
+            {
+                if (!mTableOfNames.ContainsKey(variable))
+                {
+                    throw new SemanticException("Используется необъявленная переменная: " + variable);
+                }
+            }
+        }
+
         private void CompleteTableOfNames()
         {
             // тип переменных в услови СonditionalJump - bool
@@ -80,15 +91,11 @@ namespace iCompiler
                 if (line is Line.UnaryExpr)
                 {
                     var unary = line as Line.UnaryExpr;
-                    if (unary.left[0] != '@')
-                    {
-                        if (!mTableOfNames.ContainsKey(unary.left))
-                        {
-                            throw new SemanticException("Используется необъявленная переменная: " + unary.left);
-                        }
-                    }
+                    CheckDefinitionVariable(unary.left);
 
-                    if (unary.ParamIsNumber()) continue;
+                    if (unary.ArgIsNumber()) continue;
+                    else CheckDefinitionVariable(unary.argument);
+
                     if (mTableOfNames.ContainsKey(unary.left)) continue;
 
                     if (unary.IsBoolExpr()) {
@@ -102,15 +109,11 @@ namespace iCompiler
                 else if (line is Line.Identity)
                 {
                     var identity = line as Line.Identity;
-                    if (identity.left[0] != '@')
-                    {
-                        if (!mTableOfNames.ContainsKey(identity.left))
-                        {
-                            throw new SemanticException("Используется необъявленная переменная: " + identity.left);
-                        }
-                    }
+                    CheckDefinitionVariable(identity.left);
 
                     if (identity.RightIsNumber()) continue;
+                    else CheckDefinitionVariable(identity.right);
+
                     if (mTableOfNames.ContainsKey(identity.left)) continue;
 
                     mTableOfNames.Add(identity.left, mTableOfNames[identity.right]);
@@ -118,13 +121,9 @@ namespace iCompiler
                 else if (line is Line.BinaryExpr)
                 {
                     var expr = line as Line.BinaryExpr;
-                    if (expr.left[0] != '@')
-                    {
-                        if (!mTableOfNames.ContainsKey(expr.left))
-                        {
-                            throw new SemanticException("Используется необъявленная переменная: " + expr.left);
-                        }
-                    }
+                    CheckDefinitionVariable(expr.left);
+                    if (!expr.FirstParamIsNumber()) CheckDefinitionVariable(expr.first);
+                    if (!expr.SecondParamIsNumber()) CheckDefinitionVariable(expr.second);
 
                     if (mTableOfNames.ContainsKey(expr.left)) continue;
 
@@ -203,7 +202,7 @@ namespace iCompiler
                 else if (line.Is<Line.UnaryExpr>())
                 {
                     var lineUnExpr = line as Line.UnaryExpr;
-                    if (lineUnExpr.ParamIsNumber() || leftIDs.Contains(lineUnExpr.argument)) //если операнд число или переменная, определенная ранее
+                    if (lineUnExpr.ArgIsNumber() || leftIDs.Contains(lineUnExpr.argument)) //если операнд число или переменная, определенная ранее
                         leftIDs.Add(lineUnExpr.left);
                     else
                         throw new SemanticException("Переменная в правой части UnaryExpr не определена. Выражение " + lineUnExpr.ToString());
@@ -273,21 +272,10 @@ namespace iCompiler
             if (node.Expr is UnaryNode)
             {
                 var unary = node.Expr as UnaryNode;
-                if (unary.Expr is IntNumNode)
+                if (unary.Expr is IntNumNode || unary.Expr is FloatNumNode || unary.Expr is IdNode)
                 {
-                    mLines.Add(new Line.UnaryExpr(variable, unary.Op, (unary.Expr as IntNumNode).Num.ToString()));
-                    CheckRealLabel(node);
-                    return;
-                }
-                else if (unary.Expr is FloatNumNode)
-                {
-                    mLines.Add(new Line.UnaryExpr(variable, unary.Op, (unary.Expr as FloatNumNode).Num.ToString()));
-                    CheckRealLabel(node);
-                    return;
-                }
-                else if (unary.Expr is IdNode)
-                {
-                    mLines.Add(new Line.UnaryExpr(variable, unary.Op, (unary.Expr as IdNode).Name));
+                    unary.Expr.Accept(this);
+                    mLines.Add(new Line.UnaryExpr(variable, unary.Op, mStack.Pop()));
                     CheckRealLabel(node);
                     return;
                 }
@@ -319,7 +307,7 @@ namespace iCompiler
             throw new NotImplementedException();
         }
 
-        public void Visit(VarDeclNode node)
+        public void Visit(VarDeclListNode node)
         {
             if (node.HasLabel())
             {
@@ -327,20 +315,25 @@ namespace iCompiler
                 throw new SemanticException(desc);
             }
 
+            foreach (var item in node.VariablesList)
+            {
+                item.Accept(this);
+                mTableOfNames.Add(item.GetID().Name, node.VariablesType);
+            }
+        }
+
+        public void Visit(VarDeclNode node)
+        {
             if (mTableOfNames.ContainsKey(node.GetID().Name))
             {
                 string desc = "Повторное объявление переменной: " + node.GetID().Name + "!";
                 throw new SemanticException(desc);
             }
 
-            if (node.IsAssigned)
+            if (node.IsAssigned())
             {
                 Visit(node.ValueAssignment);
             }
-
-            //REWORK!!! CHANGES IN GRAMMAR(BREAKING!!!)
-            //LOOK jknightmmcs LAST COMMIT
-            //mTableOfNames.Add(node.GetID().Name, node.VariableType);
         }
 
         public void Visit(GotoNode node)

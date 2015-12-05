@@ -66,67 +66,44 @@ namespace ProgramTree
         }
     }
 
-		public class VarDeclListNode : StatementNode
-		{
-				public List<VarDeclNode> VariablesList { get; set; }
-				public SimpleVarType VariablesType { get; set; }
-				
-				public VarDeclListNode(SimpleVarType type)
-				{
-					VariablesType = type;
-					VariablesList = new List<VarDeclNode>();
-				}
-		}
+    public class VarDeclListNode : StatementNode
+    {
+        public List<VarDeclNode> VariablesList { get; set; }
+        public SimpleVarType VariablesType { get; set; }
+
+        public VarDeclListNode(SimpleVarType type)
+        {
+            VariablesType = type;
+            VariablesList = new List<VarDeclNode>();
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
 		
     public class VarDeclNode : StatementNode
     {
-        public AssignNode ValueAssignment { get; set; }        
-        public IdNode Id { get; set; }
-        public bool IsAssigned { get; private set; }
-
-        public IdNode GetID()
-        {
-            if (IsAssigned)
-                return ValueAssignment.Id;
-            else
-                return Id;
-        }
+        public AssignNode ValueAssignment { get; set; }
 
         public VarDeclNode(AssignNode Assignment)
         {
-            Id = null;
-            ValueAssignment = Assignment;            
-            IsAssigned = true;
+            ValueAssignment = Assignment;
         }
 
         public VarDeclNode(IdNode ident)
         {
-            ValueAssignment = null;
-            Id = ident;            
-            IsAssigned = false;
-        }
-        /// <summary>
-        /// TODO: PASCAL GRAMMAR: REWORK!!! DEPRECATED!!
-        /// </summary>
-        /// <param name="var"></param>
-        /// <param name="Assignment"></param>
-        public VarDeclNode(SimpleVarType var, AssignNode Assignment)
-        {
-            Id = null;
-            ValueAssignment = Assignment;
-            IsAssigned = true;
+            ValueAssignment = new AssignNode(ident, null);
         }
 
-        /// <summary>
-        /// TODO: PASCAL GRAMMAR: REWORK!!! DEPRECATED!!
-        /// </summary>
-        /// <param name="var"></param>
-        /// <param name="Assignment"></param>
-        public VarDeclNode(SimpleVarType var, IdNode ident)
+        public IdNode GetID()
         {
-            ValueAssignment = null;
-            Id = ident;
-            IsAssigned = false;
+            return ValueAssignment.Id;
+        }
+
+        public bool IsAssigned() {
+            return ValueAssignment.Expr != null;
         }
 
         public override void Accept(IVisitor visitor)
