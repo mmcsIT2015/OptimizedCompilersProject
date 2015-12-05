@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ProgramTree;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace iCompiler.Line
 {
@@ -21,7 +22,10 @@ namespace iCompiler.Line
         public virtual bool RightIsNumber() // является параметр правой части числом
         {
             double temp;
-            return double.TryParse(right, out temp);
+            var style = System.Globalization.NumberStyles.Any;
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = ".";
+            return double.TryParse(right, style, nfi, out temp);
         }
 
         public override string ToString()
