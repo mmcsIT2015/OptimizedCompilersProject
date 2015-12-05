@@ -25,7 +25,7 @@ namespace iCompiler
     public class DeadCodeElimination : IOptimizer
     {
         private int mBlockNumber;
-
+        private IEnumerable<string> Out = new List<string>();
         /// <summary>
         ///
         /// </summary>
@@ -42,7 +42,7 @@ namespace iCompiler
             var block = threeAddrCode.blocks[blockNumber - 1]; //берем блок из листа блоков трехадресного кода
             var dotLine = block;
             int listSize = dotLine.Count; //количество строк в блоке
-            Dictionary<string, bool> idLife = new Dictionary<string, bool>(); //ассоциативный массив "переменная - живучесть"
+            Dictionary<string, bool> idLife = new Dictionary<string, bool>();//ассоциативный массив "переменная - живучесть"
             List<int> removeIndexList = new List<int>(); //лист удаляемых номеров строк кода ББл
 
 
@@ -54,6 +54,9 @@ namespace iCompiler
                 if (dotLine[i].Is<Line.Identity>())
                 {
                     var temp = dotLine[i] as Line.Identity;
+                    if (Out.Count<string>() > 0 && !Out.Contains<string>(temp.ToString()))
+                        removeIndexList.Add(i);
+
                     if (temp.left == temp.right)
                     {
                         //idLife[line.left] = false;//переменная в левой части "мертвая"
@@ -82,6 +85,9 @@ namespace iCompiler
                 {
                     var line = dotLine[i] as Line.BinaryExpr;
 
+                    if (Out.Count<string>() > 0 && !Out.Contains<string>(line.ToString()))
+                        removeIndexList.Add(i);
+
                     idLife[line.first] = true; //первый операнд правой части "живой"
                     idLife[line.second] = true; //второй операнд правой части "живой"
 
@@ -101,6 +107,9 @@ namespace iCompiler
                 else if (dotLine[i].Is<Line.UnaryExpr>())
                 {
                     var line = dotLine[i] as Line.UnaryExpr;
+
+                    if (Out.Count<string>() > 0 && !Out.Contains<string>(line.ToString()))
+                        removeIndexList.Add(i);
 
                     if (line.left != line.argument)
                         idLife[line.argument] = true;
@@ -132,17 +141,42 @@ namespace iCompiler
 
         public override void Optimize(params Object[] values)
         {
-            if (mBlockNumber < 0)
+            Dictionary<Block, IEnumerable<string>> listOut = new Dictionary<Block, IEnumerable<string>>();
+            if (values.Count() > 0 && values[0] is Dictionary<Block, IEnumerable<string>>)
             {
-                for (int i = 0; i < Code.blocks.Count; ++i)
+                listOut = values[0] as Dictionary<Block, IEnumerable<string>>;
+                if (listOut.Count == Code.blocks.Count)
                 {
-                    Code.blocks[i] = DCEAlgorithm(Code, i + 1);
+                    if (mBlockNumber < 0)
+                    {
+                        for (int i = 0; i < Code.blocks.Count; ++i)
+                        {
+                            this.Out = listOut[Code.blocks[i]];
+                            Code.blocks[i] = DCEAlgorithm(Code, i + 1);
+                        }
+                    }
+                    else
+                    {
+                        Debug.Assert(mBlockNumber >= 1 && mBlockNumber <= Code.blocks.Count);
+                        this.Out = listOut[Code.blocks[mBlockNumber - 1]];
+                        Code.blocks[mBlockNumber - 1] = DCEAlgorithm(Code, mBlockNumber);
+                    }
                 }
             }
             else
             {
-                Debug.Assert(mBlockNumber >= 1 && mBlockNumber <= Code.blocks.Count);
-                Code.blocks[mBlockNumber - 1] = DCEAlgorithm(Code, mBlockNumber);
+                if (mBlockNumber < 0)
+                {
+                    for (int i = 0; i < Code.blocks.Count; ++i)
+                    {
+                        Code.blocks[i] = DCEAlgorithm(Code, i + 1);
+                    }
+                }
+                else
+                {
+                    Debug.Assert(mBlockNumber >= 1 && mBlockNumber <= Code.blocks.Count);
+                    Code.blocks[mBlockNumber - 1] = DCEAlgorithm(Code, mBlockNumber);
+                }
             }
         }
     }

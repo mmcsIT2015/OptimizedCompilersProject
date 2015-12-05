@@ -100,6 +100,7 @@
     <Compile Include="IVisitor.cs" />
     <Compile Include="Code\Line\Line.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Optimization\ActiveVarsOptimization.cs" />
     <Compile Include="Optimization\CommonSubexpressionsOptimization.cs" />
     <Compile Include="Optimization\ConstantFolding.cs" />
     <Compile Include="Optimization\DeadCodeElimination.cs" />

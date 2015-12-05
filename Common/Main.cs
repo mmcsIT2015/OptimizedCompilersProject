@@ -218,15 +218,15 @@ namespace SimpleCompiler
             {
                 List<string> files = new List<string>();
                 //files.Add(@"..\..\tests\test-validation3.cn");
-                //files.Add(@"..\..\tests\test-2.cn");
+                files.Add(@"..\..\tests\test-activevars1.cn");
                 //files.Add(@"..\..\tests\test-realnum1.pasn");
-                //files.Add(@"..\..\tests\test-dce3.cn");
+                //files.Add(@"..\..\tests\test-dce2.cn");
                 //files.Add(@"..\..\in.pasn");
                 //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
                 //files.Add(@"..\..\tests\test-goto1.pasn");
                 //files.Add(@"..\..\tests\test-exprgenkill-3.cn");
-                files.Add(@"..\..\tests\test-exprgenkill-5.cn");
+                //files.Add(@"..\..\tests\test-exprgenkill-5.cn");
 
                 foreach (var file in files)
                 {
@@ -239,14 +239,17 @@ namespace SimpleCompiler
                         Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
                         codeGenerator.Visit(root);
 
-                        //var code = codeGenerator.CreateCode();
+                        var code = codeGenerator.CreateCode();
+
+                        ActiveVarsOptimization AVO = new ActiveVarsOptimization(code);
+                        AVO.Optimize();
 
                         //DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code/*, 1*/);
                         //deadCodeElimination.Optimize();
 
-                        //Console.WriteLine(code);
+                        Console.WriteLine(code);
 
-                        TestDomIterativeAlogrithm(root);
+                        //TestDomIterativeAlogrithm(root);
                         //TestReachableExpressions(root);
                     }
                     catch (FileNotFoundException)
