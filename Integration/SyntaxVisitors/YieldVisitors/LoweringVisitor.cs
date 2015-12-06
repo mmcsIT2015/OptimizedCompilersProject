@@ -70,10 +70,6 @@ namespace SyntaxVisitors
             ProcessNode(ifn.then_body);
             ProcessNode(ifn.else_body);
 
-            var b = HasStatementVisitor<yield_node>.Has(ifn);
-            if (!b)
-                return;
-
             var gtAfter = goto_statement.New;
             var lbAfter = new labeled_statement(gtAfter.label);
 
@@ -107,10 +103,6 @@ namespace SyntaxVisitors
         {
             ProcessNode(rn.statements);
 
-            var b = HasStatementVisitor<yield_node>.Has(rn);
-            if (!b)
-                return;
-
             var gtContinue = goto_statement.New;
             var gtBreak = goto_statement.New;
 
@@ -133,10 +125,6 @@ namespace SyntaxVisitors
         {
             ProcessNode(wn.statements);
 
-            var b = HasStatementVisitor<yield_node>.Has(wn);
-            if (!b)
-                return;
-
             var gt1 = goto_statement.New;
             var gt2 = goto_statement.New;
 
@@ -155,11 +143,6 @@ namespace SyntaxVisitors
         public override void visit(for_node fn)
         {
             ProcessNode(fn.statements);
-
-            Console.WriteLine("!!!");
-            //var b = HasStatementVisitor<yield_node>.Has(fn);
-            //if (!b)
-            //    return;
 
             var gt1 = goto_statement.New;
             var gt2 = goto_statement.New;

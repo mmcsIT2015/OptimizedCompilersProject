@@ -40,13 +40,13 @@ namespace ParsePABC
 
             sn.visit(new LoweringVisitor());
 
-            Console.WriteLine("\nafter:\n---");
+            Console.WriteLine("\nlowering:\n---");
             sn.visit(new SimplePrettyPrinterVisitor());
 
             var generator = new Gen3AddrCodeVisitor();
             sn.visit(generator);
 
-            Console.WriteLine("code:\n---");
+            Console.WriteLine("\ncode:\n---");
             Console.WriteLine(generator.CreateCode());
         }
     }

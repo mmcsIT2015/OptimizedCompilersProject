@@ -1,6 +1,8 @@
 var 
 	i, j: integer;
 begin
-	i := j;
-	j := 7 - t * 2;
+	if 5+6>0 then
+	begin
+	j := t * 2
+	end
 end.

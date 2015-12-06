@@ -54,6 +54,11 @@ namespace iCompiler.Line
 
     public class EmptyLine : Line
     {
+        public EmptyLine(string label = "")
+        {
+            this.label = label;
+        }
+
         public override string ToString()
         {
             return "<empty statement>\n";
