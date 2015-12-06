@@ -46,7 +46,7 @@ namespace iCompiler
         /// <summary>
         /// Ребра - выходы из цикла
         /// </summary>
-        public List<DomGraph.BlocksPair<T>> OUTS { get; set; }
+        public List<DomGraph.ValPair<T>> OUTS { get; set; }
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ namespace iCompiler
     /// <typeparam name="T">Тип вершин</typeparam>
     public class CycleUsual<T>: Cycle<T>
     {
-        public CycleUsual(T n, List<T> data, List<DomGraph.BlocksPair<T>> outs, T d)
+        public CycleUsual(T n, List<T> data, List<DomGraph.ValPair<T>> outs, T d)
         {
             this.N = n;
             this.DATA = data;
@@ -75,7 +75,7 @@ namespace iCompiler
     /// <typeparam name="T">Тип вершин</typeparam>
     public class CycleSpecialCase<T> : Cycle<T>
     {
-        public CycleSpecialCase(T n, List<T> data, List<DomGraph.BlocksPair<T>> outs, T d1, T d2)
+        public CycleSpecialCase(T n, List<T> data, List<DomGraph.ValPair<T>> outs, T d1, T d2)
         {
             this.N = n;
             this.DATA = data;
@@ -120,23 +120,23 @@ namespace iCompiler
         /// <param name="graph">CFG</param>
         /// <param name="reverseEdges">Список обратных дуг</param>
         /// <param name="domTree">Дерево доминирования</param>
-        public AllCycles(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.BlocksPair<T>> reverseEdges, IDominatorRelation<T> domTree)
+        public AllCycles(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.ValPair<T>> reverseEdges, IDominatorRelation<T> domTree)
         {
             InitCycles(blocks, graph, reverseEdges, domTree);
         }
 
-        protected virtual void InitCycles(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.BlocksPair<T>> reverseEdges, IDominatorRelation<T> domTree)
+        protected virtual void InitCycles(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.ValPair<T>> reverseEdges, IDominatorRelation<T> domTree)
         {
             cycles = new List<Cycle<T>>();
             foreach (T n in blocks)
             {
-                foreach (T d in reverseEdges.FindAll(pair => pair.blockEnd.CompareTo(n) == 0).Select(pair => pair.blockBegin))
+                foreach (T d in reverseEdges.FindAll(pair => pair.valEnd.CompareTo(n) == 0).Select(pair => pair.valBegin))
                 {
                     Dictionary<T, bool> mark = new Dictionary<T, bool>();
                     foreach (T bl in blocks)
                         mark[bl] = false;
                     List<T> verts = FindVerts(n, d, d, mark, graph, domTree);
-                    List<DomGraph.BlocksPair<T>> outs = FindOuts(n, graph, domTree, verts);
+                    List<DomGraph.ValPair<T>> outs = FindOuts(n, graph, domTree, verts);
                     cycles.Add(new CycleUsual<T>(n, verts, outs, d));
                 }
             }
@@ -164,11 +164,11 @@ namespace iCompiler
             return verts;
         }
 
-        protected static List<DomGraph.BlocksPair<T>> FindOuts(T n, IGraph<T> graph, IDominatorRelation<T> domTree, List<T> verts)
+        protected static List<DomGraph.ValPair<T>> FindOuts(T n, IGraph<T> graph, IDominatorRelation<T> domTree, List<T> verts)
         {
-            return verts.Select(v => graph.OutEdges(v).Select(v1 => new DomGraph.BlocksPair<T>(v, v1)))
-                .Aggregate(new List<DomGraph.BlocksPair<T>>(), (l, e) => { l.AddRange(e); return l; })
-                .Where(e => verts.All(u => e.blockEnd.CompareTo(u) != 0) && domTree.UpperDominators(n).All(u => e.blockEnd.CompareTo(u) != 0))
+            return verts.Select(v => graph.OutEdges(v).Select(v1 => new DomGraph.ValPair<T>(v, v1)))
+                .Aggregate(new List<DomGraph.ValPair<T>>(), (l, e) => { l.AddRange(e); return l; })
+                .Where(e => verts.All(u => e.valEnd.CompareTo(u) != 0) && domTree.UpperDominators(n).All(u => e.valEnd.CompareTo(u) != 0))
                 .ToList();
         }
     }
@@ -189,14 +189,14 @@ namespace iCompiler
         /// <param name="graph">CFG</param>
         /// <param name="reverseEdges">Список обратных дуг</param>
         /// <param name="domTree">Дерево доминирования</param>
-        public AllCyclesWithSpecialCase(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.BlocksPair<T>> reverseEdges, IDominatorRelation<T> domTree)
+        public AllCyclesWithSpecialCase(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.ValPair<T>> reverseEdges, IDominatorRelation<T> domTree)
             : base(blocks, graph, reverseEdges, domTree) { }
-        protected override void InitCycles(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.BlocksPair<T>> reverseEdges, IDominatorRelation<T> domTree)
+        protected override void InitCycles(IEnumerable<T> blocks, IGraph<T> graph, List<DomGraph.ValPair<T>> reverseEdges, IDominatorRelation<T> domTree)
         {
             cycles = new List<Cycle<T>>();
             foreach (T n in blocks)
             {
-                List<T> Ds = reverseEdges.FindAll(pair => pair.blockEnd.CompareTo(n) == 0).Select(pair => pair.blockBegin).ToList();
+                List<T> Ds = reverseEdges.FindAll(pair => pair.valEnd.CompareTo(n) == 0).Select(pair => pair.valBegin).ToList();
                 List<Cycle<T>> grouped = GroupingInCycles(n, Ds, domTree);
                 for (int i = 0; i < grouped.Count; i++ )
                 {

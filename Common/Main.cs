@@ -76,7 +76,7 @@ namespace SimpleCompiler
             }
 
             Console.WriteLine("\nReversed Edges");
-            List<DomGraph.BlocksPair<Block>> listEdges = DomGraph.ReverseEdges(blockDoms, code.graph) as List<DomGraph.BlocksPair<Block>>;
+            List<DomGraph.ValPair<Block>> listEdges = DomGraph.ReverseEdges(blockDoms, code.graph) as List<DomGraph.ValPair<Block>>;
 
             if (listEdges.Count == 0)
             {
@@ -85,8 +85,8 @@ namespace SimpleCompiler
             }
 
             for (int i = 0; i < listEdges.Count; ++i)
-                Console.WriteLine("Reversed edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].blockBegin) + 1,
-                    code.blocks.IndexOf(listEdges[i].blockEnd) + 1);
+                Console.WriteLine("Reversed edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].valBegin) + 1,
+                    code.blocks.IndexOf(listEdges[i].valEnd) + 1);
         }
 
         public static void TestExpressionsGenKill(ProgramTree.BlockNode root)
@@ -160,7 +160,8 @@ namespace SimpleCompiler
             Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.GenerateDomOut(code);
             ControlFlowGraph CFG = new ControlFlowGraph(code.blocks);
             SpanningTreeWithoutRecursive<Block> spanningTree = new SpanningTreeWithoutRecursive<Block>(code.blocks, CFG);
-            return spanningTree.IsGraphGiven(blockDoms);
+            GraphEdges<Block> graphEdges = new GraphEdges<Block>(spanningTree, blockDoms);
+            return graphEdges.IsGraphGiven();
 
         }
 

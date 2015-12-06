@@ -85,7 +85,7 @@ namespace iCompiler
             protected string exampleTitle;
             protected int[] blocks;
             protected TestGraph graph;
-            protected List<DomGraph.BlocksPair<int>> reverseEdges;
+            protected List<DomGraph.ValPair<int>> reverseEdges;
             protected TestDominatorTree domTree;
             public void TestAllCycles()
             {
@@ -137,8 +137,8 @@ namespace iCompiler
                 foreach (var i in cycle.DATA)
                     Console.Write(i + " ");
                 Console.Write("OUTS:");
-                foreach (DomGraph.BlocksPair<int> p in cycle.OUTS)
-                    Console.Write("(" + p.blockBegin + ">" + p.blockEnd + ") ");
+                foreach (DomGraph.ValPair<int> p in cycle.OUTS)
+                    Console.Write("(" + p.valBegin + ">" + p.valEnd + ") ");
                 if (cycle is CycleUsual<int>)
                 {
                     CycleUsual<int> c = cycle as CycleUsual<int>;
@@ -195,12 +195,12 @@ namespace iCompiler
                 Data[9].Add(1);
                 Data[10].Add(7);
                 graph = new TestGraph(Data);
-                reverseEdges = new List<DomGraph.BlocksPair<int>>();
-                reverseEdges.Add(new DomGraph.BlocksPair<int>(9, 1));
-                reverseEdges.Add(new DomGraph.BlocksPair<int>(4, 3));
-                reverseEdges.Add(new DomGraph.BlocksPair<int>(8, 3));
-                reverseEdges.Add(new DomGraph.BlocksPair<int>(7, 4));
-                reverseEdges.Add(new DomGraph.BlocksPair<int>(10, 7));
+                reverseEdges = new List<DomGraph.ValPair<int>>();
+                reverseEdges.Add(new DomGraph.ValPair<int>(9, 1));
+                reverseEdges.Add(new DomGraph.ValPair<int>(4, 3));
+                reverseEdges.Add(new DomGraph.ValPair<int>(8, 3));
+                reverseEdges.Add(new DomGraph.ValPair<int>(7, 4));
+                reverseEdges.Add(new DomGraph.ValPair<int>(10, 7));
                 Dictionary<int, List<int>> DataDom = new Dictionary<int, List<int>>();
                 for (int i = 1; i <= 10; i++)
                     DataDom[i] = new List<int>();
@@ -235,9 +235,9 @@ namespace iCompiler
                 Data[3].Add(1);
                 Data[4].Add(1);
                 graph = new TestGraph(Data);
-                reverseEdges = new List<DomGraph.BlocksPair<int>>();
-                reverseEdges.Add(new DomGraph.BlocksPair<int>(3, 1));
-                reverseEdges.Add(new DomGraph.BlocksPair<int>(4, 1));
+                reverseEdges = new List<DomGraph.ValPair<int>>();
+                reverseEdges.Add(new DomGraph.ValPair<int>(3, 1));
+                reverseEdges.Add(new DomGraph.ValPair<int>(4, 1));
                 Dictionary<int, List<int>> DataDom = new Dictionary<int, List<int>>();
                 for (int i = 1; i <= 4; i++)
                     DataDom[i] = new List<int>();

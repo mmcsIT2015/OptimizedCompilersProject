@@ -6,14 +6,14 @@ namespace iCompiler
 
     public static class DomGraph
     {
-        public struct BlocksPair<T>
+        public struct ValPair<T>
         {
-            public T blockBegin;
-            public T blockEnd;
-            public BlocksPair(T begin, T end)
+            public T valBegin;
+            public T valEnd;
+            public ValPair(T begin, T end)
             {
-                blockBegin = begin;
-                blockEnd = end;
+                valBegin = begin;
+                valEnd = end;
             }
         }
        
@@ -67,9 +67,9 @@ namespace iCompiler
         /// <param name="Dom"></param>
         /// <param name="CFG"></param>
         /// <returns></returns>
-        public static IEnumerable<BlocksPair<Block>> ReverseEdges(Dictionary<Block, IEnumerable<Block>> Dom, ControlFlowGraph CFG)
+        public static IEnumerable<ValPair<Block>> ReverseEdges(Dictionary<Block, IEnumerable<Block>> Dom, ControlFlowGraph CFG)
         {
-            List<BlocksPair<Block>> listEdges = new List<BlocksPair<Block>>();
+            List<ValPair<Block>> listEdges = new List<ValPair<Block>>();
 /*            List<Block> inputCFG = new List<Block>();
 
             foreach (Block block in Dom.Keys)
@@ -81,7 +81,7 @@ namespace iCompiler
                 foreach (Block b in Dom[a])
                     //if a -> b
                     if ((CFG.OutEdges(a) as List<Block>).Contains(b))
-                        listEdges.Add(new BlocksPair<Block>(a, b));
+                        listEdges.Add(new ValPair<Block>(a, b));
 
             return listEdges;
 

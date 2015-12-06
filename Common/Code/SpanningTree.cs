@@ -96,56 +96,5 @@ namespace iCompiler
                 root = parents.Pop();
             }
         }
-
-        private IEnumerable<DomGraph.BlocksPair<T>> RetreatingEdges()
-        {
-            List<DomGraph.BlocksPair<T>> listRetreat = new List<DomGraph.BlocksPair<T>>();
-
-            foreach (T Tkey in Data.Keys)
-                for (int i = 0; i < Data[Tkey].Count; ++i)
-                    if (Numbers[Tkey] > Numbers[Data[Tkey][i]])
-                        listRetreat.Add(new DomGraph.BlocksPair<T>(Tkey, Data[Tkey][i]));
-
-            return listRetreat;
-
-        }
-
-        private IEnumerable<DomGraph.BlocksPair<Block>> ReversedEdges(Dictionary<Block, IEnumerable<Block>> Dom)
-        {
-            List<DomGraph.BlocksPair<Block>> listEdges = new List<DomGraph.BlocksPair<Block>>();
-            Dictionary<Block, List<Block>> DataBlock;
-            if (Data is Dictionary<Block, List<Block>>)
-            {
-                DataBlock = Data as Dictionary<Block, List<Block>>;
-
-                foreach (Block a in Dom.Keys)
-                    foreach (Block b in Dom[a])
-                        //if a -> b
-                        //if ((CFG.OutEdges(a) as List<Block>).Contains(b))
-                        if (DataBlock[a].Contains(b))
-                            listEdges.Add(new DomGraph.BlocksPair<Block>(a, b));
-            }
-
-            return listEdges;
-
-        }
-
-        public bool IsGraphGiven(Dictionary<Block, IEnumerable<Block>> Dom)
-        {
-            List<DomGraph.BlocksPair<Block>> listReversed = ReversedEdges(Dom) as List<DomGraph.BlocksPair<Block>>;
-            List<DomGraph.BlocksPair<Block>> listRetreat = RetreatingEdges() as List<DomGraph.BlocksPair<Block>>;
-
-            if (listReversed.Count == listRetreat.Count)
-            {
-                for (int i = 0; i < listReversed.Count; ++i)
-                    if (!(listReversed[i].blockBegin == listRetreat[i].blockBegin && listReversed[i].blockEnd == listRetreat[i].blockEnd))
-                        return false;
-            }
-            else
-                return false;
-
-            return true;
-
-        }
     }
 }
