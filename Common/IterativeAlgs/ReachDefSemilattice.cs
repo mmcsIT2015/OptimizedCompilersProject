@@ -5,9 +5,9 @@ using System.Text;
 
 namespace iCompiler
 {
-    class ReachDefSemilattice : UnionSemilattice<ThreeAddrCode.Index>
+    class ReachableDefSemilattice : UnionSemilattice<ThreeAddrCode.Index>
     {
-        public ReachDefSemilattice(ThreeAddrCode code)
+        public ReachableDefSemilattice(ThreeAddrCode code)
         {
 
         }

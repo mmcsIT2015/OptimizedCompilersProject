@@ -5,7 +5,9 @@ using System.Text;
 
 namespace iCompiler
 {
-    class InOutData<AData>
+    using ExprWrapper = ReachableExprsGenerator.ExpressionWrapper;
+
+    public class InOutData<AData>
     {
         public Dictionary<Block, IEnumerable<AData>> In;
         public Dictionary<Block, IEnumerable<AData>> Out;
@@ -23,7 +25,7 @@ namespace iCompiler
         // Получить достигающие определения для блоков
         public static InOutData<ThreeAddrCode.Index> GetReachDefs(ThreeAddrCode code)
         {
-            var semilattice = new ReachDefSemilattice(code);
+            var semilattice = new ReachableDefSemilattice(code);
             var funcs = TransferFuncFactory.TransferFuncsForReachDef(code);
             var alg = new IterativeAlgo<ThreeAddrCode.Index, TransferFunction<ThreeAddrCode.Index>>(semilattice, funcs);
 
@@ -50,6 +52,23 @@ namespace iCompiler
             return dst;
         }
 
+        public static InOutData<Line.Expr> BuildReachableExpressions(ThreeAddrCode code)
+        {
+            var semilattice = new ReachableExprSemilattice(code);
+            var funcs = ReachableExprsGenerator.BuildTransferFuncForReachableExprs(code);
+            var alg = new IterativeAlgo<ExprWrapper, TransferFunction<ExprWrapper>>(semilattice, funcs);
 
+            alg.Run(code);
+
+            var result = new InOutData<Line.Expr>();
+
+            foreach (Block block in code.blocks)
+            {
+                result.In[block] = ReachableExprsGenerator.FlushExprs(alg.In[block]);
+                result.Out[block] = ReachableExprsGenerator.FlushExprs(alg.Out[block]);
+            }
+
+            return result;
+        }
     }
 }

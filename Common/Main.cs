@@ -11,7 +11,7 @@ namespace SimpleCompiler
     {        
         public static void TestIterativeAlgo(ThreeAddrCode code) 
         {
-            var semilattice = new ReachDefSemilattice(code);
+            var semilattice = new ReachableDefSemilattice(code);
             var funcs = TransferFuncFactory.TransferFuncsForReachDef(code);
             var alg = new IterativeAlgo<ThreeAddrCode.Index, TransferFunction<ThreeAddrCode.Index>>(semilattice, funcs);
 
@@ -98,7 +98,7 @@ namespace SimpleCompiler
 
             WriteBlocksToConsole(code);
 
-            var exprGenKill = ReachableExpressionsGenerator.BuildReachableExpressionsGenKill(code);
+            var exprGenKill = ReachableExprsGenerator.BuildReachableExpressionsGenKill(code);
             foreach (Block block in code.blocks)
             {
                 Console.WriteLine();
@@ -127,7 +127,7 @@ namespace SimpleCompiler
 
             WriteBlocksToConsole(code);
 
-            InOutData<Expr> reachableExpressions = ReachableExpressionsGenerator.BuildReachableExpressions(code);
+            InOutData<Expr> reachableExpressions = DataFlowAnalysis.BuildReachableExpressions(code);
 
             foreach (Block block in code.blocks)
             {
