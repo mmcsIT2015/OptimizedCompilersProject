@@ -80,7 +80,7 @@ namespace iCompiler
         /// <summary>
         /// Фабрика для примеров
         /// </summary>
-        public abstract class AllCyclesTestExampleAbstractFactory
+        public abstract class AllCyclesTestExampleAbstract
         {
             protected string exampleTitle;
             protected int[] blocks;
@@ -91,36 +91,63 @@ namespace iCompiler
             {
                 AllCycles<int> allCycles = new AllCycles<int>(blocks, graph, reverseEdges, domTree);
                 Console.WriteLine("AllCycles");
-                _cycles(allCycles);
+                Console.WriteLine(exampleTitle);
+                foreach (Cycle<int> c in allCycles.cycles)
+                    _print_cycle(c);
+                Console.WriteLine();
             }
             public void TestAllCyclesWithSpecialCase()
             {
                 AllCycles<int> allCycles = new AllCyclesWithSpecialCase<int>(blocks, graph, reverseEdges, domTree);
                 Console.WriteLine("AllCyclesWithSpecialCase");
-                _cycles(allCycles);
-            }
-            private void _cycles(AllCycles<int> allCycles)
-            {
                 Console.WriteLine(exampleTitle);
-                foreach (var cycle in allCycles.cycles)
+                foreach(Cycle<int> c in allCycles.cycles)
+                    _print_cycle(c);
+                Console.WriteLine();
+            }
+            public void TestCyclesHierarchy()
+            {
+                //находим все циклы
+                AllCycles<int> allCycles = new AllCyclesWithSpecialCase<int>(blocks, graph, reverseEdges, domTree);
+                Console.WriteLine("CyclesHierarchy");
+                Console.WriteLine(exampleTitle);
+                //здесь определяем вложенность циклов (например)
+                //...
+                Dictionary<Cycle<int>, List<Cycle<int>>> hierarchy = null;
+                //...
+                //и выводим
+                foreach(Cycle<int> c in allCycles.cycles)
                 {
-                    Console.Write("IN:" + cycle.N + " VERTS:");
-                    foreach (var i in cycle.DATA)
-                        Console.Write(i + " ");
-                    Console.Write("OUTS:");
-                    foreach (DomGraph.BlocksPair<int> p in cycle.OUTS)
-                        Console.Write("(" + p.blockBegin + ">" + p.blockEnd + ") ");
-                    if (cycle is CycleUsual<int>)
+                    //...
+                    _print_cycle(c);
+                    //...
+                    foreach(Cycle<int> c1 in hierarchy[c])
                     {
-                        CycleUsual<int> c = cycle as CycleUsual<int>;
-                        Console.Write("D:" + c.D);
+                        //...
+                        _print_cycle(c1);
+                        //...
                     }
-                    else if (cycle is CycleSpecialCase<int>)
-                    {
-                        CycleSpecialCase<int> c = cycle as CycleSpecialCase<int>;
-                        Console.Write("D1:" + c.D1 + " D2:" + c.D2);
-                    }
-                    Console.WriteLine();
+                    //...
+                }
+                Console.WriteLine();
+            }
+            private void _print_cycle(Cycle<int> cycle)
+            {
+                Console.Write("IN:" + cycle.N + " VERTS:");
+                foreach (var i in cycle.DATA)
+                    Console.Write(i + " ");
+                Console.Write("OUTS:");
+                foreach (DomGraph.BlocksPair<int> p in cycle.OUTS)
+                    Console.Write("(" + p.blockBegin + ">" + p.blockEnd + ") ");
+                if (cycle is CycleUsual<int>)
+                {
+                    CycleUsual<int> c = cycle as CycleUsual<int>;
+                    Console.Write("D:" + c.D);
+                }
+                else if (cycle is CycleSpecialCase<int>)
+                {
+                    CycleSpecialCase<int> c = cycle as CycleSpecialCase<int>;
+                    Console.Write("D1:" + c.D1 + " D2:" + c.D2);
                 }
                 Console.WriteLine();
             }
@@ -142,7 +169,7 @@ namespace iCompiler
         /// <summary>
         /// Пример 1 из лекции
         /// </summary>
-        public class AllCyclesTestExample1 : AllCyclesTestExampleAbstractFactory
+        public class AllCyclesTestExample1 : AllCyclesTestExampleAbstract
         {
             public AllCyclesTestExample1() 
             { 
@@ -193,7 +220,7 @@ namespace iCompiler
         /// <summary>
         /// Пример 2 из лекции
         /// </summary>
-        public class AllCyclesTestExample2 : AllCyclesTestExampleAbstractFactory
+        public class AllCyclesTestExample2 : AllCyclesTestExampleAbstract
         {
             public AllCyclesTestExample2() 
             { 
@@ -242,6 +269,16 @@ namespace iCompiler
             AllCyclesTestExample2 ex2 = new AllCyclesTestExample2();
             ex1.TestSpanningTree();
             ex2.TestSpanningTree();
+        }
+        /// <summary>
+        /// Тесты для определения вложенности циклов
+        /// </summary>
+        public static void TestCyclesHierarchy()
+        {
+            AllCyclesTestExample1 ex1 = new AllCyclesTestExample1();
+            AllCyclesTestExample2 ex2 = new AllCyclesTestExample2();
+            ex1.TestCyclesHierarchy();
+            ex2.TestCyclesHierarchy();
         }
     }
 }
