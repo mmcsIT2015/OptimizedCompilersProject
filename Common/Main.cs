@@ -165,6 +165,91 @@ namespace SimpleCompiler
 
         }
 
+        public static void GraphIntTesting1()
+        {
+            Dictionary<int, List<int>> testDictionary = new Dictionary<int,List<int>>();
+            for (int i = 1; i <= 3; ++i)
+                testDictionary[i] = new List<int>();
+
+            testDictionary[1].Add(2);
+            testDictionary[3].AddRange(new int [] {1, 2});
+
+            AllCyclesTesting.TestGraph testGraph = new AllCyclesTesting.TestGraph(testDictionary);
+            AllCyclesTesting.TestDominatorTree testDom = new AllCyclesTesting.TestDominatorTree(testDictionary);
+            Dictionary<int, IEnumerable<int>> intDoms = new Dictionary<int, IEnumerable<int>>();
+
+            for (int i = 1; i <= 3; ++i)
+                intDoms[i] = testDom.UpperDominators(i) as List<int>;
+
+            SpanningTreeWithoutRecursive<int> spanningTree = new SpanningTreeWithoutRecursive<int>(new int[] { 1, 2, 3 }, testGraph);
+            GraphEdges<int> graphEdges = new GraphEdges<int>(spanningTree, intDoms);
+
+            if (graphEdges.IsGraphGiven())
+                Console.WriteLine("Test GraphInt 1 passed");
+            else
+                Console.WriteLine("Test GraphInt 1 did not passed");
+
+
+
+        }
+
+        public static void GraphIntTesting2()
+        {
+            Dictionary<int, List<int>> testDictionary = new Dictionary<int, List<int>>();
+            for (int i = 1; i <= 3; ++i)
+                testDictionary[i] = new List<int>();
+
+            testDictionary[1].AddRange(new int[] { 2, 3 });
+
+            AllCyclesTesting.TestGraph testGraph = new AllCyclesTesting.TestGraph(testDictionary);
+            AllCyclesTesting.TestDominatorTree testDom = new AllCyclesTesting.TestDominatorTree(testDictionary);
+            Dictionary<int, IEnumerable<int>> intDoms = new Dictionary<int, IEnumerable<int>>();
+
+            for (int i = 1; i <= 3; ++i)
+                intDoms[i] = testDom.UpperDominators(i) as List<int>;
+
+            SpanningTreeWithoutRecursive<int> spanningTree = new SpanningTreeWithoutRecursive<int>(new int[] { 1, 2, 3 }, testGraph);
+            GraphEdges<int> graphEdges = new GraphEdges<int>(spanningTree, intDoms);
+
+            if (graphEdges.IsGraphGiven())
+                Console.WriteLine("Test GraphInt 2 passed");
+            else
+                Console.WriteLine("Test GraphInt 2 did not passed");
+
+
+
+        }
+
+        //пример из лекции неприводимого графа
+        public static void GraphIntTesting3()
+        {
+            Dictionary<int, List<int>> testDictionary = new Dictionary<int, List<int>>();
+            for (int i = 1; i <= 3; ++i)
+                testDictionary[i] = new List<int>();
+
+            testDictionary[1].AddRange(new int[] { 2, 3 });
+            testDictionary[2].Add(3);
+            testDictionary[3].Add(2);
+
+            AllCyclesTesting.TestGraph testGraph = new AllCyclesTesting.TestGraph(testDictionary);
+            AllCyclesTesting.TestDominatorTree testDom = new AllCyclesTesting.TestDominatorTree(testDictionary);
+            Dictionary<int, IEnumerable<int>> intDoms = new Dictionary<int, IEnumerable<int>>();
+
+            for (int i = 1; i <= 3; ++i)
+                intDoms[i] = testDom.UpperDominators(i) as List<int>;
+
+            SpanningTreeWithoutRecursive<int> spanningTree = new SpanningTreeWithoutRecursive<int>(new int[] { 1, 2, 3 }, testGraph);
+            GraphEdges<int> graphEdges = new GraphEdges<int>(spanningTree, intDoms);
+
+            if (graphEdges.IsGraphGiven())
+                Console.WriteLine("Test GraphInt 3 passed");
+            else
+                Console.WriteLine("Test GraphInt 3 did not passed");
+
+
+
+        }
+
         private static void WriteBlocksToConsole(ThreeAddrCode code)
         {
             int blockIndex = 0;
@@ -270,6 +355,10 @@ namespace SimpleCompiler
                             Console.WriteLine("Это приводимый граф");
                         else
                             Console.WriteLine("Это неприводимый граф");
+
+                        GraphIntTesting1();
+                        GraphIntTesting2();
+                        GraphIntTesting3();
 
                         //TestDomIterativeAlogrithm(root);
                         //TestReachableExpressions(root);

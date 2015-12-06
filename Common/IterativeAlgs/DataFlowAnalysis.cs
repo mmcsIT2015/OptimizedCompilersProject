@@ -54,19 +54,19 @@ namespace iCompiler
 
         public static InOutData<Line.Expr> BuildReachableExpressions(ThreeAddrCode code)
         {
-            var semilattice = new ReachableExprSemilattice(code);
-            var funcs = ReachableExprsGenerator.BuildTransferFuncForReachableExprs(code);
-            var alg = new IterativeAlgo<ExprWrapper, TransferFunction<ExprWrapper>>(semilattice, funcs);
+            //var semilattice = new ReachableExprSemilattice(code);
+            //var funcs = ReachableExprsGenerator.BuildTransferFuncForReachableExprs(code);
+            //var alg = new IterativeAlgo<ExprWrapper, TransferFunction<ExprWrapper>>(semilattice, funcs);
 
-            alg.Run(code);
+           // alg.Run(code);
 
             var result = new InOutData<Line.Expr>();
 
-            foreach (Block block in code.blocks)
-            {
-                result.In[block] = ReachableExprsGenerator.FlushExprs(alg.In[block]);
-                result.Out[block] = ReachableExprsGenerator.FlushExprs(alg.Out[block]);
-            }
+           // foreach (Block block in code.blocks)
+           // {
+           //     result.In[block] = ReachableExprsGenerator.FlushExprs(alg.In[block]);
+           //     result.Out[block] = ReachableExprsGenerator.FlushExprs(alg.Out[block]);
+           // }
 
             return result;
         }
