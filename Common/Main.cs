@@ -188,9 +188,6 @@ namespace SimpleCompiler
                 Console.WriteLine("Test GraphInt 1 passed");
             else
                 Console.WriteLine("Test GraphInt 1 did not passed");
-
-
-
         }
 
         public static void GraphIntTesting2()
