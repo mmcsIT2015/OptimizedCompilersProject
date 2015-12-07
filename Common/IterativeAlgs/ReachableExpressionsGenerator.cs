@@ -8,6 +8,12 @@ namespace iCompiler
 {
     public class ReachableExprsGenerator
     {
+        private class ExpressionGenKill
+        {
+            public HashSet<ExpressionWrapper> Gen = new HashSet<ExpressionWrapper>();
+            public HashSet<ExpressionWrapper> Kill = new HashSet<ExpressionWrapper>();
+        }
+
         public class ExpressionWrapper
         {
             private readonly Expr mExpressionLine;
@@ -106,24 +112,7 @@ namespace iCompiler
             }
         }
 
-        public static List<Line.Expr> FlushExprs(IEnumerable<ExpressionWrapper> rawExpressions)
-        {
-            var result = new List<Line.Expr>();
-            foreach (ExpressionWrapper rawExpression in rawExpressions)
-            {
-                result.Add(rawExpression.GetExpression());
-            }
-
-            return result;
-        }
-
-        public class ExpressionGenKill
-        {
-            public HashSet<ExpressionWrapper> Gen = new HashSet<ExpressionWrapper>();
-            public HashSet<ExpressionWrapper> Kill = new HashSet<ExpressionWrapper>();
-        }
-
-        public static Dictionary<Block, ExpressionGenKill> BuildExpressionsGenKill(ThreeAddrCode code)
+        private static Dictionary<Block, ExpressionGenKill> BuildExpressionsGenKill(ThreeAddrCode code)
         {
             Dictionary<Block, ExpressionGenKill> exprGenKillList = new Dictionary<Block, ExpressionGenKill>();
 
@@ -181,11 +170,21 @@ namespace iCompiler
             return exprGenKillList;
         }
 
+        private static List<Line.Expr> FlushExprs(IEnumerable<ExpressionWrapper> rawExpressions)
+        {
+            var result = new List<Line.Expr>();
+            foreach (ExpressionWrapper rawExpression in rawExpressions)
+            {
+                result.Add(rawExpression.GetExpression());
+            }
+
+            return result;
+        }
+
         public static InOutData<Line.Expr> BuildReachableExpressionsGenKill(ThreeAddrCode code)
         {
-            Dictionary<Block, ExpressionGenKill> rawGenKill = BuildExpressionsGenKill(code);
-
-            InOutData<Expr> blocksExprs = new InOutData<Expr>();
+            var rawGenKill = BuildExpressionsGenKill(code);
+            var blocksExprs = new InOutData<Expr>();
 
             foreach (var blockGenKill in rawGenKill)
             {
@@ -196,7 +195,7 @@ namespace iCompiler
             return blocksExprs;
         }
 
-        public static Dictionary<Block, TransferFunction<ExpressionWrapper>> BuildTransferFuncForReachableExprs(ThreeAddrCode code)
+        public static Dictionary<Block, TransferFunction<ExpressionWrapper>> BuildTransferFuncsForReachableExprs(ThreeAddrCode code)
         {
             var funcs = new Dictionary<Block, TransferFunction<ExpressionWrapper>>();
             Dictionary<Block, ExpressionGenKill> blocksGenKill = BuildExpressionsGenKill(code);
