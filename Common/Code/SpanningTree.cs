@@ -12,7 +12,7 @@ namespace iCompiler
     {
         public static void Test()
         {
-            AllCyclesTesting.TestSpanningTree();
+            AllCyclesTesting.TestingSpanningTree();
         }
     }
 
@@ -41,8 +41,13 @@ namespace iCompiler
             FindSpanningTree(blocks.First(), ref index, graph);
         }
 
-        public Dictionary<T, int> Numbers { get; private set; }
-        public Dictionary<T, List<T>> Data { get; private set; }
+        /// <summary>
+        /// Ничего не делает
+        /// </summary>
+        protected SpanningTree() { }
+
+        public Dictionary<T, int> Numbers { get; protected set; }
+        public Dictionary<T, List<T>> Data { get; protected set; }
 
         protected virtual void FindSpanningTree(T root, ref int index, IGraph<T> graph)
         {

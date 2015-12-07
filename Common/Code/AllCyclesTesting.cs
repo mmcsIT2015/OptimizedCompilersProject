@@ -78,6 +78,18 @@ namespace iCompiler
             }
         }
         /// <summary>
+        /// Тестовое остовное дерево
+        /// </summary>
+        public class TestSpanningTree: SpanningTree<int>
+        {
+            public TestSpanningTree(Dictionary<int, List<int>> Data, Dictionary<int, int> Numbers)
+                :base()
+            {
+                this.Data = Data;
+                this.Numbers = Numbers;
+            }
+        }
+        /// <summary>
         /// Фабрика для примеров
         /// </summary>
         public abstract class AllCyclesTestExampleAbstract
@@ -251,7 +263,7 @@ namespace iCompiler
         /// <summary>
         /// Тесты для классов AllCycles
         /// </summary>
-        public static void TestAllCycles()
+        public static void TestingAllCycles()
         {
             AllCyclesTestExample1 ex1 = new AllCyclesTestExample1();
             AllCyclesTestExample2 ex2 = new AllCyclesTestExample2();
@@ -263,7 +275,7 @@ namespace iCompiler
         /// <summary>
         /// Тесты для классов SpanningTree
         /// </summary>
-        public static void TestSpanningTree()
+        public static void TestingSpanningTree()
         {
             AllCyclesTestExample1 ex1 = new AllCyclesTestExample1();
             AllCyclesTestExample2 ex2 = new AllCyclesTestExample2();
@@ -273,7 +285,7 @@ namespace iCompiler
         /// <summary>
         /// Тесты для определения вложенности циклов
         /// </summary>
-        public static void TestCyclesHierarchy()
+        public static void TestingCyclesHierarchy()
         {
             AllCyclesTestExample1 ex1 = new AllCyclesTestExample1();
             AllCyclesTestExample2 ex2 = new AllCyclesTestExample2();
