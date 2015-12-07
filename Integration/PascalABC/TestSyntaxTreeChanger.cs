@@ -47,7 +47,13 @@ namespace ParsePABC
             sn.visit(generator);
 
             Console.WriteLine("\ncode:\n---");
-            Console.WriteLine(generator.CreateCode());
+            var code = generator.CreateCode();
+            Console.WriteLine(code);
+
+            Console.WriteLine("\ntest:\n---");
+            PascalABCTreeGenerator gen = new PascalABCTreeGenerator();
+            sn = gen.generate(code);
+            sn.visit(new SimplePrettyPrinterVisitor());
         }
     }
 }
