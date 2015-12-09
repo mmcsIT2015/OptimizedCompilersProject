@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CompilerExceptions;
 using System.Threading.Tasks;
 
 using PascalABCCompiler;
@@ -19,25 +20,10 @@ namespace ParsePABC
         }
     }
 
-    public class TestVisitor : BaseChangeVisitor
-    {
-        public override void visit(ident ifn)
-        {
-            Console.WriteLine("ident> " + ifn.name);
-        }
-        public override void visit(int32_const ifn)
-        {
-            ifn.val = 56;
-            Console.WriteLine("val> " + ifn.val);
-        }
-    }
-
     public class TestSyntaxTreeChanger : ISyntaxTreeChanger
     {
         public void Change(syntax_tree_node sn)
         {
-            //sn.visit(new SimplePrettyPrinterVisitor());
-
             sn.visit(new LoweringVisitor());
 
             Console.WriteLine("\nlowering:\n---");
@@ -47,13 +33,22 @@ namespace ParsePABC
             sn.visit(generator);
 
             Console.WriteLine("\ncode:\n---");
-            var code = generator.CreateCode();
-            Console.WriteLine(code);
+            try
+            {
+                var code = generator.CreateCode();
+                Console.WriteLine(code);
+                Console.WriteLine("\nvars:\n---");
+                Console.WriteLine(code.TableOfNamesToString());
 
-            Console.WriteLine("\ntest:\n---");
-            PascalABCTreeGenerator gen = new PascalABCTreeGenerator();
-            sn = gen.generate(code);
-            sn.visit(new SimplePrettyPrinterVisitor());
+                Console.WriteLine("\ntest:\n---");
+                PascalABCTreeGenerator gen = new PascalABCTreeGenerator();
+                sn = gen.generate(code);
+                sn.visit(new SimplePrettyPrinterVisitor());
+            }
+            catch (SemanticException e)
+            {
+                Console.WriteLine("Semantic error: " + e.Message);
+            }
         }
     }
 }

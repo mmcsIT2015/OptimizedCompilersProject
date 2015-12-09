@@ -7,6 +7,7 @@ using PascalABCCompiler.SyntaxTree;
 using System.Diagnostics;
 using CompilerExceptions;
 using iCompiler.Line;
+using ProgramTree;
 using iCompiler;
 
 namespace ParsePABC
@@ -16,18 +17,143 @@ namespace ParsePABC
         public iCompiler.ThreeAddrCode CreateCode()
         {
             EraseEmptyLines();
+            CompleteTableOfNames();
             var code = new iCompiler.ThreeAddrCode(mLines);
+            code.tableOfNames = mTableOfNames;
             return code;
         }
 
         private iCompiler.Block mLines = new iCompiler.Block();
         private Stack<string> mStack = new Stack<string>();
         private Stack<syntax_tree_node> mAuxStack = new Stack<syntax_tree_node>();
+        private Dictionary<string, ProgramTree.SimpleVarType> mTableOfNames = new Dictionary<string, ProgramTree.SimpleVarType>();
 
         public Gen3AddrCodeVisitor()
         {
             OnLeave = Leave;
             OnEnter = Enter;
+        }
+
+        private SimpleVarType Cast(SimpleVarType lhs, SimpleVarType rhs)
+        {
+            if (lhs == rhs) return lhs;
+            else if (lhs == SimpleVarType.Bool || rhs == SimpleVarType.Bool)
+            {
+                return SimpleVarType.Bool;
+            }
+            else if (lhs == SimpleVarType.Float || rhs == SimpleVarType.Float)
+            {
+                return SimpleVarType.Float;
+            }
+
+            return SimpleVarType.Int;
+        }
+
+        private void CheckDefinitionVariable(string variable)
+        {
+            if (variable[0] != '@')
+            {
+                if (!mTableOfNames.ContainsKey(variable))
+                {
+                    throw new SemanticException("Используется необъявленная переменная: " + variable);
+                }
+            }
+        }
+
+        private void CompleteTableOfNames()
+        {
+            // тип переменных в услови СonditionalJump - bool
+            foreach (var line in mLines.Where(e => e is iCompiler.Line.СonditionalJump).Select(e => e as iCompiler.Line.СonditionalJump))
+            {
+                if (mTableOfNames.ContainsKey(line.condition))
+                {
+                    mTableOfNames[line.condition] = SimpleVarType.Bool;
+                }
+                else
+                {
+                    mTableOfNames.Add(line.condition, SimpleVarType.Bool);
+                }
+            }
+
+            foreach (var line in mLines)
+            {
+                if (line is iCompiler.Line.UnaryExpr)
+                {
+                    var unary = line as iCompiler.Line.UnaryExpr;
+                    CheckDefinitionVariable(unary.left);
+
+                    if (unary.ArgIsNumber()) continue;
+                    else CheckDefinitionVariable(unary.argument);
+
+                    if (mTableOfNames.ContainsKey(unary.left)) continue;
+
+                    if (unary.IsBoolExpr())
+                    {
+                        mTableOfNames.Add(unary.left, SimpleVarType.Bool);
+                    }
+                    else
+                    {
+                        mTableOfNames.Add(unary.left, mTableOfNames[unary.argument]);
+                    }
+                }
+                else if (line is iCompiler.Line.Identity)
+                {
+                    var identity = line as iCompiler.Line.Identity;
+                    CheckDefinitionVariable(identity.left);
+
+                    if (identity.RightIsNumber()) continue;
+                    else CheckDefinitionVariable(identity.right);
+
+                    if (mTableOfNames.ContainsKey(identity.left)) continue;
+
+                    mTableOfNames.Add(identity.left, mTableOfNames[identity.right]);
+                }
+                else if (line is iCompiler.Line.BinaryExpr)
+                {
+                    var expr = line as iCompiler.Line.BinaryExpr;
+                    CheckDefinitionVariable(expr.left);
+                    if (!expr.FirstParamIsNumber()) CheckDefinitionVariable(expr.first);
+                    if (!expr.SecondParamIsNumber()) CheckDefinitionVariable(expr.second);
+
+                    if (mTableOfNames.ContainsKey(expr.left)) continue;
+
+                    if (expr.IsBoolExpr())
+                    {
+                        mTableOfNames.Add(expr.left, SimpleVarType.Bool);
+                    }
+                    else
+                    {
+                        if (expr.FirstParamIsNumber() && expr.SecondParamIsNumber())
+                        {
+                            if (!expr.FirstParamIsIntNumber() || !expr.SecondParamIsIntNumber())
+                            {
+                                mTableOfNames.Add(expr.left, SimpleVarType.Float);
+                            }
+                            else
+                            {
+                                mTableOfNames.Add(expr.left, SimpleVarType.Int);
+                            }
+                        }
+                        else if (!expr.FirstParamIsNumber() && !expr.SecondParamIsNumber())
+                        {
+                            var type = Cast(mTableOfNames[expr.first], mTableOfNames[expr.second]);
+                            mTableOfNames.Add(expr.left, type);
+                        }
+                        else if (!expr.FirstParamIsNumber())
+                        {
+                            var secondType = expr.SecondParamIsIntNumber() ? SimpleVarType.Int : SimpleVarType.Float;
+                            var resultType = Cast(mTableOfNames[expr.first], secondType);
+                            mTableOfNames.Add(expr.left, resultType);
+                        }
+                        else //if (!expr.SecondParamIsNumber())
+                        {
+                            var firstType = expr.FirstParamIsIntNumber() ? SimpleVarType.Int : SimpleVarType.Float;
+                            var resultType = Cast(firstType, mTableOfNames[expr.second]);
+                            mTableOfNames.Add(expr.left, resultType);
+                        }
+                    }
+                }
+            }
         }
 
         private void ReplaceAllReferencesToLabel(string what, string forWhat)
@@ -56,7 +182,16 @@ namespace ParsePABC
             }
         }
 
-        ProgramTree.Operator Map(Operators op)
+        private ProgramTree.SimpleVarType Map(string type)
+        {
+            if (type == "integer") return ProgramTree.SimpleVarType.Int;
+            if (type == "real") return ProgramTree.SimpleVarType.Float;
+            if (type == "boolean") return ProgramTree.SimpleVarType.Bool;
+
+            throw new Exception("Неизвестный тип: " + type);
+        }
+
+        private ProgramTree.Operator Map(Operators op)
         {
             switch (op)
             {
@@ -89,7 +224,7 @@ namespace ParsePABC
 
         public virtual void Leave(syntax_tree_node node)
         {
-            //Console.WriteLine(" Leave: " + node.GetType() + ": " + node.ToString());
+            Console.WriteLine(" Leave: " + node.GetType() + ": " + node.ToString());
 
             if (node is variable_definitions)
             {
@@ -134,6 +269,10 @@ namespace ParsePABC
             else if (node is int32_const)
             {
                 mStack.Push((node as int32_const).val.ToString());
+            }
+            else if (node is double_const)
+            {
+                mStack.Push((node as double_const).val.ToString());
             }
             else if (node is bin_expr)
             {
@@ -194,7 +333,7 @@ namespace ParsePABC
 
         public virtual void Enter(syntax_tree_node node)
         {
-            //Console.WriteLine("Enter: " + node.GetType() + ": " + node.ToString());
+            Console.WriteLine("Enter: " + node.GetType() + ": " + node.ToString());
             if (node is if_node)
             {
                 mAuxStack.Push(node);
@@ -205,6 +344,16 @@ namespace ParsePABC
                 var label = (node as labeled_statement).label_name.name;
                 mLines.Add(new iCompiler.Line.EmptyLine(label));
             }
+            else if (node is var_def_statement)
+            {
+                var defs = node as var_def_statement;
+                var type = Map((defs.vars_type as named_type_reference).names.First().name);
+                foreach (var id in defs.vars.idents)
+                {
+                    mTableOfNames.Add(id.name, type);
+                }
+            }
+            
         }
     }
 }
