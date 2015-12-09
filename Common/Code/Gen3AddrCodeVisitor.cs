@@ -30,7 +30,6 @@ namespace iCompiler
         {
             EraseEmptyLines();
             CompleteTableOfNames();
-            //VerifyCorrectnessOfProgram();
             var code = new iCompiler.ThreeAddrCode(mLines);
             code.tableOfNames = mTableOfNames;
             return code;
@@ -173,56 +172,6 @@ namespace iCompiler
                 if (line.label == what) line.label = forWhat;
                 if (line is Line.GoTo) line.ChangeTargetIfEqual(what, forWhat);
             }
-        }
-
-        private void VerifyCorrectnessOfProgram() {
-            HashSet<String> leftIDs = new HashSet<string>();
-
-            //bool isValid = true;
-            for (int i = 0; i < mLines.Count; ++i)
-            {
-                var line = mLines[i];
-                if (line.IsNot<Line.BinaryExpr>() && line.IsNot<Line.UnaryExpr>() && line.IsNot<Line.Identity>()) continue;
-
-                if (line.Is<Line.BinaryExpr>())
-                {
-                    var lineBinExpr = line as Line.BinaryExpr;
-
-                    if (leftIDs.Contains(lineBinExpr.first) && leftIDs.Contains(lineBinExpr.second) //если обе переменные определены ранее
-                        || leftIDs.Contains(lineBinExpr.first) && lineBinExpr.SecondParamIsNumber() // если первая переменная определена и второй операнд число
-                        || leftIDs.Contains(lineBinExpr.second) && lineBinExpr.FirstParamIsNumber() // если вторая переменная определена и первый операнд число
-                        || lineBinExpr.FirstParamIsNumber() && lineBinExpr.SecondParamIsNumber() // если оба операнда числа
-                        )
-                    {
-                        leftIDs.Add(lineBinExpr.left);
-                    }
-                    else
-                        throw new SemanticException("Одна или две переменные в правой части BinaryExpr не определены. Выражение " + lineBinExpr.ToString());
-                }
-                else if (line.Is<Line.UnaryExpr>())
-                {
-                    var lineUnExpr = line as Line.UnaryExpr;
-                    if (lineUnExpr.ArgIsNumber() || leftIDs.Contains(lineUnExpr.argument)) //если операнд число или переменная, определенная ранее
-                        leftIDs.Add(lineUnExpr.left);
-                    else
-                        throw new SemanticException("Переменная в правой части UnaryExpr не определена. Выражение " + lineUnExpr.ToString());
-                }
-                else //if (line.Is<Line.Identity>())
-                {
-                    var lineIdentExpr = line as Line.Identity;
-                    if (!(lineIdentExpr.RightIsNumber() || leftIDs.Contains(lineIdentExpr.right))) //если не число и не переменная, определенная ранее
-                        throw new SemanticException("Переменная в правой части Identity не определена. Выражение " + lineIdentExpr.ToString());
-                    else if (lineIdentExpr.left == lineIdentExpr.right) // если выражение вида x = x
-                        throw new SemanticException("Неожиданно встретилось выражение вида x = x. Выражение " + lineIdentExpr.ToString());
-                    else
-                        leftIDs.Add(lineIdentExpr.left);
-                }
-            }
-
-            //if (!isValid)
-            //{
-            //    throw new SemanticException("Тут будут подробности");
-            //}
         }
 
         private void CheckRealLabel(StatementNode node, int index = -1)
