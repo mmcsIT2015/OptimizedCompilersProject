@@ -40,6 +40,12 @@ namespace iCompiler.Line
             return double.TryParse(argument, style, nfi, out temp);
         }
 
+        public virtual bool ArgIsIntNumber() // является ли параметр целым числом
+        {
+            int temp;
+            return int.TryParse(argument, out temp);
+        }
+
         private static string ToString(Operator operation)
         {
             switch (operation)
