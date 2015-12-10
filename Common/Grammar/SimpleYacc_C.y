@@ -17,7 +17,7 @@
 			public FunctionNode funVal;
 			public FunctionNodeSt funStVal;
 			public List<ExprNode> paramVal;
-			public SimpleVarType typeVal;
+			public string typeVal;
 			public VarDeclListNode listDeclVal;
 		  public List<VarDeclNode> listDeclRawVal;
         }
@@ -90,7 +90,21 @@ goto: GOTO ident { $$ = new GotoNode($2 as IdNode); }
 	;
 	
 decl_type_list: 	
-	| TYPE decl_list { $$ = new VarDeclListNode($1); $$.VariablesList = $2; }	
+	| TYPE decl_list 
+	{ 
+		SimpleVarType type;
+		if ($1 == "int")
+			type = SimpleVarType.Int;
+		else if ($1 == "float")
+			type = SimpleVarType.Float;
+		else if ($1 == "string")
+			type = SimpleVarType.Str;
+		else if ($1 == "bool")
+			type = SimpleVarType.Bool;
+		else type = SimpleVarType.Unknown;
+		$$ = new VarDeclListNode(type); 
+		$$.VariablesList = $2; 
+	}	
 	;
 
 decl_list:

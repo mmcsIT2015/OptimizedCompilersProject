@@ -3,9 +3,9 @@
 // (see accompanying GPPGcopyright.rtf)
 
 // GPPG version 1.3.6
-// Machine:  DESKTOP-U94NV7T
-// DateTime: 04.12.2015 19:08:22
-// UserName: jedik
+// Machine:  JEDIKNIGHT-PC
+// DateTime: 10.12.2015 18:53:34
+// UserName: jediknight
 // Input file <SimpleYacc_C.y>
 
 // options: no-lines gplex
@@ -40,7 +40,7 @@ public struct ValueType
 			public FunctionNode funVal;
 			public FunctionNodeSt funStVal;
 			public List<ExprNode> paramVal;
-			public SimpleVarType typeVal;
+			public string typeVal;
 			public VarDeclListNode listDeclVal;
 		  public List<VarDeclNode> listDeclRawVal;
         }
@@ -316,7 +316,20 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
 { CurrentSemanticValue.stVal = new GotoNode(ValueStack[ValueStack.Depth-1].eVal as IdNode); }
         break;
       case 22: // decl_type_list -> TYPE, decl_list
-{ CurrentSemanticValue.listDeclVal = new VarDeclListNode(ValueStack[ValueStack.Depth-2].typeVal); CurrentSemanticValue.listDeclVal.VariablesList = ValueStack[ValueStack.Depth-1].listDeclRawVal; }
+{ 
+		SimpleVarType type;
+		if (ValueStack[ValueStack.Depth-2].typeVal == "int")
+			type = SimpleVarType.Int;
+		else if (ValueStack[ValueStack.Depth-2].typeVal == "float")
+			type = SimpleVarType.Float;
+		else if (ValueStack[ValueStack.Depth-2].typeVal == "string")
+			type = SimpleVarType.Str;
+		else if (ValueStack[ValueStack.Depth-2].typeVal == "bool")
+			type = SimpleVarType.Bool;
+		else type = SimpleVarType.Unknown;
+		CurrentSemanticValue.listDeclVal = new VarDeclListNode(type); 
+		CurrentSemanticValue.listDeclVal.VariablesList = ValueStack[ValueStack.Depth-1].listDeclRawVal; 
+	}
         break;
       case 24: // decl_list -> ident
 { CurrentSemanticValue.listDeclRawVal = new List<VarDeclNode>(); CurrentSemanticValue.listDeclRawVal.Add(new VarDeclNode(ValueStack[ValueStack.Depth-1].eVal as IdNode)); }

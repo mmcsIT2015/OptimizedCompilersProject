@@ -6,7 +6,7 @@ namespace ProgramTree
 {
     public enum AssignType { Assign, AssignPlus, AssignMinus, AssignMult, AssignDivide };
 		
-	public enum SimpleVarType { Int, Float, Str, Bool,  };
+	public enum SimpleVarType { Int, Float, Str, Bool,  Unknown };
 
     public enum Operator { None, Plus, Minus, Mult, Div, Less, Greater, Equal, NotEqual, LessEqual, GreaterEqual, Not };
 	

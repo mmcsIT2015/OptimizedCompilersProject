@@ -17,7 +17,7 @@
 			public FunctionNode funVal;
 			public FunctionNodeSt funStVal;
 			public List<ExprNode> paramVal;
-			public SimpleVarType typeVal;
+			public string typeVal;
        }
 
 %using ProgramTree;
@@ -92,7 +92,19 @@ decl_assign: VAR ident COLON TYPE ASSIGN expr
 		{ 
 			List<VarDeclNode> ls = new List<VarDeclNode>();
 			ls.Add(new VarDeclNode(new AssignNode($2 as IdNode, $6)));
-			var listNode = new VarDeclListNode($4); 
+			
+			SimpleVarType type;
+			if ($4 == "integer")
+				type = SimpleVarType.Int;
+			else if ($4 == "float")
+				type = SimpleVarType.Float;
+			else if ($4 == "string")
+				type = SimpleVarType.Str;
+			else if ($4 == "boolean")
+				type = SimpleVarType.Bool;
+			else type = SimpleVarType.Unknown;
+			
+			var listNode = new VarDeclListNode(type); 
 			listNode.VariablesList = ls;
 			$$ = listNode;
 		}
@@ -100,7 +112,19 @@ decl_assign: VAR ident COLON TYPE ASSIGN expr
 		{ 
 			var ls = new List<VarDeclNode>();
 			ls.Add(new VarDeclNode($2 as IdNode));
-			var listNode = new VarDeclListNode($4); 
+			
+			SimpleVarType type;
+			if ($4 == "integer")
+				type = SimpleVarType.Int;
+			else if ($4 == "float")
+				type = SimpleVarType.Float;
+			else if ($4 == "string")
+				type = SimpleVarType.Str;
+			else if ($4 == "boolean")
+				type = SimpleVarType.Bool;
+			else type = SimpleVarType.Unknown;
+			
+			var listNode = new VarDeclListNode(type); 
 			listNode.VariablesList = ls;
 			$$ = listNode;
 		}
