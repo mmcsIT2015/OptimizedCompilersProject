@@ -466,7 +466,7 @@ namespace iCompiler
                 throw new SemanticException(desc);
             }
 
-            if (node.Op != Operator.Minus || node.Op != Operator.Not || node.Op != Operator.Plus)
+            if (node.Op != Operator.Minus && node.Op != Operator.Not && node.Op != Operator.Plus)
             {
                 var desc = "Недопустимый унарный оператор: " + node.Op + "!\n";
                 desc += "Разрешены лишь операторы " + Operator.Minus + ", " + Operator.Not + " и " + Operator.Plus + ".";

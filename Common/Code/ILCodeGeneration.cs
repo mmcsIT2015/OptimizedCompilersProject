@@ -144,7 +144,12 @@ namespace iCompiler
         {
             StringBuilder sb = new StringBuilder();
 
+            OperandInfo aop = new OperandInfo(), rop = new OperandInfo();
+            aop.isConstant = !code.tableOfNames.ContainsKey(ue.argument);
+            aop.isFloat = aop.isConstant ? !ue.ArgIsIntNumber() : (code.tableOfNames[ue.argument] == SimpleVarType.Float);
 
+            rop.isFloat = code.tableOfNames[ue.left] == SimpleVarType.Float;
+            sb.Append(GenOperandLoading(ue.argument, aop, rop));
 
             if (ue.operation == Operator.Minus)
                 sb.AppendLine("\tneg");
@@ -152,6 +157,8 @@ namespace iCompiler
                 sb.AppendLine("\tnot");
             else
                 sb.AppendLine(ReportMessage + ": GenUnaryExpr - UnsupportedUnaryExpr");
+
+            sb.AppendLine("\tstloc " + ue.left);
 
             return sb.ToString();
         }
