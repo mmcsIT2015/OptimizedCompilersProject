@@ -61,7 +61,7 @@ namespace SimpleCompiler
                 Console.WriteLine();
             }
 
-            Console.WriteLine("\nDom Tree");
+            Console.WriteLine("\nDom Tree Algorithm");
             Dictionary<Block, List<Block>> tree = DomGraph.GenerateDomTree(code);
             foreach (Block block in tree.Keys)
             {
@@ -74,6 +74,9 @@ namespace SimpleCompiler
 
                 Console.WriteLine();
             }
+
+            Console.WriteLine("\nDom Tree Class");
+            DomTree test = new DomTree(code);
 
             Console.WriteLine("\nReversed Edges");
             List<DomGraph.ValPair<Block>> listEdges = DomGraph.ReverseEdges(blockDoms, code.graph) as List<DomGraph.ValPair<Block>>;
@@ -357,7 +360,7 @@ namespace SimpleCompiler
                         GraphIntTesting2();
                         GraphIntTesting3();
 
-                        //TestDomIterativeAlogrithm(root);
+                        TestDomIterativeAlogrithm(root);
                         //TestReachableExpressions(root);
                     }
                     catch (FileNotFoundException)

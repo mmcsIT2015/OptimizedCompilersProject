@@ -3,6 +3,46 @@ using System.Collections.Generic;
 
 namespace iCompiler
 {
+    public class DomTree : IDominatorRelation<Block>
+    {
+        private ThreeAddrCode _code;
+        private Dictionary<int, List<int>> sets;
+        private Dictionary<Block, List<Block>> tree;
+
+        public DomTree(ThreeAddrCode code)
+        {
+            Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.GenerateDomOut(code);
+            sets = new Dictionary<int, List<int>>();
+            foreach (Block block in blockDoms.Keys)
+            {
+                List<int> set = new List<int>();
+
+                foreach (Block domBlock in blockDoms[block])
+                    set.Insert(0, code.blocks.IndexOf(domBlock));
+
+                sets.Add(code.blocks.IndexOf(block), set);
+            }
+
+            _code = code;
+            tree = DomGraph.GenerateDomTree(code);
+        }
+
+        public bool FirstDomSeccond(Block a, Block b)
+        {
+
+            return true;
+        }
+
+        public IEnumerable<Block> UpperDominators(Block a)
+        {
+            return null;
+        }
+
+        public IEnumerable<Block> DownDominators(Block a)
+        {
+            return null;
+        }
+    }
 
     public static class DomGraph
     {
