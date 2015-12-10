@@ -66,6 +66,7 @@
     <Compile Include="Code\Block.cs" />
     <Compile Include="Code\ControlFlowGraph.cs" />
     <Compile Include="Code\AllCycles.cs" />
+    <Compile Include="Code\DepthFinder.cs" />
     <Compile Include="Code\GraphEdges.cs" />
     <Compile Include="Code\ILCodeGeneration.cs" />
     <Compile Include="Code\Line\FunctionCall.cs" />
