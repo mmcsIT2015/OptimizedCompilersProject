@@ -71,7 +71,7 @@ namespace GUI
 
                 ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
                 
-                MessageBox.Show(ILCodeGeneration.GenILCode(code));
+                //MessageBox.Show(ILCodeGeneration.GenILCode(code));
             }
             catch (FileNotFoundException ee)
             {

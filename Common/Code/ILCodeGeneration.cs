@@ -170,7 +170,7 @@ namespace iCompiler
                     else if (l.Is<Line.BinaryExpr>())
                         sb.Append(GenBinaryExpr(code, l as Line.BinaryExpr));
                     else if (l.Is<Line.UnaryExpr>())
-                        sb.Append(GenUnaryExpr(code, l as Line.UnaryExpr);
+                        sb.Append(GenUnaryExpr(code, l as Line.UnaryExpr));
                     else
                         sb.AppendLine(ReportMessage + ": GenILCode - UnsupportedLine");
                 }
