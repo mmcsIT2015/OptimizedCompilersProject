@@ -1,0 +1,108 @@
+﻿1 Введение(debug_title_level=5)
+
+2 Описания языков программирования(debug_title_level=5)
+2.1 C-подобная грамматика(debug_title_level=4)
+
+2.2 Pascal-подобная грамматика(debug_title_level=4)
+
+
+3 Оптимизации(debug_title_level=5)
+3.1 В пределах базового блока(debug_title_level=4)
+3.1.1 Def-Use информация о переменных(debug_title_level=3)
+
+3.1.2 Устранение мертвого кода(debug_title_level=3)
+
+3.1.3 Свертка констант и алгебраические тождества(debug_title_level=3)
+
+3.1.4 Оптимизация общих подвыражений(debug_title_level=3)
+
+3.1.5 Протяжка констант(debug_title_level=3)
+
+3.1.6 Генерация 3-х адресного кода(debug_title_level=3)
+
+3.1.7 Выделение базовых блоков(debug_title_level=3)
+
+
+3.2 Построение графа потока управления(debug_title_level=4)
+
+3.3 Итерационные алгоритмы(debug_title_level=4)
+3.3.1 Достигающие определения(debug_title_level=3)
+3.3.1.1 Вычисление множеств gen и kill(debug_title_level=2)
+
+3.3.1.2 Реализация передаточной функции(debug_title_level=2)
+3.3.1.2.1 Суперозиция передаточных функций команд(debug_title_level=1)
+
+3.3.1.2.2 Общая формула(debug_title_level=1)
+
+
+3.3.1.3 Реализация алгоритма(debug_title_level=2)
+
+3.3.1.4 Тесты(debug_title_level=2)
+
+
+3.3.2 Активные переменные(debug_title_level=3)
+3.3.2.1 Анализ(debug_title_level=2)
+
+3.3.2.2 Набор тестов(debug_title_level=2)
+
+3.3.2.3 Оптимизации(debug_title_level=2)
+
+
+3.3.3 Доступные выражения(debug_title_level=3)
+3.3.3.1 Анализ(debug_title_level=2)
+
+3.3.3.2 Набор тестов(debug_title_level=2)
+
+3.3.3.3 Оптимизации(debug_title_level=2)
+
+
+3.3.4 Распространение констант(debug_title_level=3)
+
+3.3.5 Объединение итерационных алгоритмов(debug_title_level=3)
+
+3.3.6 Отношение доминирования(debug_title_level=3)
+3.3.6.1 Итерационный алгоритм(debug_title_level=2)
+
+3.3.6.2 Построения графа доминатора(debug_title_level=2)
+
+
+3.3.7 Изменение итерационного алгоритма(debug_title_level=3)
+
+
+3.4 Анализ графа для алгоритма выделения областей(debug_title_level=4)
+3.4.1 Обход в глубину с нумерацией(debug_title_level=3)
+
+3.4.2 Построение остовного дерева(debug_title_level=3)
+
+3.4.3 Классификация рёбер(debug_title_level=3)
+
+3.4.4 Определить обратные рёбра в CFG(debug_title_level=3)
+
+3.4.5 Определить приводимость графа(debug_title_level=3)
+
+3.4.6 Определение всех естественных циклов(debug_title_level=3)
+
+3.4.7 Вложенность естественных циклов(debug_title_level=3)
+
+3.4.8 Глубина CFG(debug_title_level=3)
+
+
+3.5 Алгоритм выделения областей(debug_title_level=4)
+3.5.1 Выделение областей(debug_title_level=3)
+
+3.5.2 Реализация алгоритма на основе областей(debug_title_level=3)
+
+
+
+4 Сопутствующие задачи(debug_title_level=5)
+4.1 GUI(debug_title_level=4)
+
+4.2 Генерация IL-кода(debug_title_level=4)
+
+4.3 Документация(debug_title_level=4)
+
+4.4 Подсчёт статистики(debug_title_level=4)
+
+
+5 Заключение(debug_title_level=5)
+
