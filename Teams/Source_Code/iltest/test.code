@@ -5,49 +5,48 @@
 {
 	.entrypoint
 	.maxstack 5
-	.locals init (int32 i, int32 j, int32 t0, int32 t1, int32 t2)
-	
+	.locals init (int32 i, int32 j, bool @t0, bool @t1, int32 @t2)
+
 	ldc.i4 0
 	stloc i
-l0:
+@l2:
 	ldloc i
 	ldc.i4 10
 	clt
-	stloc t0
-	ldloc t0
-	brtrue l1
-	br l2
-l1:
+	stloc @t0
+	ldloc @t0
+	brtrue @l0
+	br @l1
+@l0:
 	ldc.i4 0
 	stloc j
-l3:
+@l5:
 	ldloc j
 	ldc.i4 10
 	clt
-	stloc t1
-	ldloc t1
-	brtrue l4
-	br l5
-l4:
+	stloc @t1
+	ldloc @t1
+	brtrue @l3
+	br @l4
+@l3:
 	ldloc i
 	ldloc j
 	mul
-	stloc t2
-	ldloc t2
+	stloc @t2
+	ldloc @t2
 	call void [mscorlib]System.Console::WriteLine(int32)
 	ldloc j
 	ldc.i4 1
 	add
 	stloc j
-	br l3
-l5:
-	nop
+	br @l5
+@l4:
 	ldloc i
 	ldc.i4 1
 	add
 	stloc i
-	br l0
-l2:
+	br @l2
+@l1:
 	nop
 	ret
 }

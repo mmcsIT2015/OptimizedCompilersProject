@@ -17,6 +17,13 @@ namespace iCompiler
             public bool isFloat;
         }
 
+        struct FunctionParamInfo
+        {
+            public string param;
+            public SimpleVarType type;
+            public OperandInfo op;
+        }
+
         private static string Type2String(SimpleVarType type)
         {
             switch (type)
@@ -163,9 +170,79 @@ namespace iCompiler
             return sb.ToString();
         }
 
-        public static string GenILCode(ThreeAddrCode code)
+        private static string GenIdentity(ThreeAddrCode code, Line.Identity id)
         {
             StringBuilder sb = new StringBuilder();
+
+            OperandInfo op = new OperandInfo(), rop = new OperandInfo();
+            op.isConstant = !code.tableOfNames.ContainsKey(id.right);
+            op.isFloat = op.isConstant ? !id.RightIsIntNumber() : (code.tableOfNames[id.right] == SimpleVarType.Float);
+
+            rop.isFloat = code.tableOfNames[id.left] == SimpleVarType.Float;
+            sb.Append(GenOperandLoading(id.right, op, rop));
+
+            sb.AppendLine("\tstloc " + id.left);
+
+            return sb.ToString();
+        }
+
+        private static string GenConditionalJump(ThreeAddrCode code, Line.СonditionalJump cj)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("\tldloc " + cj.condition);
+            sb.AppendLine("\tbrtrue " + cj.target);
+
+            return sb.ToString();
+        }
+
+        private static string GenGoTo(ThreeAddrCode code, Line.GoTo gt)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("\tbr " + gt.target);
+
+            return sb.ToString();
+        }
+
+        private static FunctionParamInfo ProcessFunctionParam(ThreeAddrCode code, Line.FunctionParam par)
+        {
+            FunctionParamInfo res = new FunctionParamInfo();
+            res.param = par.param;
+            res.op = new OperandInfo();
+            res.op.isConstant = !code.tableOfNames.ContainsKey(par.param);
+            res.op.isFloat = res.op.isConstant ? !par.ParamIsIntNumber() : (code.tableOfNames[par.param] == SimpleVarType.Float);
+            res.type = res.op.isConstant ? (res.op.isFloat ? SimpleVarType.Float : SimpleVarType.Int) : code.tableOfNames[par.param];
+            return res;
+        }
+
+        private static string GenFunctionCall(ThreeAddrCode code, Line.FunctionCall fc, List<FunctionParamInfo> pars)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            StringBuilder pars_sb = new StringBuilder();
+
+            for (int i = 0; i < pars.Count; ++i)
+            {
+                OperandInfo rop = new OperandInfo();
+                rop.isFloat = pars[i].op.isFloat;
+                sb.Append(GenOperandLoading(pars[i].param, pars[i].op, rop));
+                pars_sb.Append(Type2String(pars[i].type) + ", ");
+            }
+
+            if (fc.name.Equals("cout"))
+                sb.AppendLine("\tcall void [mscorlib]System.Console::WriteLine(" + pars_sb.ToString().Substring(0, pars_sb.ToString().Length - 2) + ")");
+            else
+                sb.AppendLine(ReportMessage + ": GenFunctionalCall - UnsupportedFunction");
+
+            return sb.ToString();
+        }
+
+        public static string GenILCode(ThreeAddrCode code)
+        {
+            StringBuilder sb = new StringBuilder(), sb_header = new StringBuilder();
+            List<FunctionParamInfo> pars = new List<FunctionParamInfo>();
+
             foreach (Block b in code.blocks)
                 foreach (Line.Line l in b)
                 {
@@ -178,11 +255,28 @@ namespace iCompiler
                         sb.Append(GenBinaryExpr(code, l as Line.BinaryExpr));
                     else if (l.Is<Line.UnaryExpr>())
                         sb.Append(GenUnaryExpr(code, l as Line.UnaryExpr));
+                    else if (l.Is<Line.Identity>())
+                        sb.Append(GenIdentity(code, l as Line.Identity));
+                    else if (l.Is<Line.СonditionalJump>())
+                        sb.Append(GenConditionalJump(code, l as Line.СonditionalJump));
+                    else if (l.Is<Line.GoTo>())
+                        sb.Append(GenGoTo(code, l as Line.GoTo));
+                    else if (l.Is<Line.FunctionParam>())
+                        pars.Add(ProcessFunctionParam(code, l as Line.FunctionParam));
+                    else if (l.Is<Line.FunctionCall>())
+                    {
+                        sb.Append(GenFunctionCall(code, l as Line.FunctionCall, pars));
+
+                        if ((l as Line.FunctionCall).name.Equals("cout"))
+                            sb_header.AppendLine(".assembly extern mscorlib {}");
+
+                        pars.Clear();
+                    }
                     else
                         sb.AppendLine(ReportMessage + ": GenILCode - UnsupportedLine");
                 }
             
-            return AddRim(code, sb.ToString());
+            return sb_header.Append(AddRim(code, sb.ToString())).ToString();
         }
     }
 }

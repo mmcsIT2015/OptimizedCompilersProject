@@ -70,8 +70,7 @@ namespace GUI
                 cso.Optimize();
 
                 ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
-                
-                //MessageBox.Show(ILCodeGeneration.GenILCode(code));
+                //ResultView.Text = ILCodeGeneration.GenILCode(code);
             }
             catch (FileNotFoundException ee)
             {

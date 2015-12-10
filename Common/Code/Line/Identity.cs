@@ -28,6 +28,12 @@ namespace iCompiler.Line
             return double.TryParse(right, style, nfi, out temp);
         }
 
+        public virtual bool RightIsIntNumber() // является ли параметр правой части целым числом
+        {
+            int temp;
+            return int.TryParse(right, out temp);
+        }
+
         public override string ToString()
         {
             return left + " = " + right;
