@@ -12,6 +12,7 @@ namespace iCompiler
         public DomTree(ThreeAddrCode code)
         {
             Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.GenerateDomOut(code);
+
             sets = new Dictionary<int, List<int>>();
             foreach (Block block in blockDoms.Keys)
             {
@@ -29,18 +30,42 @@ namespace iCompiler
 
         public bool FirstDomSeccond(Block a, Block b)
         {
+            int a_ind = _code.blocks.IndexOf(a);
+            int b_ind = _code.blocks.IndexOf(b);
 
-            return true;
+            if (sets[b_ind].Contains(a_ind))
+                return true;
+            else
+                return false;
         }
 
         public IEnumerable<Block> UpperDominators(Block a)
         {
-            return null;
+            List<Block> result = new List<Block>();
+
+            int a_ind = _code.blocks.IndexOf(a);
+            List<int> a_list = sets[a_ind];
+            for (int i = 0; i < a_list.Count; ++i)
+                result.Add(_code.blocks[a_list[i]]);
+
+            return result;
         }
 
         public IEnumerable<Block> DownDominators(Block a)
         {
-            return null;
+            List<Block> result = new List<Block>();
+
+            Stack<Block> stack = new Stack<Block>();
+            stack.Push(a);
+            while(stack.Count > 0)
+            {
+                Block block = stack.Pop();
+                result.Add(block);
+                for (int i = 0; i < tree[block].Count; ++i)
+                    stack.Push(tree[block][i]);
+            }
+
+            return result;
         }
     }
 

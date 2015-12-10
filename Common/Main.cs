@@ -77,6 +77,16 @@ namespace SimpleCompiler
 
             Console.WriteLine("\nDom Tree Class");
             DomTree test = new DomTree(code);
+            //Console.WriteLine(test.FirstDomSeccond(code.blocks[0], code.blocks[1]).ToString());
+            //Console.WriteLine(test.FirstDomSeccond(code.blocks[3], code.blocks[4]).ToString());
+            //Console.WriteLine(test.FirstDomSeccond(code.blocks[1], code.blocks[3]).ToString());
+            //IEnumerable<Block> list = test.UpperDominators(code.blocks[3]);
+            //foreach (Block block in list)
+            //    Console.WriteLine(block);
+            //IEnumerable<Block> list = test.DownDominators(code.blocks[0]);
+            //foreach (Block block in list)
+            //    Console.WriteLine(block);
+
 
             Console.WriteLine("\nReversed Edges");
             List<DomGraph.ValPair<Block>> listEdges = DomGraph.ReverseEdges(blockDoms, code.graph) as List<DomGraph.ValPair<Block>>;
