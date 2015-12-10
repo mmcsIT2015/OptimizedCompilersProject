@@ -5,7 +5,7 @@
 {
 	.entrypoint
 	.maxstack 5
-	.locals init (int32 i, int32 j, bool @t0, bool @t1, int32 @t2)
+	.locals init (int32 i, float32 j, bool @t0, bool @t1, float32 @t2)
 
 	ldc.i4 0
 	stloc i
@@ -18,11 +18,11 @@
 	brtrue @l0
 	br @l1
 @l0:
-	ldc.i4 0
+	ldc.r4 0
 	stloc j
 @l5:
 	ldloc j
-	ldc.i4 10
+	ldc.r4 10
 	clt
 	stloc @t1
 	ldloc @t1
@@ -32,11 +32,12 @@
 	ldloc i
 	ldloc j
 	mul
+	conv.r4
 	stloc @t2
 	ldloc @t2
-	call void [mscorlib]System.Console::WriteLine(int32)
+	call void [mscorlib]System.Console::WriteLine(float32)
 	ldloc j
-	ldc.i4 1
+	ldc.r4 1
 	add
 	stloc j
 	br @l5
