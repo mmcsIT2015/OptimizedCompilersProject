@@ -3,9 +3,9 @@
 // (see accompanying GPPGcopyright.rtf)
 
 // GPPG version 1.3.6
-// Machine:  DESKTOP-9C48I3Q
-// DateTime: 05.12.2015 11:07:53
-// UserName: alexey
+// Machine:  JEDIKNIGHT-PC
+// DateTime: 10.12.2015 18:53:35
+// UserName: jediknight
 // Input file <SimpleYacc_Pascal.y>
 
 // options: no-lines gplex
@@ -39,7 +39,7 @@ public struct ValueType
 			public FunctionNode funVal;
 			public FunctionNodeSt funStVal;
 			public List<ExprNode> paramVal;
-			public SimpleVarType typeVal;
+			public string typeVal;
        }
 // Abstract base class for GPLEX scanners
 public abstract class ScanBase : AbstractScanner<ValueType,LexLocation> {
@@ -293,7 +293,19 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
 { 
 			List<VarDeclNode> ls = new List<VarDeclNode>();
 			ls.Add(new VarDeclNode(new AssignNode(ValueStack[ValueStack.Depth-5].eVal as IdNode, ValueStack[ValueStack.Depth-1].eVal)));
-			var listNode = new VarDeclListNode(ValueStack[ValueStack.Depth-3].typeVal); 
+			
+			SimpleVarType type;
+			if (ValueStack[ValueStack.Depth-3].typeVal == "integer")
+				type = SimpleVarType.Int;
+			else if (ValueStack[ValueStack.Depth-3].typeVal == "float")
+				type = SimpleVarType.Float;
+			else if (ValueStack[ValueStack.Depth-3].typeVal == "string")
+				type = SimpleVarType.Str;
+			else if (ValueStack[ValueStack.Depth-3].typeVal == "boolean")
+				type = SimpleVarType.Bool;
+			else type = SimpleVarType.Unknown;
+			
+			var listNode = new VarDeclListNode(type); 
 			listNode.VariablesList = ls;
 			CurrentSemanticValue.stVal = listNode;
 		}
@@ -302,7 +314,19 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
 { 
 			var ls = new List<VarDeclNode>();
 			ls.Add(new VarDeclNode(ValueStack[ValueStack.Depth-3].eVal as IdNode));
-			var listNode = new VarDeclListNode(ValueStack[ValueStack.Depth-1].typeVal); 
+			
+			SimpleVarType type;
+			if (ValueStack[ValueStack.Depth-1].typeVal == "integer")
+				type = SimpleVarType.Int;
+			else if (ValueStack[ValueStack.Depth-1].typeVal == "float")
+				type = SimpleVarType.Float;
+			else if (ValueStack[ValueStack.Depth-1].typeVal == "string")
+				type = SimpleVarType.Str;
+			else if (ValueStack[ValueStack.Depth-1].typeVal == "boolean")
+				type = SimpleVarType.Bool;
+			else type = SimpleVarType.Unknown;
+			
+			var listNode = new VarDeclListNode(type); 
 			listNode.VariablesList = ls;
 			CurrentSemanticValue.stVal = listNode;
 		}
@@ -406,7 +430,6 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
     else
         return CharToString((char)terminal);
   }
-
 
 }
 }

@@ -31,6 +31,7 @@ STRING_LITERAL \"([^\"]|\\.)*\"
 }
 
 {TYPEDESC}	{
+	yylval.typeVal = yytext;
 	return (int)Tokens.TYPE;		
 }
 
