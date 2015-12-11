@@ -73,5 +73,10 @@ namespace iCompiler.Line
         {
             this.left = left;
         }
+
+        public virtual bool IsEqualRightSide(Expr expr)
+        {
+            return false;
+        }
     }
 }

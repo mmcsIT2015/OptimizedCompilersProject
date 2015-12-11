@@ -10,7 +10,6 @@ namespace iCompiler
 {
     /// <summary>
     /// Оптимизация: Устранение общих подвыражений
-    /// Примечание: Использовать после разбиения на внутренние блоки
     /// Пример использования:
     /// ====
     ///     CommonSubexpressionsOptimization opt = new CommonSubexpressionsOptimization(codeGenerator.Code);
@@ -37,12 +36,18 @@ namespace iCompiler
     /// </summary>
     public class CommonSubexpressionsOptimization : IOptimizer
     {
-        class Value
+        protected class Value
         {
             public List<string> ids = new List<string>();
+
+            public Value() { }
+            public Value(Line.Expr expr)
+            {
+                ids.Add(expr.left);
+            }
         }
 
-        class Operation : Value
+        protected class Operation : Value
         {
             public Value value1 = null, value2 = null;
             public ProgramTree.Operator op_type = ProgramTree.Operator.None;
@@ -62,7 +67,7 @@ namespace iCompiler
             }
         }
 
-        class UnaryOperation : Value
+        protected class UnaryOperation : Value
         {
             public Value value = null;
             public ProgramTree.Operator op_type = ProgramTree.Operator.Minus;
@@ -87,7 +92,8 @@ namespace iCompiler
             Code = code;
         }
 
-        private Value GetValue(Dictionary<string, Value> dict, string id)
+        // TODO чертовски неинформативное название. И вводящее в заблуждение.
+        protected Value GetValue(Dictionary<string, Value> dict, string id)
         {
             Value v;
             if (!dict.ContainsKey(id))
@@ -97,11 +103,14 @@ namespace iCompiler
                 dict[id] = v;
             }
             else
+            {
                 v = dict[id];
+            }
+
             return v;
         }
-        
-        private void IterationUnaryExpr(Dictionary<string, Value> dict, Block block, int ind)
+
+        protected void IterationUnaryExpr(Dictionary<string, Value> dict, Block block, int ind)
         {
             Line.UnaryExpr op = block[ind] as Line.UnaryExpr;
 
@@ -113,7 +122,7 @@ namespace iCompiler
             opp.value = GetValue(dict, op.argument);
             opp.op_type = op.operation;
 
-            bool b = false;
+            bool found = false;
             foreach (Value v2 in dict.Values)
             {
                 UnaryOperation opp2 = v2 as UnaryOperation;
@@ -123,25 +132,26 @@ namespace iCompiler
                     opp2.ids.Add(op.left);
 
                     block[ind] = new Line.Identity(op.left, opp2.ids[0]);
-                    b = true;
+                    found = true;
                     break;
                 }
             }
 
-            if (!b)
+            if (!found)
             {
                 dict[op.left] = opp;
-                if (opp.value.ids.Count != 0)
-                    op.argument = opp.value.ids[0];
+                if (opp.value.ids.Count != 0) op.argument = opp.value.ids[0];
             }
         }
 
-        private void IterationBinaryExpr(Dictionary<string, Value> dict, Block block, int ind)
+        protected void IterationBinaryExpr(Dictionary<string, Value> dict, Block block, int ind)
         {
             Line.BinaryExpr op = block[ind] as Line.BinaryExpr;
 
             if (dict.ContainsKey(op.left))
+            {
                 dict[op.left].ids.Remove(op.left);
+            }
 
             Operation opp = new Operation();
             opp.ids.Add(op.left);
@@ -149,7 +159,7 @@ namespace iCompiler
             opp.value2 = GetValue(dict, op.second);
             opp.op_type = op.operation;
 
-            bool b = false;
+            bool found = false;
             foreach (Value v2 in dict.Values)
             {
                 Operation opp2 = v2 as Operation;
@@ -159,27 +169,27 @@ namespace iCompiler
                     opp2.ids.Add(op.left);
 
                     block[ind] = new Line.Identity(op.left, opp2.ids[0]);
-                    b = true;
+                    found = true;
                     break;
                 }
             }
 
-            if (!b)
+            if (!found)
             {
                 dict[op.left] = opp;
-                if (opp.value1.ids.Count != 0)
-                    op.first = opp.value1.ids[0];
-                if (opp.value2.ids.Count != 0)
-                    op.second = opp.value2.ids[0];
+                if (opp.value1.ids.Count != 0) op.first = opp.value1.ids[0];
+                if (opp.value2.ids.Count != 0) op.second = opp.value2.ids[0];
             }
         }
 
-        private void IterationItentity(Dictionary<string, Value> dict, Block block, int ind)
+        protected void IterationItentity(Dictionary<string, Value> dict, Block block, int ind)
         {
             Line.Identity op = block[ind] as Line.Identity;
 
             if (dict.ContainsKey(op.left))
+            {
                 dict[op.left].ids.Remove(op.left);
+            }
 
             Value v = GetValue(dict, op.right);
             dict[op.left] = v;
@@ -188,11 +198,17 @@ namespace iCompiler
             op.right = v.ids[0];
         }
 
+        protected virtual Dictionary<string, Value> PrepareDictionary(Block block)
+        {
+            Dictionary<string, Value> dict = new Dictionary<string, Value>();
+            return dict;
+        }
+
         public override void Optimize(params Object[] values)
         {
             foreach (Block block in Code.blocks)
             {
-                Dictionary<string, Value> dict = new Dictionary<string, Value>();
+                var dict = PrepareDictionary(block);
                 for (int i = 0; i < block.Count; ++i)
                     if (block[i].Is<Line.Identity>())
                         IterationItentity(dict, block, i);

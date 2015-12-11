@@ -1,5 +1,7 @@
 # Folders
 .vs/
+SyntaxVisitors/bin/
+PascalABC/bin/
 Common/bin/
 GUI/bin/
 obj/

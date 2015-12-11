@@ -1,7 +1,12 @@
 {	
-		int a = 3, b = 5, p;
+		int a, b, c, d, e, f, h;
+		a = b + c;
+		if (1) {
+			d = b + c;
+			e = b + c;
+			h = b + c;
+		}
 
-		a = 4 + f(4, g(6, 7, 8));
-		b = 3*(2-p);
+		e = b + c;
 }
 

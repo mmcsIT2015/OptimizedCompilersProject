@@ -102,5 +102,13 @@ namespace iCompiler.Line
         {
             return left + " = " + first + " " + ToString(operation) + " " + second;
         }
+
+        public override bool IsEqualRightSide(Expr expr)
+        {
+            if (expr.IsNot<BinaryExpr>()) return false;
+
+            var bin = expr as BinaryExpr;
+            return bin.first == first && bin.second == second && bin.operation == operation;
+        }
     }
 }

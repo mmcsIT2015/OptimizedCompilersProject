@@ -38,5 +38,12 @@ namespace iCompiler.Line
         {
             return left + " = " + right;
         }
+
+        public override bool IsEqualRightSide(Expr expr)
+        {
+            if (expr.IsNot<Identity>()) return false;
+
+            return (expr as Identity).right == right;
+        }
     }
 }

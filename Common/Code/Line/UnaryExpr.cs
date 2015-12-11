@@ -60,5 +60,13 @@ namespace iCompiler.Line
         {
             return left + " = " +  ToString(operation) + argument;
         }
+
+        public override bool IsEqualRightSide(Expr expr)
+        {
+            if (expr.IsNot<UnaryExpr>()) return false;
+
+            var un = expr as UnaryExpr;
+            return un.argument == argument && un.operation == operation;
+        }
     }
 }
