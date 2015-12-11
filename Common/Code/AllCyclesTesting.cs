@@ -69,20 +69,20 @@ namespace iCompiler
                     if (root[0] is CycleUsual<T>)
                     {
                         CycleUsual<T> c = root[0] as CycleUsual<T>;
-                        Console.WriteLine("Вход в цикл: {0}", c.N);
-                        Console.WriteLine("Выход из цикла: {0}", c.D);
+                        Console.WriteLine("Вход в цикл: {0}", c.N.ToString());
+                        Console.WriteLine("Выход из цикла: {0}", c.D.ToString());
                         Console.WriteLine("Вершины цикла:");
                         for (int i = 0; i < c.DATA.Count; ++i)
-                            Console.WriteLine(c.DATA[i] + " ");
+                            Console.WriteLine(c.DATA[i].ToString() + " ");
                     }
                     if (root[0] is CycleSpecialCase<T>)
                     {
                         CycleSpecialCase<T> c = root[0] as CycleSpecialCase<T>;
-                        Console.WriteLine("Вход в цикл: {0}", c.N);
-                        Console.WriteLine("Выходы из цикла: {0} , {1} ", c.D1, c.D2);
+                        Console.WriteLine("Вход в цикл: {0}", c.N.ToString());
+                        Console.WriteLine("Выходы из цикла: {0} , {1} ", c.D1.ToString(), c.D2.ToString());
                         Console.WriteLine("Вершины цикла:");
                         for (int i = 0; i < c.DATA.Count; ++i)
-                            Console.WriteLine(c.DATA[i] + " ");
+                            Console.WriteLine(c.DATA[i].ToString() + " ");
                     }
                     
                     if (hierarchy.ContainsKey(root[0]))
@@ -100,20 +100,20 @@ namespace iCompiler
                     if (root[0] is CycleUsual<T>)
                     {
                         CycleUsual<T> c = root[0] as CycleUsual<T>;
-                        Console.WriteLine("Вход в цикл: {0}", c.N);
-                        Console.WriteLine("Выход из цикла: {0}", c.D);
+                        Console.WriteLine("Вход в цикл: {0}", c.N.ToString());
+                        Console.WriteLine("Выход из цикла: {0}", c.D.ToString());
                         Console.WriteLine("Вершины цикла:");
                         for (int i = 0; i < c.DATA.Count; ++i)
-                            Console.WriteLine(c.DATA[i] + " ");
+                            Console.WriteLine(c.DATA[i].ToString() + " ");
                     }
                     if (root[0] is CycleSpecialCase<T>)
                     {
                         CycleSpecialCase<T> c = root[0] as CycleSpecialCase<T>;
-                        Console.WriteLine("Вход в цикл: {0}", c.N);
-                        Console.WriteLine("Выходы из цикла: {0} , {1} ", c.D1, c.D2);
+                        Console.WriteLine("Вход в цикл: {0}", c.N.ToString());
+                        Console.WriteLine("Выходы из цикла: {0} , {1} ", c.D1.ToString(), c.D2.ToString());
                         Console.WriteLine("Вершины цикла:");
                         for (int i = 0; i < c.DATA.Count; ++i)
-                            Console.WriteLine(c.DATA[i] + " ");
+                            Console.WriteLine(c.DATA[i].ToString() + " ");
                     }
 
                     if (hierarchy.ContainsKey(root[0]))
@@ -129,20 +129,20 @@ namespace iCompiler
                     if (root[1] is CycleUsual<T>)
                     {
                         CycleUsual<T> c = root[1] as CycleUsual<T>;
-                        Console.WriteLine("Вход в цикл: {0}", c.N);
-                        Console.WriteLine("Выход из цикла: {0}", c.D);
+                        Console.WriteLine("Вход в цикл: {0}", c.N.ToString());
+                        Console.WriteLine("Выход из цикла: {0}", c.D.ToString());
                         Console.WriteLine("Вершины цикла:");
                         for (int i = 0; i < c.DATA.Count; ++i)
-                            Console.WriteLine(c.DATA[i] + " ");
+                            Console.WriteLine(c.DATA[i].ToString() + " ");
                     }
                     if (root[1] is CycleSpecialCase<T>)
                     {
                         CycleSpecialCase<T> c = root[1] as CycleSpecialCase<T>;
-                        Console.WriteLine("Вход в цикл: {0}", c.N);
-                        Console.WriteLine("Выходы из цикла: {0} , {1} ", c.D1, c.D2);
+                        Console.WriteLine("Вход в цикл: {0}", c.N.ToString());
+                        Console.WriteLine("Выходы из цикла: {0} , {1} ", c.D1.ToString(), c.D2.ToString());
                         Console.WriteLine("Вершины цикла:");
                         for (int i = 0; i < c.DATA.Count; ++i)
-                            Console.WriteLine(c.DATA[i] + " ");
+                            Console.WriteLine(c.DATA[i].ToString() + " ");
                     }
 
                     if (hierarchy.ContainsKey(root[1]))
