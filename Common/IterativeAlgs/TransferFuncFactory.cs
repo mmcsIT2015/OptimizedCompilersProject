@@ -57,5 +57,10 @@ namespace iCompiler
 
             return funcs;
         }
+
+        public static Dictionary<Block, TransferFunction<Block>> TransferFuncsForDraggingConst(ThreeAddrCode code)
+        {
+            return null;
+        }
     }
 }
