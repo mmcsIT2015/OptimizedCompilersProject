@@ -10,6 +10,157 @@ namespace iCompiler
     /// </summary>
     public static class AllCyclesTesting
     {
+        public class AllCyclesHierarchy<T>
+        {
+            private Dictionary<Cycle<T>, List<Cycle<T>>> hierarchy = new Dictionary<Cycle<T>, List<Cycle<T>>>();
+            private List<Cycle<T>> mCycles = new List<Cycle<T>>();
+
+            public AllCyclesHierarchy(List<Cycle<T>> cycles)
+            {
+                mCycles = cycles;
+            }
+
+            public void HierarchyAlgo()
+            {
+                for (int i = 0; i < mCycles.Count; ++i)
+                    if (mCycles[i] is CycleSpecialCase<int>)
+                    {
+                        CycleSpecialCase<T> cycleSpec = mCycles[i] as CycleSpecialCase<T>;
+
+                        List<T> vertices = new List<T>();
+                        vertices = cycleSpec.DATA;
+                        vertices.Remove(cycleSpec.D2);
+                        vertices.Remove(cycleSpec.D1);
+
+                        List<DomGraph.ValPair<T>> outs1 = new List<DomGraph.ValPair<T>>();
+                        List<DomGraph.ValPair<T>> outs2 = new List<DomGraph.ValPair<T>>();
+
+                        outs1.Add(new DomGraph.ValPair<T>(cycleSpec.D1, mCycles[i].N));
+                        outs2.Add(new DomGraph.ValPair<T>(cycleSpec.D2, mCycles[i].N));
+
+                        List<T> vertices1 = new List<T>();
+                        vertices1.AddRange(vertices);
+                        vertices1.Add(cycleSpec.D1);
+
+                        List<T> vertices2 = new List<T>();
+                        vertices2.AddRange(vertices);
+                        vertices2.Add(cycleSpec.D2);
+
+                        CycleUsual<T> c1 = new CycleUsual<T>(mCycles[i].N, vertices1,
+                            outs1, cycleSpec.D1);
+
+                        CycleUsual<T> c2 = new CycleUsual<T>(mCycles[i].N, vertices2,
+                            outs2, cycleSpec.D2);
+
+                        List<Cycle<T>> cycles = new List<Cycle<T>>();
+                        cycles.Add(c1);
+                        cycles.Add(c2);
+
+                        hierarchy[cycleSpec] = cycles;
+                    }
+            }
+
+            public void PrintHierarchy(List<Cycle<T>> root)
+            {
+                if (root.Count == 0)
+                    return;
+                if (root.Count == 1)
+                {
+                    if (root[0] is CycleUsual<T>)
+                    {
+                        CycleUsual<T> c = root[0] as CycleUsual<T>;
+                        Console.WriteLine("Вход в цикл: {0}", c.N);
+                        Console.WriteLine("Выход из цикла: {0}", c.D);
+                        Console.WriteLine("Вершины цикла:");
+                        for (int i = 0; i < c.DATA.Count; ++i)
+                            Console.WriteLine(c.DATA[i] + " ");
+                    }
+                    if (root[0] is CycleSpecialCase<T>)
+                    {
+                        CycleSpecialCase<T> c = root[0] as CycleSpecialCase<T>;
+                        Console.WriteLine("Вход в цикл: {0}", c.N);
+                        Console.WriteLine("Выходы из цикла: {0} , {1} ", c.D1, c.D2);
+                        Console.WriteLine("Вершины цикла:");
+                        for (int i = 0; i < c.DATA.Count; ++i)
+                            Console.WriteLine(c.DATA[i] + " ");
+                    }
+                    
+                    if (hierarchy.ContainsKey(root[0]))
+                    {
+                        Console.WriteLine("Вложенные циклы для этого цикла:");
+                        PrintHierarchy(hierarchy[root[0]]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Нет вложенных циклов на этом уровне");
+                    }
+                }
+                if (root.Count == 2)
+                {
+                    if (root[0] is CycleUsual<T>)
+                    {
+                        CycleUsual<T> c = root[0] as CycleUsual<T>;
+                        Console.WriteLine("Вход в цикл: {0}", c.N);
+                        Console.WriteLine("Выход из цикла: {0}", c.D);
+                        Console.WriteLine("Вершины цикла:");
+                        for (int i = 0; i < c.DATA.Count; ++i)
+                            Console.WriteLine(c.DATA[i] + " ");
+                    }
+                    if (root[0] is CycleSpecialCase<T>)
+                    {
+                        CycleSpecialCase<T> c = root[0] as CycleSpecialCase<T>;
+                        Console.WriteLine("Вход в цикл: {0}", c.N);
+                        Console.WriteLine("Выходы из цикла: {0} , {1} ", c.D1, c.D2);
+                        Console.WriteLine("Вершины цикла:");
+                        for (int i = 0; i < c.DATA.Count; ++i)
+                            Console.WriteLine(c.DATA[i] + " ");
+                    }
+
+                    if (hierarchy.ContainsKey(root[0]))
+                    {
+                        Console.WriteLine("Вложенные циклы для этого цикла:");
+                        PrintHierarchy(hierarchy[root[0]]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Нет вложенных циклов на этом уровне");
+                    }
+
+                    if (root[1] is CycleUsual<T>)
+                    {
+                        CycleUsual<T> c = root[1] as CycleUsual<T>;
+                        Console.WriteLine("Вход в цикл: {0}", c.N);
+                        Console.WriteLine("Выход из цикла: {0}", c.D);
+                        Console.WriteLine("Вершины цикла:");
+                        for (int i = 0; i < c.DATA.Count; ++i)
+                            Console.WriteLine(c.DATA[i] + " ");
+                    }
+                    if (root[1] is CycleSpecialCase<T>)
+                    {
+                        CycleSpecialCase<T> c = root[1] as CycleSpecialCase<T>;
+                        Console.WriteLine("Вход в цикл: {0}", c.N);
+                        Console.WriteLine("Выходы из цикла: {0} , {1} ", c.D1, c.D2);
+                        Console.WriteLine("Вершины цикла:");
+                        for (int i = 0; i < c.DATA.Count; ++i)
+                            Console.WriteLine(c.DATA[i] + " ");
+                    }
+
+                    if (hierarchy.ContainsKey(root[1]))
+                    {
+                        Console.WriteLine("Вложенные циклы для этого цикла:");
+                        PrintHierarchy(hierarchy[root[1]]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Нет вложенных циклов на этом уровне");
+                    }
+                    
+                }
+
+                   
+            }
+        }
+        
         /// <summary>
         /// Тестовый граф
         /// </summary>
@@ -124,64 +275,14 @@ namespace iCompiler
                 Console.WriteLine("CyclesHierarchy");
                 Console.WriteLine(exampleTitle);
                 //здесь определяем вложенность циклов (например)
-                Dictionary<Cycle<int>, List<Cycle<int>>> hierarchy = new Dictionary<Cycle<int>, List<Cycle<int>>>();
 
-                for (int i = 0; i < allCycles.cycles.Count; ++i)
-                    if (allCycles.cycles[i] is CycleSpecialCase<int>)
-                    {
-                        CycleSpecialCase<int> cycleSpec = allCycles.cycles[i] as CycleSpecialCase<int>;
-
-                        List<int> vertices = new List<int>();
-                        vertices = cycleSpec.DATA;
-                        vertices.Remove(cycleSpec.D2);
-                        vertices.Remove(cycleSpec.D1);
-
-                        List<DomGraph.ValPair<int>> outs1 = new List<DomGraph.ValPair<int>>();
-                        List<DomGraph.ValPair<int>> outs2 = new List<DomGraph.ValPair<int>>();
-
-                        outs1.Add(new DomGraph.ValPair<int>(cycleSpec.D1, allCycles.cycles[i].N));
-                        outs2.Add(new DomGraph.ValPair<int>(cycleSpec.D2, allCycles.cycles[i].N));
-
-                        List<int> vertices1 = new List<int>();
-                        vertices1.AddRange(vertices);
-                        vertices1.Add(cycleSpec.D1);
-
-                        List<int> vertices2 = new List<int>();
-                        vertices2.AddRange(vertices);
-                        vertices2.Add(cycleSpec.D2);
-
-                        CycleUsual<int> c1 = new CycleUsual<int>(allCycles.cycles[i].N, vertices1,
-                            outs1, cycleSpec.D1);
-
-                        CycleUsual<int> c2 = new CycleUsual<int>(allCycles.cycles[i].N, vertices2,
-                            outs2, cycleSpec.D2);
-
-                        List<Cycle<int>> cycles = new List<Cycle<int>>();
-                        cycles.Add(c1);
-                        cycles.Add(c2);
-
-                        hierarchy[cycleSpec] = cycles;
-                    }
-
-
+                AllCyclesHierarchy<int> allCyclesHierarchy = new AllCyclesHierarchy<int>(allCycles.cycles);
+                allCyclesHierarchy.HierarchyAlgo();
                 foreach (Cycle<int> c in allCycles.cycles)
                 {
-                    //...
-                    _print_cycle(c);
-                    //...
-
-                    if (hierarchy.Count > 0)
-                    {
-                        Console.WriteLine("The cycle hierarchy is: ");
-                        foreach (Cycle<int> c1 in hierarchy[c])
-                        {
-
-                            _print_cycle(c1);
-                            //...
-                        }
-                    }
-                    else
-                        Console.WriteLine("There are no cycle hierarchy.");
+                    List<Cycle<int>> listCycles = new List<Cycle<int>>();
+                    listCycles.Add(c);
+                    allCyclesHierarchy.PrintHierarchy(listCycles);
                 }
                 Console.WriteLine();
             }
