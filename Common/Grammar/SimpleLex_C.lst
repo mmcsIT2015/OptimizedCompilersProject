@@ -1,3 +1,14 @@
+
+// ==========================================================================
+//  GPLEX error listing for lex source file <SimpleLex_C.lex>
+// ==========================================================================
+//  Version:  1.1.3.301
+//  Machine:  DESKTOP-U94NV7T
+//  DateTime: 20.11.2015 18:13:24
+//  UserName: jedik
+// ==========================================================================
+
+
 %using CompilerExceptions;
 %using QUT.Gppg;
 %using System.Linq;
@@ -11,40 +22,32 @@ AlphaDigit {Alpha}|{Digit}
 INTNUM  {Digit}+
 REALNUM {INTNUM}\.{INTNUM}
 ID {Alpha}{AlphaDigit}*
-TYPEDESC int|float|string|bool
+TYPE {int}|{float}|{string}|{bool}
+//----^^^
+// Error: Unknown lexical category <int> 
+// --------------------------------------
 
 STRING_LITERAL \"([^\"]|\\.)*\"
 
 %%
 
 {INTNUM} { 
-	bool isIntNum = int.TryParse(yytext, out yylval.iVal); 
-	if (isIntNum) {
-		return (int)Tokens.INUM; 
-	}
-
-	throw new SyntaxException(yytext + " isn't a value of type `INTNUM`");
+  bool isIntNum = int.TryParse(yytext, out yylval.iVal); 
+  if (isIntNum) {
+	return (int)Tokens.INUM; 
+  }
+  throw new SyntaxException(yytext + " isn't a value of type `INTNUM`");
 }
 
-{STRING_LITERAL} {
-	return (int)Tokens.STRING_L;
-}
 
-{TYPEDESC}	{
-	yylval.typeVal = yytext;
-	return (int)Tokens.TYPE;		
-}
 
 {REALNUM} { 
-	var style = System.Globalization.NumberStyles.Any;
-    NumberFormatInfo nfi = new NumberFormatInfo();
-    nfi.NumberDecimalSeparator = ".";
-	bool isRealNum = double.TryParse(yytext, style, nfi, out yylval.dVal); 
-	if (isRealNum) {
-		return (int)Tokens.RNUM; 
-	}
+  bool isRealNum = double.TryParse(yytext, out yylval.dVal); 
+  if (isRealNum) {
+	return (int)Tokens.RNUM; 
+  }
   
-	throw new SyntaxException(yytext + " isn't a value of type `REALNUM`");
+  throw new SyntaxException(yytext + " isn't a value of type `REALNUM`");
 }
 
 {ID}  {
@@ -69,10 +72,7 @@ STRING_LITERAL \"([^\"]|\\.)*\"
 ">" { return (int)Tokens.GREAT; }
 "==" { return (int)Tokens.EQUAL; }
 "!=" { return (int)Tokens.INEQUAL; }
-"<=" { return (int)Tokens.LESSEQUAL; }
-">=" { return (int)Tokens.GREATEREQUAL; }
 "," { return (int)Tokens.COMMA; }
-":" { return (int)Tokens.COLON; }
 "!" { return (int)Tokens.NOT; }
 
 [^\t \r\n] {
@@ -110,8 +110,6 @@ class ScannerHelper
     keywords.Add("if",(int)Tokens.IF);
     keywords.Add("else",(int)Tokens.ELSE);
     keywords.Add("while",(int)Tokens.WHILE);
-		keywords.Add("goto", (int)Tokens.GOTO);
-		keywords.Add("endl", (int)Tokens.ENDL);
   }
   public static int GetIDToken(string s)
   {
@@ -122,3 +120,5 @@ class ScannerHelper
   }
 
 }
+// ==========================================================================
+
