@@ -131,7 +131,9 @@ namespace iCompiler
                     dict[op.left] = opp2;
                     opp2.ids.Add(op.left);
 
+                    var label = block[ind].label;
                     block[ind] = new Line.Identity(op.left, opp2.ids[0]);
+                    block[ind].label = label;
                     found = true;
                     break;
                 }
@@ -168,7 +170,9 @@ namespace iCompiler
                     dict[op.left] = opp2;
                     opp2.ids.Add(op.left);
 
+                    var label = block[ind].label;
                     block[ind] = new Line.Identity(op.left, opp2.ids[0]);
+                    block[ind].label = label;
                     found = true;
                     break;
                 }
@@ -182,7 +186,7 @@ namespace iCompiler
             }
         }
 
-        protected void IterationItentity(Dictionary<string, Value> dict, Block block, int ind)
+        protected void IterationIdentity(Dictionary<string, Value> dict, Block block, int ind)
         {
             Line.Identity op = block[ind] as Line.Identity;
 
@@ -211,7 +215,7 @@ namespace iCompiler
                 var dict = PrepareDictionary(block);
                 for (int i = 0; i < block.Count; ++i)
                     if (block[i].Is<Line.Identity>())
-                        IterationItentity(dict, block, i);
+                        IterationIdentity(dict, block, i);
                     else if (block[i].Is<Line.BinaryExpr>())
                         IterationBinaryExpr(dict, block, i);
                     else if (block[i].Is<Line.UnaryExpr>())
