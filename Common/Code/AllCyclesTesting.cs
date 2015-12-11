@@ -23,7 +23,7 @@ namespace iCompiler
             public void HierarchyAlgo()
             {
                 for (int i = 0; i < mCycles.Count; ++i)
-                    if (mCycles[i] is CycleSpecialCase<int>)
+                    if (mCycles[i] is CycleSpecialCase<T>)
                     {
                         CycleSpecialCase<T> cycleSpec = mCycles[i] as CycleSpecialCase<T>;
 
