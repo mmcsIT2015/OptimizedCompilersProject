@@ -1,0 +1,246 @@
+﻿__Постановка задачи__
+
+Определение всех естественных циклов
+
+__От каких задач зависит(на каких задачах основывается), входные данные__
+
+На вход алгоритму подаются:
+
+- Список базовых блоков 
+
+~~~~~~~{.cs}
+
+    IEnumerable<T> blocks
+
+~~~~~~~~~~~~~~
+
+- Граф потока управления
+
+~~~~~~~{.cs}
+
+    IGraph<T> graph
+
+~~~~~~~~~~~~~~~
+
+- Список обратных дуг
+
+~~~~~~~{.cs}
+
+    List<DomGraph.ValPair<T>> reverseEdges
+
+~~~~~~~~~~~~~~
+
+- Дерево доминатора
+
+~~~~~~~{.cs}
+
+    IDominatorRelation<T>
+
+~~~~~~~~~~~~~~
+
+Данный алгоритм основывается на задачах, которые занимаются построением соотвествующих структур данных,
+за исключением IDominatorRelation<T>, который предоставляется как интерфейс:
+
+~~~~~~~{.cs}
+
+    /// <summary>
+    /// Интерфейс для дерева доминатора
+    /// </summary>
+    /// <typeparam name="T">Тип данных</typeparam>
+    public interface IDominatorRelation<T>
+    {
+        /// <summary>
+        /// Отношение доминирования первой вершины над второй
+        /// </summary>
+        /// <param name="a">Первая вершина</param>
+        /// <param name="b">Вторая вершина</param>
+        /// <returns></returns>
+        bool FirstDomSeccond(T a, T b);
+
+        /// <summary>
+        /// Все вершины, которые доминируют над текущей
+        /// </summary>
+        /// <param name="a">Вершина</param>
+        /// <returns></returns>
+        IEnumerable<T> UpperDominators(T a);
+    }
+
+~~~~~~~~~~~~~~~~
+
+__Для каких задач нужна(для каких задач является основой), выходные данные__
+
+Выходные данные алгоритма - список циклов:
+
+~~~~~~~{.cs}
+
+    List<Cycle>
+
+~~~~~~~~~~~~~~~~
+
+Данная задача является основой для задачи "Определение вложенности естественных циклов"
+
+__Реализация(интерфейс т.е. классы, методы)__
+
+Шаблон типа необходим для проведения тестирования алгоритма с помощью типа int, но алгоритм предназначен для использования с типом Block.
+
+Данный алгоритм реализуется классами:
+
+1. AllCycles< T > - находит все циклы типа CycleUsual<T> (цикл типа CycleSpecialCase<T> распознается как 2 цикла типа CycleUsual<T>)
+
+~~~~~~~{.cs}
+
+    public class AllCycles<T> where T : IComparable<T>
+    { 
+         public List<Cycle<T>> cycles { get; protected set; } 
+         public AllCycles(IEnumerable<T> blocks, IGraph<T> graph, 
+         List<DomGraph.ValPair<T>> reverseEdges, 
+  			    IDominatorRelation<T> domTree);
+    }
+
+~~~~~~~~~~~~~~
+
+2. AllCyclesSpecialCase< T > - находит все циклы типа CycleUsual<T> и CycleSpecialCase<T>
+
+~~~~~~~{.cs}
+
+    public class AllCyclesWithSpecialCase<T> : AllCycles<T>  
+    where T: IComparable<T>
+    {
+         public AllCyclesWithSpecialCase(IEnumerable<T> blocks, 
+				    IGraph<T> graph, 
+         List<DomGraph.ValPair<T>> reverseEdges, 
+			    IDominatorRelation<T> domTree);
+    }
+
+~~~~~~~~~~~~~~
+
+Тип Cycle< T > является абстрактным классом цикла, который реализуется 2 классами:
+
+~~~~~~~{.cs}
+
+    /// <summary>
+    /// Класс цикла
+    /// </summary>
+    /// <typeparam name="T">Тип вершин</typeparam>
+    public abstract class Cycle<T>
+    {
+        /// <summary>
+        /// Вход в цикл
+        /// </summary>
+        public T N { get; set; }
+
+        /// <summary>
+        /// Все вершины, принадлежащие циклу
+        /// </summary>
+        public List<T> DATA { get; set; }
+
+        /// <summary>
+        /// Ребра - выходы из цикла
+        /// </summary>
+        public List<DomGraph.ValPair<T>> OUTS { get; set; }
+    }
+
+    /// <summary>
+    /// Цикл с одной обратной дугой
+    /// </summary>
+    /// <typeparam name="T">Тип вершин</typeparam>
+    public class CycleUsual<T>: Cycle<T>
+    {
+        public CycleUsual(T n, List<T> data, 
+         	    List<DomGraph.ValPair<T>> outs, T d)
+        {
+            this.N = n;
+            this.DATA = data;
+            this.OUTS = outs;
+            this.D = d;
+        }
+
+        /// <summary>
+        /// Вершина из обратного ребра
+        /// </summary>
+        public T D { get; set; }
+    }
+
+    /// <summary>
+    /// Цикл с двумя обратными дугами
+    /// </summary>
+    /// <typeparam name="T">Тип вершин</typeparam>
+    public class CycleSpecialCase<T> : Cycle<T>
+    {
+        public CycleSpecialCase(T n, List<T> data, 
+  	    List<DomGraph.ValPair<T>> outs, T d1, T d2)
+        {
+            this.N = n;
+            this.DATA = data;
+            this.OUTS = outs;
+            this.D1 = d1;
+            this.D2 = d2;
+        }
+
+        /// <summary>
+        /// Вершина из первого обратного ребра
+        /// </summary>
+        public T D1 { get; set; }
+
+        /// <summary>
+        /// Вершина из второго обратного ребра
+        /// </summary>
+        public T D2 { get; set; }
+    }
+
+~~~~~~~~~~~~~~
+
+Других видов циклов не бывает.	
+List< Cycle< T > > - полиморфный контейнер, который хранит в себе 2 вида циклов.
+
+__Пример использования:__
+
+~~~~~~~{.cs}
+
+    //Входные данные
+    List<Block> block;
+    ControlFlowGraph graph;
+    List<DomGraph.ValPair<Block>> reverseEdges;
+    DomTree domTree;
+    //...
+    //Инициализация
+    AllCycles<Block> allCyclesSpec = 
+	    new AllCyclesWithSpecialCase<Block>(blocks, graph, 
+				    reverseEdges, domTree);
+    AllCycles<Block> allCycles = 
+	    new AllCycles<Block>(code.blocks, code.graph, 
+			    reverseEdges, domTree);
+    //Получить все циклы с учётом "специального случая"
+    List<Cycle<Block>> cyclesSpec = allCycles.cycles;
+    //Получить все циклы без учёта "специального случая"
+    List<Cycle<Block>> cycles = allCycles.cycles;
+
+~~~~~~~~~~~~~~
+	
+__Описание(что делает и как реализовано)__
+
+- Алгоритм ищет все циклы в графе потока управления.
+
+- Считает граф потока управления приводимым.
+
+- Ищет все циклы в графе вне зависимости от их вложенности.
+
+- Алгоритм раелизован с помощью рекурсивного обхода вглубину по напрвлению дуг, обратных графу потока управления. Обход начинается с каждой точки выхода из цикла, и заканчивается обходом всего цикла.
+
+	
+__Тесты(если есть и если не являются другой задачей)__
+
+Тестовые структуры данных, реализующие соответствующие интерфейсы, а также классы примеров вы можете видеть на dgml диаграмме (см. рис. 1)
+
+![Рис. 1](dgml1.jpg "Рис. 1")
+Рис. 1
+  
+Для прогона тестов необходимо вызвать 
+
+~~~~~~~{.cs}
+
+    AllCyclesTesting.TestingAllCycles();
+
+~~~~~~~~~~~~~~
+__Команда__
+Альфа
