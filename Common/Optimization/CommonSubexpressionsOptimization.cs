@@ -93,6 +93,7 @@ namespace iCompiler
         }
 
         // TODO чертовски неинформативное название. И вводящее в заблуждение.
+        // Ну так метод protected, не для того, чтобы давать какую-то информацию
         protected Value GetValue(Dictionary<string, Value> dict, string id)
         {
             Value v;

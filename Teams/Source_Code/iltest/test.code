@@ -4,8 +4,8 @@
 .method static public void main() cil managed
 {
 	.entrypoint
-	.maxstack 5
-	.locals init (int32 i, float32 j, bool @t0, bool @t1, float32 @t2)
+	.maxstack 4
+	.locals init (int32 i, int32 j, bool @t0, bool @t1)
 
 	ldc.i4 0
 	stloc i
@@ -18,11 +18,11 @@
 	brtrue @l0
 	br @l1
 @l0:
-	ldc.r4 0
+	ldc.i4 0
 	stloc j
 @l5:
 	ldloc j
-	ldc.r4 10
+	ldc.i4 10
 	clt
 	stloc @t1
 	ldloc @t1
@@ -30,14 +30,12 @@
 	br @l4
 @l3:
 	ldloc i
+	call void [mscorlib]System.Console::Write(int32)
 	ldloc j
-	mul
-	conv.r4
-	stloc @t2
-	ldloc @t2
-	call void [mscorlib]System.Console::WriteLine(float32)
+	call void [mscorlib]System.Console::Write(int32)
+	call void [mscorlib]System.Console::WriteLine()
 	ldloc j
-	ldc.r4 1
+	ldc.i4 1
 	add
 	stloc j
 	br @l5

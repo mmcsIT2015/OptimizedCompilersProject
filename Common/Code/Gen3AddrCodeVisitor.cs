@@ -346,7 +346,7 @@ namespace iCompiler
             mLines.Add(new Line.FunctionCall("cout", parameters.Count));
             CheckRealLabel(node, nextLine);
         }
-
+        
         public void Visit(FunctionNode node)
         {
             List<string> parameters = new List<string>();
@@ -496,6 +496,12 @@ namespace iCompiler
         {
             string str = node.Num.ToString();
             str = str.Replace(',', '.');
+            mStack.Push(str);
+        }
+
+        public void Visit(EndlNode endlNode)
+        {
+            string str = "endl";
             mStack.Push(str);
         }
     }

@@ -118,9 +118,9 @@ namespace SimpleCompiler
             if (listEdges.Count == 0)
                 Console.WriteLine("There are no straight edges");
             else
-            for (int i = 0; i < listEdges.Count; ++i)
-                Console.WriteLine("Straight edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].valBegin) + 1,
-                    code.blocks.IndexOf(listEdges[i].valEnd) + 1);
+                for (int i = 0; i < listEdges.Count; ++i)
+                    Console.WriteLine("Straight edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].valBegin) + 1,
+                        code.blocks.IndexOf(listEdges[i].valEnd) + 1);
 
             Console.WriteLine("\nReversed Edges");
             listEdges = graphEdges.ReversedEdges(blockDoms) as List<DomGraph.ValPair<Block>>;
@@ -257,7 +257,7 @@ namespace SimpleCompiler
             if (graphEdges.IsGraphGiven())
                 Console.WriteLine("Test GraphInt 1 passed");
             else
-                Console.WriteLine("Test GraphInt 1 did not passed");
+                Console.WriteLine("Test GraphInt 1 did not pass");
         }
 
         public static void GraphIntTesting2()
@@ -281,7 +281,7 @@ namespace SimpleCompiler
             if (graphEdges.IsGraphGiven())
                 Console.WriteLine("Test GraphInt 2 passed");
             else
-                Console.WriteLine("Test GraphInt 2 did not passed");
+                Console.WriteLine("Test GraphInt 2 did not pass");
 
 
 
@@ -311,7 +311,7 @@ namespace SimpleCompiler
             if (graphEdges.IsGraphGiven())
                 Console.WriteLine("Test GraphInt 3 passed");
             else
-                Console.WriteLine("Test GraphInt 3 did not passed");
+                Console.WriteLine("Test GraphInt 3 did not pass");
 
 
 

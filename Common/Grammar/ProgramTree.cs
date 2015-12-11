@@ -294,15 +294,19 @@ namespace ProgramTree
             visitor.Visit(this);
         }
     }
+		
+	public class EndlNode : ExprNode {
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
 
     public class CoutNode : StatementNode
     {
         public List<ExprNode> ExprList = new List<ExprNode>();
 
-        public CoutNode(ExprNode expr)
-        {
-            Add(expr);
-        }
+        public CoutNode() { }    
 
         public void Add(ExprNode expr)
         {

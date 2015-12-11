@@ -26,7 +26,7 @@
 
 %namespace SimpleParserC
 
-%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA COLON NOT LESSEQUAL GREATEREQUAL GOTO
+%token ASSIGN SEMICOLON PLUS MINUS MUL DIV LBRACKET RBRACKET BEGIN END IF ELSE WHILE DO LESS GREAT EQUAL INEQUAL LSHIFT COUT COMMA COLON NOT LESSEQUAL GREATEREQUAL GOTO ENDL
 %token <iVal> INUM
 %token <dVal> RNUM
 %token <sVal> ID STRING_L
@@ -35,7 +35,7 @@
 %type <eVal> expr ident T F S U
 %type <stVal> assign statement st do_while while if goto
 %type <blVal> stlist block
-%type <ioVal> cout
+%type <ioVal> cout cout_list
 %type <funVal> funcall
 %type <funStVal> funcallst
 %type <paramVal> params
@@ -55,13 +55,12 @@ stlist	: statement { $$ = new BlockNode($1);	}
 		}
 	 ;
 
-cout	: COUT LSHIFT expr { $$ = new CoutNode($3); }
-    | cout LSHIFT expr
-    	{
-    		$1.Add($3);
-    		$$ = $1;
-    	}
-    ;
+cout_list : LSHIFT expr { $$ = new CoutNode(); $$.Add($2); }
+	| LSHIFT ENDL { $$ = new CoutNode(); $$.Add(new EndlNode()); }
+	| cout_list LSHIFT expr { $$ = $1; $$.Add($3); }
+	| cout_list LSHIFT ENDL { $$ = $1; $$.Add(new EndlNode()); }
+	;
+cout	: COUT cout_list { $$ = $2; } ;  
 
 params : expr { $$ = new List<ExprNode>(); $$.Add($1); }
     |	params COMMA expr
