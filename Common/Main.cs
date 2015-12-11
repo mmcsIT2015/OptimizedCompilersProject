@@ -281,7 +281,7 @@ namespace SimpleCompiler
             if (graphEdges.IsGraphGiven())
                 Console.WriteLine("Test GraphInt 2 passed");
             else
-                Console.WriteLine("Test GraphInt 2 did not passed");
+                Console.WriteLine("Test GraphInt 2 did not pass");
 
 
 
