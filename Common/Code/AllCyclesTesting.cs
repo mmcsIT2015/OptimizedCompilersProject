@@ -124,22 +124,64 @@ namespace iCompiler
                 Console.WriteLine("CyclesHierarchy");
                 Console.WriteLine(exampleTitle);
                 //здесь определяем вложенность циклов (например)
-                //...
-                Dictionary<Cycle<int>, List<Cycle<int>>> hierarchy = null;
-                //...
-                //и выводим
-                foreach(Cycle<int> c in allCycles.cycles)
+                Dictionary<Cycle<int>, List<Cycle<int>>> hierarchy = new Dictionary<Cycle<int>, List<Cycle<int>>>();
+
+                for (int i = 0; i < allCycles.cycles.Count; ++i)
+                    if (allCycles.cycles[i] is CycleSpecialCase<int>)
+                    {
+                        CycleSpecialCase<int> cycleSpec = allCycles.cycles[i] as CycleSpecialCase<int>;
+
+                        List<int> vertices = new List<int>();
+                        vertices = cycleSpec.DATA;
+                        vertices.Remove(cycleSpec.D2);
+                        vertices.Remove(cycleSpec.D1);
+
+                        List<DomGraph.ValPair<int>> outs1 = new List<DomGraph.ValPair<int>>();
+                        List<DomGraph.ValPair<int>> outs2 = new List<DomGraph.ValPair<int>>();
+
+                        outs1.Add(new DomGraph.ValPair<int>(cycleSpec.D1, allCycles.cycles[i].N));
+                        outs2.Add(new DomGraph.ValPair<int>(cycleSpec.D2, allCycles.cycles[i].N));
+
+                        List<int> vertices1 = new List<int>();
+                        vertices1.AddRange(vertices);
+                        vertices1.Add(cycleSpec.D1);
+
+                        List<int> vertices2 = new List<int>();
+                        vertices2.AddRange(vertices);
+                        vertices2.Add(cycleSpec.D2);
+
+                        CycleUsual<int> c1 = new CycleUsual<int>(allCycles.cycles[i].N, vertices1,
+                            outs1, cycleSpec.D1);
+
+                        CycleUsual<int> c2 = new CycleUsual<int>(allCycles.cycles[i].N, vertices2,
+                            outs2, cycleSpec.D2);
+
+                        List<Cycle<int>> cycles = new List<Cycle<int>>();
+                        cycles.Add(c1);
+                        cycles.Add(c2);
+
+                        hierarchy[cycleSpec] = cycles;
+                    }
+
+
+                foreach (Cycle<int> c in allCycles.cycles)
                 {
                     //...
                     _print_cycle(c);
                     //...
-                    foreach(Cycle<int> c1 in hierarchy[c])
+
+                    if (hierarchy.Count > 0)
                     {
-                        //...
-                        _print_cycle(c1);
-                        //...
+                        Console.WriteLine("The cycle hierarchy is: ");
+                        foreach (Cycle<int> c1 in hierarchy[c])
+                        {
+
+                            _print_cycle(c1);
+                            //...
+                        }
                     }
-                    //...
+                    else
+                        Console.WriteLine("There are no cycle hierarchy.");
                 }
                 Console.WriteLine();
             }
@@ -261,6 +303,63 @@ namespace iCompiler
             }
         }
         /// <summary>
+        /// Пример 1 вложенности циклов
+        /// </summary>
+        public class AllCyclesTestExample3 : AllCyclesTestExampleAbstract
+        {
+            public AllCyclesTestExample3()
+            {
+                exampleTitle = "Example3";
+                blocks = new int[] { 1, 2, 3, 4, 5 };
+                Dictionary<int, List<int>> Data = new Dictionary<int, List<int>>();
+                for (int i = 1; i <= 5; i++)
+                    Data[i] = new List<int>();
+                Data[1].Add(2);
+                Data[2].Add(3);
+                Data[3].Add(4);
+                Data[3].Add(5);
+                Data[4].Add(2);
+                Data[5].Add(2);
+                graph = new TestGraph(Data);
+                reverseEdges = new List<DomGraph.ValPair<int>>();
+                reverseEdges.Add(new DomGraph.ValPair<int>(4, 2));
+                reverseEdges.Add(new DomGraph.ValPair<int>(5, 2));
+                Dictionary<int, List<int>> DataDom = new Dictionary<int, List<int>>();
+                for (int i = 1; i <= 5; i++)
+                    DataDom[i] = new List<int>();
+                DataDom[1].AddRange(new int[] { 1 });
+                DataDom[2].AddRange(new int[] { 1, 2 });
+                DataDom[3].AddRange(new int[] { 1, 2, 3 });
+                DataDom[4].AddRange(new int[] { 1, 2, 3, 4 });
+                DataDom[5].AddRange(new int[] { 1, 2, 3, 5 });
+                domTree = new TestDominatorTree(DataDom);
+            }
+        }
+        /// <summary>
+        /// Пример 2 вложенности циклов
+        /// </summary>
+        public class AllCyclesTestExample4 : AllCyclesTestExampleAbstract
+        {
+            public AllCyclesTestExample4()
+            {
+                exampleTitle = "Example4";
+                blocks = new int[] { 1, 2 };
+                Dictionary<int, List<int>> Data = new Dictionary<int, List<int>>();
+                for (int i = 1; i <= 2; i++)
+                    Data[i] = new List<int>();
+                Data[1].Add(2);
+                Data[2].Add(2);
+                graph = new TestGraph(Data);
+                reverseEdges = new List<DomGraph.ValPair<int>>();
+                Dictionary<int, List<int>> DataDom = new Dictionary<int, List<int>>();
+                for (int i = 1; i <= 2; i++)
+                    DataDom[i] = new List<int>();
+                DataDom[1].AddRange(new int[] { 1 });
+                DataDom[2].AddRange(new int[] { 1, 2 });
+                domTree = new TestDominatorTree(DataDom);
+            }
+        }
+        /// <summary>
         /// Тесты для классов AllCycles
         /// </summary>
         public static void TestingAllCycles()
@@ -289,8 +388,12 @@ namespace iCompiler
         {
             AllCyclesTestExample1 ex1 = new AllCyclesTestExample1();
             AllCyclesTestExample2 ex2 = new AllCyclesTestExample2();
+            AllCyclesTestExample3 ex3 = new AllCyclesTestExample3();
+            AllCyclesTestExample4 ex4 = new AllCyclesTestExample4();
             ex1.TestCyclesHierarchy();
             ex2.TestCyclesHierarchy();
+            ex3.TestCyclesHierarchy();
+            ex4.TestCyclesHierarchy();
         }
     }
 }

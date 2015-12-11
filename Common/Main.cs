@@ -366,9 +366,10 @@ namespace SimpleCompiler
                         else
                             Console.WriteLine("Это неприводимый граф");
 
-                        GraphIntTesting1();
-                        GraphIntTesting2();
-                        GraphIntTesting3();
+                        //GraphIntTesting1();
+                        //GraphIntTesting2();
+                        //GraphIntTesting3();
+                        AllCyclesTesting.TestingCyclesHierarchy();
 
                         TestDomIterativeAlogrithm(root);
                         //TestReachableExpressions(root);
