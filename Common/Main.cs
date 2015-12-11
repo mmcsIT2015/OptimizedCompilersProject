@@ -118,7 +118,7 @@ namespace SimpleCompiler
             if (listEdges.Count == 0)
                 Console.WriteLine("There are no straight edges");
             else
-            for (int i = 0; i < listEdges.Count; ++i)
+                for (int i = 0; i < listEdges.Count; ++i)
                 Console.WriteLine("Straight edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].valBegin) + 1,
                     code.blocks.IndexOf(listEdges[i].valEnd) + 1);
 
