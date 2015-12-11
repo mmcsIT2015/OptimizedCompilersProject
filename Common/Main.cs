@@ -101,6 +101,63 @@ namespace SimpleCompiler
                 Console.WriteLine("Reversed edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].valBegin) + 1,
                     code.blocks.IndexOf(listEdges[i].valEnd) + 1);
         }
+        
+        public static void TestGraphEdges(ProgramTree.BlockNode root)
+        {
+            Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+            codeGenerator.Visit(root);
+            var code = codeGenerator.CreateCode();
+            WriteBlocksToConsole(code);
+            Dictionary<Block, IEnumerable<Block>> blockDoms = DomGraph.GenerateDomOut(code);
+            ControlFlowGraph CFG = new ControlFlowGraph(code.blocks);
+            SpanningTreeWithoutRecursive<Block> spanningTree = new SpanningTreeWithoutRecursive<Block>(code.blocks, CFG);
+            GraphEdges<Block> graphEdges = new GraphEdges<Block>(spanningTree, blockDoms);
+
+            Console.WriteLine("\nStraight Edges");
+            List<DomGraph.ValPair<Block>> listEdges = graphEdges.StraightEdges(blockDoms) as List<DomGraph.ValPair<Block>>;
+            if (listEdges.Count == 0)
+                Console.WriteLine("There are no straight edges");
+            else
+            for (int i = 0; i < listEdges.Count; ++i)
+                Console.WriteLine("Straight edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].valBegin) + 1,
+                    code.blocks.IndexOf(listEdges[i].valEnd) + 1);
+
+            Console.WriteLine("\nReversed Edges");
+            listEdges = graphEdges.ReversedEdges(blockDoms) as List<DomGraph.ValPair<Block>>;
+            if (listEdges.Count == 0)
+                Console.WriteLine("There are no reversed edges");
+            else
+                for (int i = 0; i < listEdges.Count; ++i)
+                    Console.WriteLine("Reversed edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].valBegin) + 1,
+                        code.blocks.IndexOf(listEdges[i].valEnd) + 1);
+
+            Console.WriteLine("\nAdvancing Edges");
+            listEdges = graphEdges.AdvancingEdges() as List<DomGraph.ValPair<Block>>;
+            if (listEdges.Count == 0)
+                Console.WriteLine("There are no advancing edges");
+            else
+                for (int i = 0; i < listEdges.Count; ++i)
+                    Console.WriteLine("Advancing edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].valBegin) + 1,
+                        code.blocks.IndexOf(listEdges[i].valEnd) + 1);
+
+            Console.WriteLine("\nRetreating Edges");
+            listEdges = graphEdges.RetreatingEdges() as List<DomGraph.ValPair<Block>>;
+            if (listEdges.Count == 0)
+                Console.WriteLine("There are no retreating edges");
+            else
+                for (int i = 0; i < listEdges.Count; ++i)
+                    Console.WriteLine("Retreating edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].valBegin) + 1,
+                        code.blocks.IndexOf(listEdges[i].valEnd) + 1);
+
+            Console.WriteLine("\nCrossing Edges");
+            listEdges = graphEdges.CrossingEdges() as List<DomGraph.ValPair<Block>>;
+            if (listEdges.Count == 0)
+                Console.WriteLine("There are no crossing edges");
+            else
+                for (int i = 0; i < listEdges.Count; ++i)
+                    Console.WriteLine("Crossing edge [{0}] == ({1} , {2} );", i + 1, code.blocks.IndexOf(listEdges[i].valBegin) + 1,
+                        code.blocks.IndexOf(listEdges[i].valEnd) + 1);
+        }
 
         public static void TestExpressionsGenKill(ProgramTree.BlockNode root)
         {
@@ -373,6 +430,7 @@ namespace SimpleCompiler
 
                         TestDomIterativeAlogrithm(root);
                         //TestReachableExpressions(root);
+                        //TestGraphEdges(root);
                     }
                     catch (FileNotFoundException)
                     {
