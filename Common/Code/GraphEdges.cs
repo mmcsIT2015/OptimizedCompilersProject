@@ -18,7 +18,7 @@ namespace iCompiler
             this.Dom = Dom;
         }
 
-        private IEnumerable<DomGraph.ValPair<T>> RetreatingEdges()
+        public IEnumerable<DomGraph.ValPair<T>> RetreatingEdges()
         {
             List<DomGraph.ValPair<T>> listRetreat = new List<DomGraph.ValPair<T>>();
 
@@ -31,7 +31,7 @@ namespace iCompiler
 
         }
 
-        private IEnumerable<DomGraph.ValPair<T>> ReversedEdges(Dictionary<T, IEnumerable<T>> Dom)
+        public IEnumerable<DomGraph.ValPair<T>> ReversedEdges(Dictionary<T, IEnumerable<T>> Dom)
         {
             List<DomGraph.ValPair<T>> listEdges = new List<DomGraph.ValPair<T>>();
 
@@ -41,6 +41,48 @@ namespace iCompiler
                     if (Data[a].Contains(b))
                         listEdges.Add(new DomGraph.ValPair<T>(a, b));
 
+            return listEdges;
+
+        }
+        
+        public IEnumerable<DomGraph.ValPair<T>> AdvancingEdges()
+        {
+            List<DomGraph.ValPair<T>> listEdges = new List<DomGraph.ValPair<T>>();
+            foreach (T Tkey in Data.Keys)
+                for (int i = 0; i < Data[Tkey].Count; ++i)
+                    if (Numbers[Tkey] < Numbers[Data[Tkey][i]])
+                        listEdges.Add(new DomGraph.ValPair<T>(Tkey, Data[Tkey][i]));
+            return listEdges;
+
+        }
+
+        public IEnumerable<DomGraph.ValPair<T>> CrossingEdges()
+        {
+            List<DomGraph.ValPair<T>> listEdges = new List<DomGraph.ValPair<T>>();
+
+            List<DomGraph.ValPair<T>> advancingEdges = AdvancingEdges() as List<DomGraph.ValPair<T>>;
+            List<DomGraph.ValPair<T>> retreatingEdges = RetreatingEdges() as List<DomGraph.ValPair<T>>;
+
+            foreach (T Tkey in Data.Keys)
+                for (int i = 0; i < Data[Tkey].Count; ++i)
+                {
+                    DomGraph.ValPair<T> edge = new DomGraph.ValPair<T>(Tkey, Data[Tkey][i]);
+                    if (!advancingEdges.Contains(edge) && !retreatingEdges.Contains(edge))
+                        listEdges.Add(new DomGraph.ValPair<T>(Tkey, Data[Tkey][i]));
+                }
+            
+
+            return listEdges;
+
+        }
+
+        public IEnumerable<DomGraph.ValPair<T>> StraightEdges(Dictionary<T, IEnumerable<T>> Dom)
+        {
+            List<DomGraph.ValPair<T>> listEdges = new List<DomGraph.ValPair<T>>();
+            foreach (T b in Dom.Keys)
+                foreach (T a in Dom[b])
+                    if (Data[a].Contains(b))
+                        listEdges.Add(new DomGraph.ValPair<T>(a, b));
             return listEdges;
 
         }
