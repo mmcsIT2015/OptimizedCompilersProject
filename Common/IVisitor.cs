@@ -24,6 +24,7 @@ namespace iCompiler
         void Visit(StringLiteralNode node);
         void Visit(VarDeclListNode node);
         void Visit(VarDeclNode node);       
-        void Visit(GotoNode node);     
+        void Visit(GotoNode node);
+        void Visit(EndlNode endlNode);
     }
 }
