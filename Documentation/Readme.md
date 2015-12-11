@@ -1,4 +1,4 @@
-#OptimizedCompilersPriject
+#OptimizedCompilersProject
 ##Documentation
 
 ###Установка конвертера в PDF
