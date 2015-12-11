@@ -220,6 +220,7 @@ namespace iCompiler
         {
             StringBuilder sb = new StringBuilder();
 
+            /*
             StringBuilder pars_sb = new StringBuilder();
 
             for (int i = 0; i < pars.Count; ++i)
@@ -229,12 +230,24 @@ namespace iCompiler
                 sb.Append(GenOperandLoading(pars[i].param, pars[i].op, rop));
                 pars_sb.Append(Type2String(pars[i].type) + ", ");
             }
+            */
 
             if (fc.name.Equals("cout"))
-                sb.AppendLine("\tcall void [mscorlib]System.Console::WriteLine(" + pars_sb.ToString().Substring(0, pars_sb.ToString().Length - 2) + ")");
+            {
+                for (int i = 0; i < pars.Count; ++i)
+                    if (pars[i].param.Equals("endl"))
+                        sb.AppendLine("\tcall void [mscorlib]System.Console::WriteLine()");
+                    else
+                    {
+                        OperandInfo rop = new OperandInfo();
+                        rop.isFloat = pars[i].op.isFloat;
+                        sb.Append(GenOperandLoading(pars[i].param, pars[i].op, rop));
+                        sb.AppendLine("\tcall void [mscorlib]System.Console::Write(" + Type2String(pars[i].type) + ")");
+                    }
+            }
             else
                 sb.AppendLine(ReportMessage + ": GenFunctionalCall - UnsupportedFunction");
-
+            
             return sb.ToString();
         }
 
