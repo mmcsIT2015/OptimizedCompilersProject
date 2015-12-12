@@ -106,7 +106,7 @@ namespace iCompiler
     ///     List < Cycle < Block > > cycles = allCycles.cycles;
     /// </summary>
     /// <typeparam name="T">Тип вершин</typeparam>
-    public class AllCycles<T> where T : IComparable<T>
+    public class AllCycles<T>
     {
         /// <summary>
         /// Все циклы
@@ -130,7 +130,7 @@ namespace iCompiler
             cycles = new List<Cycle<T>>();
             foreach (T n in blocks)
             {
-                foreach (T d in reverseEdges.FindAll(pair => pair.valEnd.CompareTo(n) == 0).Select(pair => pair.valBegin))
+                foreach (T d in reverseEdges.FindAll(pair => pair.valEnd.Equals(n)).Select(pair => pair.valBegin))
                 {
                     Dictionary<T, bool> mark = new Dictionary<T, bool>();
                     foreach (T bl in blocks)
@@ -149,7 +149,7 @@ namespace iCompiler
             {
                 return verts;
             }
-            else if (n.CompareTo(x) == 0)
+            else if (n.Equals(x))
             {
                 mark[n] = true;
                 verts.Add(n);
@@ -168,7 +168,7 @@ namespace iCompiler
         {
             return verts.Select(v => graph.OutEdges(v).Select(v1 => new DomGraph.ValPair<T>(v, v1)))
                 .Aggregate(new List<DomGraph.ValPair<T>>(), (l, e) => { l.AddRange(e); return l; })
-                .Where(e => verts.All(u => e.valEnd.CompareTo(u) != 0) && domTree.UpperDominators(n).All(u => e.valEnd.CompareTo(u) != 0))
+                .Where(e => verts.All(u => !e.valEnd.Equals(u)) && domTree.UpperDominators(n).All(u => !e.valEnd.Equals(u)))
                 .ToList();
         }
     }
@@ -180,7 +180,7 @@ namespace iCompiler
     /// Считает граф, подаваемый на вход, приводимым!
     /// </summary>
     /// <typeparam name="T">Тип вершин</typeparam>
-    public class AllCyclesWithSpecialCase<T> : AllCycles<T> where T: IComparable<T>
+    public class AllCyclesWithSpecialCase<T> : AllCycles<T>
     {
         /// <summary>
         /// 
@@ -196,7 +196,7 @@ namespace iCompiler
             cycles = new List<Cycle<T>>();
             foreach (T n in blocks)
             {
-                List<T> Ds = reverseEdges.FindAll(pair => pair.valEnd.CompareTo(n) == 0).Select(pair => pair.valBegin).ToList();
+                List<T> Ds = reverseEdges.FindAll(pair => pair.valEnd.Equals(n)).Select(pair => pair.valBegin).ToList();
                 List<Cycle<T>> grouped = GroupingInCycles(n, Ds, domTree);
                 for (int i = 0; i < grouped.Count; i++ )
                 {
