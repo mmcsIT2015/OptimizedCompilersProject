@@ -1,12 +1,19 @@
 {
-	int x = 45;
-	x = 67;
-	x = x;
+	int a = 2;
+	int x = 45, y = 5, t;
+	if (1) {
+		int k = y;
+		y = 2;
+		k = 9;
+	}
+
 	int i = x;
 	int l = 90;
-	int k = l;
-	l = 89;
-	int o = l, t, e;
-	o = t;
-	o = e;
+	t = 9;
+	y = 9;
+	int o = l, e;
+	o = 4;
+	o = a;
+	a = k + i;
+	o = a;
 }

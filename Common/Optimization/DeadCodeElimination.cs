@@ -17,48 +17,42 @@ namespace iCompiler
     ///     codeGenerator.Visit(parser.root);
     ///     var code = codeGenerator.CreateCode();
 
-    ///     DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code/*, 1*/);
+    ///     DeadCodeElimination deadCodeElimination = new DeadCodeElimination(code);
     ///     deadCodeElimination.Optimize();
 
     ///     Console.WriteLine(code);
     /// </summary>
     public class DeadCodeElimination : IOptimizer
     {
-        private int mBlockNumber;
-        private IEnumerable<string> Out = new List<string>();
         /// <summary>
         ///
         /// </summary>
         /// <param name="threeAddrCode">Трехадресный код</param>
-        /// <param name="blockNumber">Номер нужного нам базового блока, нумерация с 1; Если -1 - то для всех блоков</param>
-        public DeadCodeElimination(ThreeAddrCode threeAddrCode, int blockNumber = -1)
+        public DeadCodeElimination(ThreeAddrCode threeAddrCode)
         {
             Code = threeAddrCode;
-            mBlockNumber = blockNumber;
         }
 
-        private Block DCEAlgorithm(ThreeAddrCode threeAddrCode, int blockNumber)
+        protected virtual Dictionary<string, bool> PrepareVitalityVars(Block block)
         {
-            var block = threeAddrCode.blocks[blockNumber - 1]; //берем блок из листа блоков трехадресного кода
-            var dotLine = block;
-            int listSize = dotLine.Count; //количество строк в блоке
-            Dictionary<string, bool> idLife = new Dictionary<string, bool>();//ассоциативный массив "переменная - живучесть"
+            return new Dictionary<string, bool>();
+        }
+
+        private Block DCEAlgorithm(Dictionary<string, bool> idLife, Block block)
+        {
+            // idLife - ассоциативный массив "переменная - живучесть"
+
+            int listSize = block.Count; //количество строк в блоке
             List<int> removeIndexList = new List<int>(); //лист удаляемых номеров строк кода ББл
 
-
-            //цикл по строкам кода ББл
+            // цикл по строкам кода ББл
             for (int i = listSize - 1; i >= 0; --i)
             {
-                //if (dotLine[i].IsNot<Line.Identity>() && dotLine[i].IsNot<Line.BinaryExpr>() && dotLine[i].IsNot<Line.UnaryExpr>()) continue;
-                
-                if (dotLine[i].Is<Line.Identity>())
+                //if (block[i].IsNot<Line.Identity>() && block[i].IsNot<Line.BinaryExpr>() && block[i].IsNot<Line.UnaryExpr>()) continue;
+
+                if (block[i].Is<Line.Identity>())
                 {
-                    var temp = dotLine[i] as Line.Identity;
-                    if (Out.Count<string>() > 0 && !Out.Contains<string>(temp.ToString()))
-                    {
-                        removeIndexList.Add(i);
-                        continue;
-                    }
+                    var temp = block[i] as Line.Identity;
 
                     if (temp.left == temp.right)
                     {
@@ -75,7 +69,10 @@ namespace iCompiler
                         {
                             //если переменная в левой части "живая"
                             if (isAlive) idLife[temp.left] = false; //делаем ее "мертвой"
-                            else removeIndexList.Add(i); //добавляем номер текущей строки в лист для удаления
+                            else
+                            {
+                                removeIndexList.Add(i); //добавляем номер текущей строки в лист для удаления
+                            }
                         }
                         else
                         {
@@ -84,15 +81,9 @@ namespace iCompiler
                     }
 
                 }
-                else if (dotLine[i].Is<Line.BinaryExpr>())
+                else if (block[i].Is<Line.BinaryExpr>())
                 {
-                    var line = dotLine[i] as Line.BinaryExpr;
-
-                    if (Out.Count<string>() > 0 && !Out.Contains<string>(line.ToString()))
-                    {
-                        removeIndexList.Add(i);
-                        continue;
-                    }
+                    var line = block[i] as Line.BinaryExpr;
 
                     idLife[line.first] = true; //первый операнд правой части "живой"
                     idLife[line.second] = true; //второй операнд правой части "живой"
@@ -110,15 +101,9 @@ namespace iCompiler
                         idLife[line.left] = false; //делаем ее "мертвой"
                     }
                 }
-                else if (dotLine[i].Is<Line.UnaryExpr>())
+                else if (block[i].Is<Line.UnaryExpr>())
                 {
-                    var line = dotLine[i] as Line.UnaryExpr;
-
-                    if (Out.Count<string>() > 0 && !Out.Contains<string>(line.ToString()))
-                    {
-                        removeIndexList.Add(i);
-                        continue;
-                    }
+                    var line = block[i] as Line.UnaryExpr;
 
                     if (line.left != line.argument)
                         idLife[line.argument] = true;
@@ -142,50 +127,18 @@ namespace iCompiler
             //удаление строк "мертвого" кода
             for (int i = 0; i < removeIndexList.Count; i++)
             {
-                dotLine.RemoveAt(removeIndexList[i]);
+                block.RemoveAt(removeIndexList[i]);
             }
 
-            return dotLine as Block; //возвращаем измененный блок
+            return block as Block; //возвращаем измененный блок
         }
 
         public override void Optimize(params Object[] values)
         {
-            Dictionary<Block, IEnumerable<string>> listOut = new Dictionary<Block, IEnumerable<string>>();
-            if (values.Count() > 0 && values[0] is Dictionary<Block, IEnumerable<string>>)
+            for (int i = 0; i < Code.blocks.Count; ++i)
             {
-                listOut = values[0] as Dictionary<Block, IEnumerable<string>>;
-                if (listOut.Count == Code.blocks.Count)
-                {
-                    if (mBlockNumber < 0)
-                    {
-                        for (int i = 0; i < Code.blocks.Count; ++i)
-                        {
-                            this.Out = listOut[Code.blocks[i]];
-                            Code.blocks[i] = DCEAlgorithm(Code, i + 1);
-                        }
-                    }
-                    else
-                    {
-                        Debug.Assert(mBlockNumber >= 1 && mBlockNumber <= Code.blocks.Count);
-                        this.Out = listOut[Code.blocks[mBlockNumber - 1]];
-                        Code.blocks[mBlockNumber - 1] = DCEAlgorithm(Code, mBlockNumber);
-                    }
-                }
-            }
-            else
-            {
-                if (mBlockNumber < 0)
-                {
-                    for (int i = 0; i < Code.blocks.Count; ++i)
-                    {
-                        Code.blocks[i] = DCEAlgorithm(Code, i + 1);
-                    }
-                }
-                else
-                {
-                    Debug.Assert(mBlockNumber >= 1 && mBlockNumber <= Code.blocks.Count);
-                    Code.blocks[mBlockNumber - 1] = DCEAlgorithm(Code, mBlockNumber);
-                }
+                var idLife = PrepareVitalityVars(Code.blocks[i]);
+                Code.blocks[i] = DCEAlgorithm(idLife, Code.blocks[i]);
             }
         }
     }

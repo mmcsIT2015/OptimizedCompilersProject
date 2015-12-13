@@ -125,6 +125,7 @@ namespace iCompiler
             var builder = new StringBuilder();
             foreach (var block in blocks)
             {
+                //builder.Append("block " + GetBlockId(block) + ":\n");
                 builder.Append(block.ToString());
                 builder.Append("\n");
             }

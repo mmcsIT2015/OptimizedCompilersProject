@@ -43,6 +43,7 @@ namespace iCompiler
 
                 foreach (var block in blocks)
                 {
+                    //if (code.GetBlockId(block) == code.GetBlockId(graph.EntryPoint())) continue;
                     var edges = graph.InEdges(block);
 
                     IEnumerable<AData> newIn;
@@ -64,12 +65,22 @@ namespace iCompiler
                 }
 
                 hasChanges = false;
-                foreach (var block in blocks) {
-                    if (!old[block].Equals(Out[block]))
+                foreach (var block in blocks)
+                {
+                    if (old[block].Count() != Out[block].Count())
                     {
                         hasChanges = true;
-                        return;
+                        break;
                     }
+
+                    var l1 = old[block].ToList();
+                    var l2 = Out[block].ToList();
+
+                    l1.Sort();
+                    l2.Sort();
+                    hasChanges = !l1.SequenceEqual(l2);
+
+                    if (hasChanges) break;
                 }
             } while (hasChanges);
         }
