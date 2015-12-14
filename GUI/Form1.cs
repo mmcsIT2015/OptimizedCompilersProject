@@ -193,7 +193,8 @@ namespace GUI
 
         private void GrammarToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            type = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 ? FileLoader.GrammarType.PASCAL : FileLoader.GrammarType.PASCALABCNET;                        
+            type = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 ? FileLoader.GrammarType.PASCAL : FileLoader.GrammarType.PASCALABCNET;
+            this.startApplicationToolStripMenuItem.Enabled = type == FileLoader.GrammarType.PASCALABCNET;
             openFileDialog1.FilterIndex = saveFileDialog1.FilterIndex = GrammarToolStripComboBox.SelectedIndex + 1;
             ResultView.Text = string.Empty;
         }
@@ -236,7 +237,7 @@ namespace GUI
                     var t1 = Task.Factory.StartNew<Tuple<long, bool>>(() => ExecuteAndEvaluateTime(RunVanilla, path_vanilla));
                     var t2 = Task.Factory.StartNew<Tuple<long, bool>>(() => ExecuteAndEvaluateTime(RunOptimized, path_optimized));
                     Task.WaitAll(t1, t2);
-                    MessageBox.Show("Optimized compared to vanilla code: " + (t1.Result.Item1 - t2.Result.Item1) + "difference(ms)");
+                    MessageBox.Show("Optimized compared to vanilla code: " + (t1.Result.Item1 - t2.Result.Item1) + "ms faster");
                 });            
         }
 

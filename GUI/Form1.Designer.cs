@@ -112,7 +112,7 @@
             this.GrammarToolStripComboBox.Name = "GrammarToolStripComboBox";
             this.GrammarToolStripComboBox.Size = new System.Drawing.Size(92, 24);
             this.GrammarToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.GrammarToolStripComboBox_SelectedIndexChanged);
-            this.GrammarToolStripComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            this.GrammarToolStripComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);            
             // 
             // RunItem
             // 
@@ -165,6 +165,7 @@
             // 
             // startApplicationToolStripMenuItem
             // 
+            this.startApplicationToolStripMenuItem.Enabled = false;
             this.startApplicationToolStripMenuItem.Name = "startApplicationToolStripMenuItem";
             this.startApplicationToolStripMenuItem.Size = new System.Drawing.Size(105, 24);
             this.startApplicationToolStripMenuItem.Text = "Start application";
