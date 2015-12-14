@@ -41,15 +41,26 @@ namespace GUI
                     fullFilename = openFileDialog1.FileName;
                     WorkingArea.Text = File.ReadAllText(openFileDialog1.FileName, Encoding.UTF8);
                     type = FileLoader.GetGrammarType(openFileDialog1.FileName);
-                    GrammarToolStripComboBox.SelectedIndex = type == FileLoader.GrammarType.C ? 0 : 1;
+                    switch (type)
+                    {
+                        case FileLoader.GrammarType.C:
+                            GrammarToolStripComboBox.SelectedIndex = 0;
+                            break;
+                        case FileLoader.GrammarType.PASCAL:
+                            GrammarToolStripComboBox.SelectedIndex = 1;
+                            break;
+                        case FileLoader.GrammarType.PASCALABCNET:
+                            GrammarToolStripComboBox.SelectedIndex = 2;
+                            break;
+                    }
+                    textModified = false;
+                    Text = formName + " - " + openFileDialog1.FileName;
+                    RunParser_Click(null, EventArgs.Empty);                
                 }
-                catch (Exception ex)
+                catch (FileNotFoundException ex)
                 {
                     MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
-                RunParser_Click(null, EventArgs.Empty);
-                textModified = false;
-                Text = formName + " - " + openFileDialog1.FileName;
             }
         }
 
@@ -58,20 +69,28 @@ namespace GUI
             try
             {
                 ResultView.Text = string.Empty;
-                string content = WorkingArea.Text;                
-                var root = FileLoader.Parse(content, type);
+                string content = WorkingArea.Text;
+                if (type != FileLoader.GrammarType.PASCALABCNET)
+                {
+                    var root = FileLoader.Parse(content, type);
 
-                var codeGenerator = new iCompiler.Gen3AddrCodeVisitor();
-                codeGenerator.Visit(root);
+                    var codeGenerator = new iCompiler.Gen3AddrCodeVisitor();
+                    codeGenerator.Visit(root);
 
-                var code = codeGenerator.CreateCode();
+                    var code = codeGenerator.CreateCode();
 
-                CommonSubexpressionsOptimization cso = new CommonSubexpressionsOptimization(code);
-                cso.Optimize();
+                    CommonSubexpressionsOptimization cso = new CommonSubexpressionsOptimization(code);
+                    cso.Optimize();
 
-                ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
-                //ResultView.Text = ILCodeGeneration.GenILCode(code);
+                    ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
+                    //ResultView.Text = ILCodeGeneration.GenILCode(code);
+                }
+                else
+                {
+                    ProcessPascalABCNETCode(content);
+                }
             }
+
             catch (FileNotFoundException ee)
             {
                 MessageBox.Show("File not found: " + ee.FileName);
@@ -88,6 +107,11 @@ namespace GUI
             {
                 MessageBox.Show("Unexpected error: " + ee.Message);
             }
+        }
+
+        private void ProcessPascalABCNETCode(string content)
+        {
+            throw new NotImplementedException("Awaits your implementation, Almikh!");
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -169,7 +193,7 @@ namespace GUI
 
         private void GrammarToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            type = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : FileLoader.GrammarType.PASCAL;
+            type = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 ? FileLoader.GrammarType.PASCAL : FileLoader.GrammarType.PASCALABCNET;                        
             openFileDialog1.FilterIndex = saveFileDialog1.FilterIndex = GrammarToolStripComboBox.SelectedIndex + 1;
             ResultView.Text = string.Empty;
         }

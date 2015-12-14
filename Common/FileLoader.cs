@@ -11,13 +11,14 @@ namespace iCompiler
 {
     public static class FileLoader
     {
-        public enum GrammarType { PASCAL, C, UNKNOWN }
+        public enum GrammarType { PASCAL, C, PASCALABCNET, UNKNOWN }
 
         public static GrammarType GetGrammarType(string fileName)
         {
             string extension = System.IO.Path.GetExtension(fileName);
             if (extension == ".pasn") return GrammarType.PASCAL;
             else if (extension == ".cn") return GrammarType.C;
+            else if (extension == ".pas") return GrammarType.PASCALABCNET;
             return GrammarType.UNKNOWN;
         }
 
