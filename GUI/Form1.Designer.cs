@@ -41,6 +41,7 @@
             this.ResultView = new System.Windows.Forms.TextBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.startApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,7 +51,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileMenu,
             this.GrammarToolStripComboBox,
-            this.RunItem});
+            this.RunItem,
+            this.startApplicationToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
@@ -116,8 +118,8 @@
             // 
             this.RunItem.Image = global::GUI.Properties.Resources.run;
             this.RunItem.Name = "RunItem";
-            this.RunItem.Size = new System.Drawing.Size(63, 24);
-            this.RunItem.Text = "Start";
+            this.RunItem.Size = new System.Drawing.Size(130, 24);
+            this.RunItem.Text = "Start compilation";
             this.RunItem.Click += new System.EventHandler(this.RunParser_Click);
             // 
             // WorkingArea
@@ -161,6 +163,13 @@
             // 
             this.openFileDialog1.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn|PABC.NET files(*.pas)|*.pas";
             // 
+            // startApplicationToolStripMenuItem
+            // 
+            this.startApplicationToolStripMenuItem.Name = "startApplicationToolStripMenuItem";
+            this.startApplicationToolStripMenuItem.Size = new System.Drawing.Size(105, 24);
+            this.startApplicationToolStripMenuItem.Text = "Start application";
+            this.startApplicationToolStripMenuItem.Click += new System.EventHandler(this.startApplicationToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -195,6 +204,7 @@
         private System.Windows.Forms.ToolStripComboBox GrammarToolStripComboBox;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem startApplicationToolStripMenuItem;
     }
 }
 

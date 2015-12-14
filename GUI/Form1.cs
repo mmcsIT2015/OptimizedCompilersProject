@@ -216,5 +216,53 @@ namespace GUI
                 }
             }
         }
+
+        private Tuple<long, TOUT> ExecuteAndEvaluateTime<TIN, TOUT>(Func<TIN, TOUT> operation, TIN in_value)
+        {
+            System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
+            s.Start();
+            TOUT ret = operation(in_value);
+            s.Stop();
+            return new Tuple<long, TOUT>(s.ElapsedMilliseconds, ret);
+        }
+
+        private void startApplicationToolStripMenuItem_Click(object sender, EventArgs e)
+        {            
+            //NEEDS REWORK: call parameters, can use anything for it.
+            Task.Factory.StartNew(() =>
+                {
+                    string path_vanilla="";
+                    string path_optimized="";
+                    var t1 = Task.Factory.StartNew<Tuple<long, bool>>(() => ExecuteAndEvaluateTime(RunVanilla, path_vanilla));
+                    var t2 = Task.Factory.StartNew<Tuple<long, bool>>(() => ExecuteAndEvaluateTime(RunOptimized, path_optimized));
+                    Task.WaitAll(t1, t2);
+                    MessageBox.Show("Optimized compared to vanilla code: " + (t1.Result.Item1 - t2.Result.Item1) + "difference(ms)");
+                });            
+        }
+
+        /// <summary>
+        /// Starts optimized version of a program
+        /// NEEDS REWORK
+        /// </summary>
+        /// <param name="arg">param for program start; path probably</param>
+        /// <returns>exit code?</returns>
+        private bool RunOptimized(string arg)
+        {
+            System.Threading.Thread.Sleep(2000);
+            return true;
+        }
+
+
+        /// <summary>
+        /// Starts vanilla version of a program
+        /// NEEDS REWORK
+        /// </summary>
+        /// <param name="arg">param for program start; path probably</param>
+        /// <returns>exit code?</returns>
+        private bool RunVanilla(string arg)
+        {
+            System.Threading.Thread.Sleep(3000);
+            return true;
+        }
     }
 }
