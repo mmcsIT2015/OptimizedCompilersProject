@@ -22,7 +22,7 @@ namespace iCompiler
         /// </summary>
         public IEnumerable<T> Map(IEnumerable<T> x)
         {
-            return mGen.Union(x.Except(mKill)) as IEnumerable<T>;
+            return mGen.Union(x.Except(mKill));
         }
 
         /// <summary>

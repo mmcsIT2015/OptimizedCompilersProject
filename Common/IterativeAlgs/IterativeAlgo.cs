@@ -49,19 +49,20 @@ namespace iCompiler
                     IEnumerable<AData> newIn;
                     if (edges.Count() > 0)
                     {
-                        newIn = Out[edges.First()];
-                        foreach (var p in edges.Skip(1))
+                        newIn = new HashSet<AData>(Out[edges.First()]);
+                        for (int i = 1; i < edges.Count(); ++i)
                         {
-                            newIn = Semilattice.Join(newIn, Out[p]);
+                            int index = code.GetBlockId(edges.ElementAt(i));
+                            newIn = Semilattice.Join(newIn, Out[edges.ElementAt(i)]);
                         }
                     }
                     else
                     {
                         newIn = new HashSet<AData>();
                     }
-
-                    In[block] = newIn;
-                    Out[block] = TransferFuncs[block].Map(In[block]);
+                   
+                    In[block] = new HashSet<AData>(newIn);
+                    Out[block] = new HashSet<AData>(TransferFuncs[block].Map(In[block]));
                 }
 
                 hasChanges = false;
@@ -76,8 +77,6 @@ namespace iCompiler
                     var l1 = old[block].ToList();
                     var l2 = Out[block].ToList();
 
-                    l1.Sort();
-                    l2.Sort();
                     hasChanges = !l1.SequenceEqual(l2);
 
                     if (hasChanges) break;

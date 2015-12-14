@@ -37,7 +37,7 @@ namespace iCompiler
                 var def = new HashSet<String>(info.Def);
                 var use = new HashSet<String>(info.Use);
 
-                funcs[block] = new TransferFunction<String>(def, use);
+                funcs[block] = new TransferFunction<String>(use, def);
             }
 
             return funcs;
