@@ -37,12 +37,15 @@
             this.SaveFileAs = new System.Windows.Forms.ToolStripMenuItem();
             this.GrammarToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.RunItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WorkingArea = new System.Windows.Forms.TextBox();
             this.ResultView = new System.Windows.Forms.TextBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.startApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -74,28 +77,28 @@
             // CreateNew
             // 
             this.CreateNew.Name = "CreateNew";
-            this.CreateNew.Size = new System.Drawing.Size(152, 22);
+            this.CreateNew.Size = new System.Drawing.Size(133, 22);
             this.CreateNew.Text = "Create new";
             this.CreateNew.Click += new System.EventHandler(this.CreateNewFile_Click);
             // 
             // OpenFile
             // 
             this.OpenFile.Name = "OpenFile";
-            this.OpenFile.Size = new System.Drawing.Size(152, 22);
+            this.OpenFile.Size = new System.Drawing.Size(133, 22);
             this.OpenFile.Text = "Open";
             this.OpenFile.Click += new System.EventHandler(this.OpenFile_Click);
             // 
             // SaveFile
             // 
             this.SaveFile.Name = "SaveFile";
-            this.SaveFile.Size = new System.Drawing.Size(152, 22);
+            this.SaveFile.Size = new System.Drawing.Size(133, 22);
             this.SaveFile.Text = "Save";
             this.SaveFile.Click += new System.EventHandler(this.Save_Click);
             // 
             // SaveFileAs
             // 
             this.SaveFileAs.Name = "SaveFileAs";
-            this.SaveFileAs.Size = new System.Drawing.Size(152, 22);
+            this.SaveFileAs.Size = new System.Drawing.Size(133, 22);
             this.SaveFileAs.Text = "Save as";
             this.SaveFileAs.Click += new System.EventHandler(this.SaveAs_Click);
             // 
@@ -112,7 +115,7 @@
             this.GrammarToolStripComboBox.Name = "GrammarToolStripComboBox";
             this.GrammarToolStripComboBox.Size = new System.Drawing.Size(92, 24);
             this.GrammarToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.GrammarToolStripComboBox_SelectedIndexChanged);
-            this.GrammarToolStripComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);            
+            this.GrammarToolStripComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // RunItem
             // 
@@ -122,6 +125,14 @@
             this.RunItem.Text = "Start compilation";
             this.RunItem.Click += new System.EventHandler(this.RunParser_Click);
             // 
+            // startApplicationToolStripMenuItem
+            // 
+            this.startApplicationToolStripMenuItem.Enabled = false;
+            this.startApplicationToolStripMenuItem.Name = "startApplicationToolStripMenuItem";
+            this.startApplicationToolStripMenuItem.Size = new System.Drawing.Size(105, 24);
+            this.startApplicationToolStripMenuItem.Text = "Start application";
+            this.startApplicationToolStripMenuItem.Click += new System.EventHandler(this.startApplicationToolStripMenuItem_Click);
+            // 
             // WorkingArea
             // 
             this.WorkingArea.AcceptsTab = true;
@@ -130,7 +141,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.WorkingArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.WorkingArea.Location = new System.Drawing.Point(0, 26);
-            this.WorkingArea.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.WorkingArea.Margin = new System.Windows.Forms.Padding(2);
             this.WorkingArea.MaxLength = 0;
             this.WorkingArea.Multiline = true;
             this.WorkingArea.Name = "WorkingArea";
@@ -147,7 +158,7 @@
             this.ResultView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ResultView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ResultView.Location = new System.Drawing.Point(553, 26);
-            this.ResultView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ResultView.Margin = new System.Windows.Forms.Padding(2);
             this.ResultView.Multiline = true;
             this.ResultView.Name = "ResultView";
             this.ResultView.ReadOnly = true;
@@ -163,29 +174,39 @@
             // 
             this.openFileDialog1.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn|PABC.NET files(*.pas)|*.pas";
             // 
-            // startApplicationToolStripMenuItem
+            // statusStrip1
             // 
-            this.startApplicationToolStripMenuItem.Enabled = false;
-            this.startApplicationToolStripMenuItem.Name = "startApplicationToolStripMenuItem";
-            this.startApplicationToolStripMenuItem.Size = new System.Drawing.Size(105, 24);
-            this.startApplicationToolStripMenuItem.Text = "Start application";
-            this.startApplicationToolStripMenuItem.Click += new System.EventHandler(this.startApplicationToolStripMenuItem_Click);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 564);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(985, 22);
+            this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(985, 586);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.ResultView);
             this.Controls.Add(this.WorkingArea);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -206,6 +227,8 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem startApplicationToolStripMenuItem;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
 

@@ -34,6 +34,7 @@ namespace GUI
 
         private void OpenFile_Click(object sender, EventArgs e)
         {
+            this.toolStripStatusLabel1.Text = "";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -194,6 +195,7 @@ namespace GUI
         private void GrammarToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             type = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 ? FileLoader.GrammarType.PASCAL : FileLoader.GrammarType.PASCALABCNET;
+            this.toolStripStatusLabel1.Text = "";
             this.startApplicationToolStripMenuItem.Enabled = type == FileLoader.GrammarType.PASCALABCNET;
             openFileDialog1.FilterIndex = saveFileDialog1.FilterIndex = GrammarToolStripComboBox.SelectedIndex + 1;
             ResultView.Text = string.Empty;
@@ -232,12 +234,16 @@ namespace GUI
             //NEEDS REWORK: call parameters, can use anything for it.
             Task.Factory.StartNew(() =>
                 {
+                    this.toolStripStatusLabel1.Text = "Execution speed comparison is in progress...";
                     string path_vanilla="";
                     string path_optimized="";
                     var t1 = Task.Factory.StartNew<Tuple<long, bool>>(() => ExecuteAndEvaluateTime(RunVanilla, path_vanilla));
                     var t2 = Task.Factory.StartNew<Tuple<long, bool>>(() => ExecuteAndEvaluateTime(RunOptimized, path_optimized));
                     Task.WaitAll(t1, t2);
-                    MessageBox.Show("Optimized compared to vanilla code: " + (t1.Result.Item1 - t2.Result.Item1) + "ms faster");
+                    if (t1.Result.Item1 > t2.Result.Item1)
+                        this.toolStripStatusLabel1.Text = "Comparison complete. " + "Optimized compared to vanilla code: " + (t1.Result.Item1 - t2.Result.Item1) + "ms faster";
+                    else
+                        this.toolStripStatusLabel1.Text = "Comparison complete. " + "Optimized compared to vanilla code: " + (t1.Result.Item1 - t2.Result.Item1) + "ms slower";
                 });            
         }
 
