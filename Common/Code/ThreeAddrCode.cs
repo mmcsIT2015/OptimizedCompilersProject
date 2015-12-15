@@ -419,6 +419,80 @@ namespace iCompiler
 
             return result;
         }
+
+
+        //Использование
+        //var code = codeGenerator.CreateCode();
+        //Dictionary<String, String> exprs = code.RollExpressionsToNormalForm();
+        
+        /// <summary>
+        /// Функция возвращает словарь, в котором каждой встреченной переменной ставится в соответствие её развернутый вид
+        /// </summary>
+        /// <returns>Словарь развернутых переменных</returns>
+        public Dictionary<String,String> RollExpressionsToNormalForm()
+        {
+            Dictionary<String, String> expressions = new Dictionary<String, String>();
+
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                for (int j = 0; j < blocks[i].Count; j++)
+                {
+                    var line = blocks[i][j];
+                    if (line.IsEmpty()) continue;
+                    if (line is Line.GoTo || line is Line.FunctionCall) continue;
+
+                    String defOfExpr = (line as Line.Expr).left;
+
+                    String firstParamOfRightPart = "";
+                    String secondParamOfRightPart = "";
+                    String rightPartOfExpr = "";
+
+                    if (line is Line.BinaryExpr)
+                    {
+                        firstParamOfRightPart = expressions.ContainsKey((line as Line.BinaryExpr).first) ?
+                                                       expressions[(line as Line.BinaryExpr).first] :
+                                                       (line as Line.BinaryExpr).first;
+
+                        secondParamOfRightPart = expressions.ContainsKey((line as Line.BinaryExpr).second) ?
+                                                        expressions[(line as Line.BinaryExpr).second] :
+                                                        (line as Line.BinaryExpr).second;
+
+                        Operator op = (line as Line.BinaryExpr).operation;
+
+                        rightPartOfExpr = firstParamOfRightPart +
+                                          (line as Line.BinaryExpr).operation +
+                                          secondParamOfRightPart;
+
+
+                        if ((op.Equals(Operator.Minus) || op.Equals(Operator.Plus)) && defOfExpr.Contains("@"))
+                            rightPartOfExpr = "(" + rightPartOfExpr + ")";
+                    }
+                    else if (line is Line.Identity)
+                    {
+                        rightPartOfExpr = expressions.ContainsKey((line as Line.Identity).right) ?
+                                                       expressions[(line as Line.Identity).right] :
+                                                       (line as Line.Identity).right;
+                    }
+                    else if (line is Line.UnaryExpr)
+                    {
+                        rightPartOfExpr = expressions.ContainsKey((line as Line.UnaryExpr).argument) ?
+                                                       expressions[(line as Line.UnaryExpr).argument] :
+                                                       (line as Line.UnaryExpr).argument;
+
+                        rightPartOfExpr = "(" + (line as Line.UnaryExpr).operation + rightPartOfExpr + ")";
+                        
+                    }
+                 
+                    if (expressions.ContainsKey(defOfExpr))                 
+                        expressions.Remove(defOfExpr);
+
+                    expressions.Add(defOfExpr, rightPartOfExpr);
+                                        
+                }
+            }
+
+            return expressions;
+        }
     }
 }
 
