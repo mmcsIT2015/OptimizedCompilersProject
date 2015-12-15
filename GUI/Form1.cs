@@ -88,7 +88,7 @@ namespace GUI
                     cso.Optimize();
 
                     ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
-                    //ResultView.Text = ILCodeGeneration.GenILCode(code);
+                    ILResultView.Text = ILCodeGeneration.GenILCode(code);
                 }
                 else
                 {

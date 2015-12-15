@@ -44,6 +44,9 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ILResultView = new System.Windows.Forms.TextBox();
+            this.IlCode = new System.Windows.Forms.Label();
+            this.TaLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -146,40 +149,39 @@
             this.WorkingArea.Multiline = true;
             this.WorkingArea.Name = "WorkingArea";
             this.WorkingArea.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.WorkingArea.Size = new System.Drawing.Size(553, 561);
+            this.WorkingArea.Size = new System.Drawing.Size(553, 536);
             this.WorkingArea.TabIndex = 1;
             this.WorkingArea.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.WorkingArea.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // ResultView
             // 
-            this.ResultView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ResultView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ResultView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ResultView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ResultView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ResultView.Location = new System.Drawing.Point(553, 26);
+            this.ResultView.Location = new System.Drawing.Point(553, 48);
             this.ResultView.Margin = new System.Windows.Forms.Padding(2);
             this.ResultView.Multiline = true;
             this.ResultView.Name = "ResultView";
             this.ResultView.ReadOnly = true;
             this.ResultView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.ResultView.Size = new System.Drawing.Size(432, 560);
+            this.ResultView.Size = new System.Drawing.Size(432, 260);
             this.ResultView.TabIndex = 2;
             // 
-            // saveFileDialog1
+            // saveFileDialog
             // 
             this.saveFileDialog.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn|PABC.NET files(*.pas)|*.pas";
             // 
-            // openFileDialog1
+            // openFileDialog
             // 
             this.openFileDialog.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn|PABC.NET files(*.pas)|*.pas";
             // 
-            // statusStrip1
+            // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
             this.statusStrip.Location = new System.Drawing.Point(0, 564);
-            this.statusStrip.Name = "statusStrip1";
+            this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(985, 22);
             this.statusStrip.TabIndex = 3;
             this.statusStrip.Text = "statusStrip1";
@@ -189,11 +191,49 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
+            // ILResultView
+            // 
+            this.ILResultView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ILResultView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ILResultView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ILResultView.Location = new System.Drawing.Point(553, 338);
+            this.ILResultView.Margin = new System.Windows.Forms.Padding(2);
+            this.ILResultView.Multiline = true;
+            this.ILResultView.Name = "ILResultView";
+            this.ILResultView.ReadOnly = true;
+            this.ILResultView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.ILResultView.Size = new System.Drawing.Size(432, 224);
+            this.ILResultView.TabIndex = 4;
+            // 
+            // IlCode
+            // 
+            this.IlCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.IlCode.AutoSize = true;
+            this.IlCode.Location = new System.Drawing.Point(553, 320);
+            this.IlCode.Name = "IlCode";
+            this.IlCode.Size = new System.Drawing.Size(47, 13);
+            this.IlCode.TabIndex = 5;
+            this.IlCode.Text = "IL Code:";
+            // 
+            // TaLabel
+            // 
+            this.TaLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.TaLabel.AutoSize = true;
+            this.TaLabel.Location = new System.Drawing.Point(553, 32);
+            this.TaLabel.Name = "TaLabel";
+            this.TaLabel.Size = new System.Drawing.Size(52, 13);
+            this.TaLabel.TabIndex = 6;
+            this.TaLabel.Text = "TA Code:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(985, 586);
+            this.Controls.Add(this.TaLabel);
+            this.Controls.Add(this.IlCode);
+            this.Controls.Add(this.ILResultView);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.ResultView);
             this.Controls.Add(this.WorkingArea);
@@ -229,6 +269,9 @@
         private System.Windows.Forms.ToolStripMenuItem startApplicationToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.TextBox ILResultView;
+        private System.Windows.Forms.Label IlCode;
+        private System.Windows.Forms.Label TaLabel;
     }
 }
 
