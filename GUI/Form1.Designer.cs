@@ -148,9 +148,10 @@
             this.WorkingArea.MaxLength = 0;
             this.WorkingArea.Multiline = true;
             this.WorkingArea.Name = "WorkingArea";
-            this.WorkingArea.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.WorkingArea.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.WorkingArea.Size = new System.Drawing.Size(553, 536);
             this.WorkingArea.TabIndex = 1;
+            this.WorkingArea.WordWrap = false;
             this.WorkingArea.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.WorkingArea.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
@@ -164,9 +165,10 @@
             this.ResultView.Multiline = true;
             this.ResultView.Name = "ResultView";
             this.ResultView.ReadOnly = true;
-            this.ResultView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.ResultView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.ResultView.Size = new System.Drawing.Size(432, 260);
             this.ResultView.TabIndex = 2;
+            this.ResultView.WordWrap = false;
             // 
             // saveFileDialog
             // 
@@ -202,9 +204,10 @@
             this.ILResultView.Multiline = true;
             this.ILResultView.Name = "ILResultView";
             this.ILResultView.ReadOnly = true;
-            this.ILResultView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.ILResultView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.ILResultView.Size = new System.Drawing.Size(432, 224);
             this.ILResultView.TabIndex = 4;
+            this.ILResultView.WordWrap = false;
             // 
             // IlCode
             // 
