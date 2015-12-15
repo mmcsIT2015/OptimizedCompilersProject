@@ -109,6 +109,7 @@
     <Compile Include="Optimization\ConstantFolding.cs" />
     <Compile Include="Optimization\DeadCodeElimination.cs" />
     <Compile Include="Optimization\DraggingConstantsOptimization.cs" />
+    <Compile Include="Optimization\Optimizer.cs" />
     <Compile Include="Optimization\ReachExprOptimization.cs" />
     <Compile Include="Optimization\IOptimizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
