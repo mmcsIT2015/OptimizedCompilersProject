@@ -1,0 +1,5 @@
+{
+	float a = 2 + 3;
+	float b = 5 * a;
+	float c = a + b - 3 + 2 * b;
+}

@@ -1,0 +1,7 @@
+{
+	float x = 5;
+	float y = -3;
+	float z = 3 + x;
+	float w = y - 2 + z;
+	float res = z / w;
+}

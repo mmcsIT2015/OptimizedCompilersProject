@@ -464,7 +464,7 @@ namespace iCompiler
                                           secondParamOfRightPart;
 
 
-                        if ((op.Equals(Operator.Minus) || op.Equals(Operator.Plus)) && defOfExpr.Contains("@"))
+                        if (op.Equals(Operator.Minus) || op.Equals(Operator.Plus))
                             rightPartOfExpr = "(" + rightPartOfExpr + ")";
                     }
                     else if (line is Line.Identity)
