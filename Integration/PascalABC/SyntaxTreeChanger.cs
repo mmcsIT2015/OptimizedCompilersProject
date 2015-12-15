@@ -20,8 +20,10 @@ namespace ParsePABC
         }
     }
 
-    public class TestSyntaxTreeChanger : ISyntaxTreeChanger
+    public class SyntaxTreeChanger : ISyntaxTreeChanger
     {
+        public iCompiler.ThreeAddrCode Code { get; protected set; }
+
         public void Change(syntax_tree_node sn)
         {
             sn.visit(new LoweringVisitor());
@@ -35,14 +37,14 @@ namespace ParsePABC
             Console.WriteLine("\ncode:\n---");
             try
             {
-                var code = generator.CreateCode();
-                Console.WriteLine(code);
+                Code = generator.CreateCode();
+                Console.WriteLine(Code);
                 Console.WriteLine("\nvars:\n---");
-                Console.WriteLine(code.TableOfNamesToString());
+                Console.WriteLine(Code.TableOfNamesToString());
 
                 Console.WriteLine("\ntest:\n---");
                 PascalABCTreeGenerator gen = new PascalABCTreeGenerator();
-                sn = gen.generate(code);
+                sn = gen.generate(Code);
                 sn.visit(new SimplePrettyPrinterVisitor());
             }
             catch (SemanticException e)

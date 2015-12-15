@@ -40,12 +40,12 @@
             this.startApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WorkingArea = new System.Windows.Forms.TextBox();
             this.ResultView = new System.Windows.Forms.TextBox();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -168,21 +168,21 @@
             // 
             // saveFileDialog1
             // 
-            this.saveFileDialog1.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn|PABC.NET files(*.pas)|*.pas";
+            this.saveFileDialog.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn|PABC.NET files(*.pas)|*.pas";
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn|PABC.NET files(*.pas)|*.pas";
+            this.openFileDialog.Filter = "cn files (*.cn)|*.cn|pasn files (*.pasn)|*.pasn|PABC.NET files(*.pas)|*.pas";
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 564);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(985, 22);
-            this.statusStrip1.TabIndex = 3;
-            this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip.Location = new System.Drawing.Point(0, 564);
+            this.statusStrip.Name = "statusStrip1";
+            this.statusStrip.Size = new System.Drawing.Size(985, 22);
+            this.statusStrip.TabIndex = 3;
+            this.statusStrip.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
@@ -194,7 +194,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(985, 586);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.ResultView);
             this.Controls.Add(this.WorkingArea);
             this.Controls.Add(this.menuStrip1);
@@ -205,8 +205,8 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,10 +224,10 @@
         private System.Windows.Forms.ToolStripMenuItem RunItem;
         private System.Windows.Forms.ToolStripMenuItem CreateNew;
         private System.Windows.Forms.ToolStripComboBox GrammarToolStripComboBox;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripMenuItem startApplicationToolStripMenuItem;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }

@@ -13,6 +13,10 @@ using System.IO;
 using CompilerExceptions;
 using iCompiler;
 
+//using ParsePABC;
+//using PascalABCCompiler;
+//using PascalABCCompiler.Errors;
+
 namespace GUI
 {
     public partial class Form1 : Form
@@ -35,13 +39,13 @@ namespace GUI
         private void OpenFile_Click(object sender, EventArgs e)
         {
             this.toolStripStatusLabel1.Text = "";
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    fullFilename = openFileDialog1.FileName;
-                    WorkingArea.Text = File.ReadAllText(openFileDialog1.FileName, Encoding.UTF8);
-                    type = FileLoader.GetGrammarType(openFileDialog1.FileName);
+                    fullFilename = openFileDialog.FileName;
+                    WorkingArea.Text = File.ReadAllText(openFileDialog.FileName, Encoding.UTF8);
+                    type = FileLoader.GetGrammarType(openFileDialog.FileName);
                     switch (type)
                     {
                         case FileLoader.GrammarType.C:
@@ -55,7 +59,7 @@ namespace GUI
                             break;
                     }
                     textModified = false;
-                    Text = formName + " - " + openFileDialog1.FileName;
+                    Text = formName + " - " + openFileDialog.FileName;
                     RunParser_Click(null, EventArgs.Empty);                
                 }
                 catch (FileNotFoundException ex)
@@ -112,7 +116,18 @@ namespace GUI
 
         private void ProcessPascalABCNETCode(string content)
         {
-            throw new NotImplementedException("Awaits your implementation, Almikh!");
+            var filename = Path.GetTempFileName();
+            File.WriteAllText(filename, WorkingArea.Text);
+
+            //Compiler compiler = new Compiler();
+            //var changer = new SyntaxTreeChanger();
+            //compiler.SyntaxTreeChanger = changer;
+            //var opts = new CompilerOptions(filename, CompilerOptions.OutputType.ConsoleApplicaton);
+            ////opts.GenerateCode = true;
+
+            //compiler.Compile(opts);
+
+            //ResultView.Text = changer.Code.ToString().Replace("\n", Environment.NewLine);
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -129,11 +144,11 @@ namespace GUI
 
         private void SaveAs_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(saveFileDialog1.FileName, WorkingArea.Text, Encoding.UTF8);
+                File.WriteAllText(saveFileDialog.FileName, WorkingArea.Text, Encoding.UTF8);
                 textModified = false;
-                fullFilename = saveFileDialog1.FileName;
+                fullFilename = saveFileDialog.FileName;
                 Text = formName + " - " + fullFilename;
             }
         }
@@ -197,7 +212,7 @@ namespace GUI
             type = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 ? FileLoader.GrammarType.PASCAL : FileLoader.GrammarType.PASCALABCNET;
             this.toolStripStatusLabel1.Text = "";
             this.startApplicationToolStripMenuItem.Enabled = type == FileLoader.GrammarType.PASCALABCNET;
-            openFileDialog1.FilterIndex = saveFileDialog1.FilterIndex = GrammarToolStripComboBox.SelectedIndex + 1;
+            openFileDialog.FilterIndex = saveFileDialog.FilterIndex = GrammarToolStripComboBox.SelectedIndex + 1;
             ResultView.Text = string.Empty;
         }
 

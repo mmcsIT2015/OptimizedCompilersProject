@@ -20,7 +20,7 @@ namespace ParsePABC
             var filename = System.IO.Path.GetFullPath(@"..\\..\\a.pas");
 
             Compiler compiler = new Compiler();
-            compiler.SyntaxTreeChanger = new TestSyntaxTreeChanger();
+            compiler.SyntaxTreeChanger = new SyntaxTreeChanger();
             var opts = new CompilerOptions(filename, CompilerOptions.OutputType.ConsoleApplicaton);
             //opts.GenerateCode = true;
 
