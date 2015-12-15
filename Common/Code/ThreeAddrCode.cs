@@ -147,13 +147,23 @@ namespace iCompiler
 
         public int GetBlockId(Block block)
         {
-            for (int i = 0; i<blocks.Count(); ++i) {
-                if (block == blocks[i]) return i;
+            return blocks.IndexOf(block);
+        }
+
+        public int GetLineId(Line.Line line)
+        {
+            int counter = 0;
+            foreach (var block in blocks)
+            {
+                for (int j = 0; j < block.Count(); ++j)
+                {
+                    if (line == block[j]) return counter;
+                    ++counter;
+                }
             }
 
-            Debug.Assert(false);
-            return -1;
-        } 
+            return counter;
+        }
 
         /// <summary>
         /// Функция возвращает список объектов GenKillInfo для каждого блока

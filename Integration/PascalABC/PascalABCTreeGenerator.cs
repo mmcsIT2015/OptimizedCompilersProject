@@ -61,8 +61,64 @@ namespace ParsePABC
             return new ident(val);
         }
 
+        private Dictionary<string, expression> RollExpressionsToNormalForm(iCompiler.ThreeAddrCode code)
+        {
+            var usedVars = new Dictionary<string, List<string>>();
+            var exprs = new Dictionary<string, expression>();
+
+            for (int i = 0; i < code.blocks.Count; i++)
+            {
+                for (int j = 0; j < code.blocks[i].Count; j++)
+                {
+                    var line = code.blocks[i][j];
+                    if (line.IsEmpty()) continue;
+                    if (line is iCompiler.Line.GoTo) continue;
+                    if (line is iCompiler.Line.FunctionCall || line is iCompiler.Line.FunctionParam) continue;
+
+                    String defOfExpr = (line as iCompiler.Line.Expr).left;
+                    if (defOfExpr.First() != '@') defOfExpr = code.GetLineId(line).ToString();
+
+                    if (line is iCompiler.Line.BinaryExpr)
+                    {
+                        var bin = line as iCompiler.Line.BinaryExpr;
+
+                        expression left = exprs.ContainsKey(bin.first) ? exprs[bin.first] : MakeExpr(bin.first);
+                        expression right = exprs.ContainsKey(bin.second) ? exprs[bin.second] : MakeExpr(bin.second);
+                        Operators op = Map(bin.operation);
+
+                        var rightPartOfExpr = new bin_expr(left, right, op);
+                        if (exprs.ContainsKey(defOfExpr)) exprs.Remove(defOfExpr);
+                        exprs.Add(defOfExpr, rightPartOfExpr);
+                    }
+                    else if (line is iCompiler.Line.Identity)
+                    {
+                        var id = line as iCompiler.Line.Identity;
+
+                        var rightPartOfExpr = exprs.ContainsKey(id.right) ? exprs[id.right] : MakeExpr(id.right);
+                        if (exprs.ContainsKey(defOfExpr)) exprs.Remove(defOfExpr);
+                        exprs.Add(defOfExpr, rightPartOfExpr);
+                    }
+                    else if (line is iCompiler.Line.UnaryExpr)
+                    {
+                        var un = line as iCompiler.Line.UnaryExpr;
+
+                        expression expr = exprs.ContainsKey(un.argument) ? exprs[un.argument] : MakeExpr(un.argument);
+                        Operators op = Map(un.operation);
+
+                        var rightPartOfExpr = new un_expr(expr, op);
+                        if (exprs.ContainsKey(defOfExpr)) exprs.Remove(defOfExpr);
+                        exprs.Add(defOfExpr, rightPartOfExpr);
+                    }
+                }
+            }
+
+            return exprs;
+        }
+
         public syntax_tree_node generate(iCompiler.ThreeAddrCode code)
         {
+            var rolledExprs = RollExpressionsToNormalForm(code);
+
             block root = new block();
             root.defs = new declarations();
             foreach (var name in code.tableOfNames.Keys)
@@ -77,12 +133,20 @@ namespace ParsePABC
             foreach (var block in code.blocks) {
                 foreach (var line in block)
                 {
+                    var lineId = code.GetLineId(line).ToString();
                     if (line.HasLabel())
                     {
                         root.defs.Add(new label_definitions(new ident(line.label)));
 
                         var st = new labeled_statement(line.label);
                         root.program_code.Add(st);
+                    }
+
+                    if (rolledExprs.ContainsKey(lineId))
+                    {
+                        var left = (line as iCompiler.Line.Expr).left;
+                        root.program_code.Add(new assign(left, rolledExprs[lineId]));
+                        continue;
                     }
 
                     if (line is iCompiler.Line.Identity)
