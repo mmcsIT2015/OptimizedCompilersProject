@@ -7,7 +7,7 @@ using ProgramTree;
 
 namespace iCompiler
 {
-    public static class ILCodeGeneration
+    public static class ILCodeGenerator
     {
         private const string ReportMessage = "[Report to the team SourceCode]";
 
@@ -251,7 +251,7 @@ namespace iCompiler
             return sb.ToString();
         }
 
-        public static string GenILCode(ThreeAddrCode code)
+        public static string Generate(ThreeAddrCode code)
         {
             StringBuilder sb = new StringBuilder(), sb_header = new StringBuilder();
             List<FunctionParamInfo> pars = new List<FunctionParamInfo>();

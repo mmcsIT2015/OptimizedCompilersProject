@@ -74,7 +74,7 @@
     <Compile Include="Code\AllCycles.cs" />
     <Compile Include="Code\DepthFinder.cs" />
     <Compile Include="Code\GraphEdges.cs" />
-    <Compile Include="Code\ILCodeGeneration.cs" />
+    <Compile Include="Code\ILCodeGenerator.cs" />
     <Compile Include="Code\Line\FunctionCall.cs" />
     <Compile Include="Code\Line\FunctionParam.cs" />
     <Compile Include="Code\Line\GoTo.cs" />
