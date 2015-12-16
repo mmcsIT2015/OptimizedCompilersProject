@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GUI</RootNamespace>
     <AssemblyName>GUI</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -52,6 +53,36 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Compiler">
+      <HintPath>..\Integration\dlls\Compiler.dll</HintPath>
+    </Reference>
+    <Reference Include="CompilerTools">
+      <HintPath>..\Integration\dlls\CompilerTools.dll</HintPath>
+    </Reference>
+    <Reference Include="Errors">
+      <HintPath>..\Integration\dlls\Errors.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory">
+      <HintPath>..\Integration\dlls\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="Localization">
+      <HintPath>..\Integration\dlls\Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="NETGenerator">
+      <HintPath>..\Integration\dlls\NETGenerator.dll</HintPath>
+    </Reference>
+    <Reference Include="ParserTools">
+      <HintPath>..\Integration\dlls\ParserTools.dll</HintPath>
+    </Reference>
+    <Reference Include="PascalABCParser">
+      <HintPath>..\Integration\dlls\PascalABCParser.dll</HintPath>
+    </Reference>
+    <Reference Include="SemanticTree">
+      <HintPath>..\Integration\dlls\SemanticTree.dll</HintPath>
+    </Reference>
+    <Reference Include="SyntaxTree">
+      <HintPath>..\Integration\dlls\SyntaxTree.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -62,6 +93,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TreeConverter">
+      <HintPath>..\Integration\dlls\TreeConverter.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Form1.cs">
@@ -102,6 +136,14 @@
     <ProjectReference Include="..\Common\iCompiler.csproj">
       <Project>{12b9d996-7b4a-4ee4-9ad8-2e24eaf3f574}</Project>
       <Name>iCompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration\PascalABC\PascalABC.csproj">
+      <Project>{d1b107ed-e2bb-4d21-98d0-a2f99c08d2b0}</Project>
+      <Name>PascalABC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration\SyntaxVisitors\SyntaxVisitors.csproj">
+      <Project>{a9ab4282-83b4-41a7-86c3-e5bf6a45e7e2}</Project>
+      <Name>SyntaxVisitors</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

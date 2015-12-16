@@ -13,9 +13,9 @@ using System.IO;
 using CompilerExceptions;
 using iCompiler;
 
-//using ParsePABC;
-//using PascalABCCompiler;
-//using PascalABCCompiler.Errors;
+using ParsePABC;
+using PascalABCCompiler;
+using PascalABCCompiler.Errors;
 
 namespace GUI
 {
@@ -119,15 +119,14 @@ namespace GUI
             var filename = Path.GetTempFileName();
             File.WriteAllText(filename, WorkingArea.Text);
 
-            //Compiler compiler = new Compiler();
-            //var changer = new SyntaxTreeChanger();
-            //compiler.SyntaxTreeChanger = changer;
-            //var opts = new CompilerOptions(filename, CompilerOptions.OutputType.ConsoleApplicaton);
-            ////opts.GenerateCode = true;
+            Compiler compiler = new Compiler();
+            var changer = new SyntaxTreeChanger();
+            compiler.SyntaxTreeChanger = changer;
+            var opts = new CompilerOptions(filename, CompilerOptions.OutputType.ConsoleApplicaton);
+            opts.GenerateCode = true;
+            compiler.Compile(opts);
 
-            //compiler.Compile(opts);
-
-            //ResultView.Text = changer.Code.ToString().Replace("\n", Environment.NewLine);
+            ResultView.Text = changer.Code.ToString().Replace("\n", Environment.NewLine);
         }
 
         private void Save_Click(object sender, EventArgs e)
