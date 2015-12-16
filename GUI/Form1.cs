@@ -116,17 +116,18 @@ namespace GUI
 
         private void ProcessPascalABCNETCode(string content)
         {
-            var filename = Path.GetTempFileName();
+            var filename = String.Format(@"{0}.pas", System.Guid.NewGuid());
             File.WriteAllText(filename, WorkingArea.Text);
 
             Compiler compiler = new Compiler();
             var changer = new SyntaxTreeChanger();
             compiler.SyntaxTreeChanger = changer;
             var opts = new CompilerOptions(filename, CompilerOptions.OutputType.ConsoleApplicaton);
-            opts.GenerateCode = true;
+            //opts.GenerateCode = true;
             compiler.Compile(opts);
 
             ResultView.Text = changer.Code.ToString().Replace("\n", Environment.NewLine);
+            File.Delete(filename);
         }
 
         private void Save_Click(object sender, EventArgs e)

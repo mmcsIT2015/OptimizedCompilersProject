@@ -142,7 +142,7 @@ namespace ParsePABC
                         root.program_code.Add(st);
                     }
 
-                    if (rolledExprs.ContainsKey(lineId))
+                    if (false && rolledExprs.ContainsKey(lineId))
                     {
                         var left = (line as iCompiler.Line.Expr).left;
                         root.program_code.Add(new assign(left, rolledExprs[lineId]));
@@ -177,9 +177,8 @@ namespace ParsePABC
                     {
                         var st = line as iCompiler.Line.СonditionalJump;
                         var condition = MakeExpr(st.condition);
-                        // TODO
-                        var statement = new assign(new ident("test"), new ident("test"));
-                        root.program_code.Add(new if_node(condition, statement));
+                        var if_body = new goto_statement(new ident(st.target));
+                        root.program_code.Add(new if_node(condition, if_body));
                     }
                     else if (line is iCompiler.Line.GoTo)
                     {

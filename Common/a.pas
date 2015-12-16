@@ -1,4 +1,4 @@
-label A,B,C;
+﻿label A,B,C;
 
 var 
   i,j: integer;
@@ -6,6 +6,7 @@ var
 begin
   write(1+i,(t+2)*3);
   i := 5;
+  while (i < 10) do
   begin
     i := i + 1;
     goto A;
