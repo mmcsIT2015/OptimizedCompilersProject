@@ -227,18 +227,19 @@ namespace GUI
             {
                 case FileLoader.GrammarType.C:
                 case FileLoader.GrammarType.PASCAL:
-                    ILResultView.Visible = true;
-                    IlCode.Visible = true;
+                    codeSplitContainer.Panel2Collapsed = false;
+                    codeSplitContainer.Panel2.Show();
                     break;
 
                 case FileLoader.GrammarType.PASCALABCNET:
-                    ILResultView.Visible = false;
-                    IlCode.Visible = false;
+
+                    codeSplitContainer.Panel2Collapsed = true;
+                    codeSplitContainer.Panel2.Hide();
                     break;
 
                 default:
-                    ILResultView.Visible = false;
-                    IlCode.Visible = false;
+                    codeSplitContainer.Panel2Collapsed = false;
+                    codeSplitContainer.Panel2.Show();
                     break;
             }
         }

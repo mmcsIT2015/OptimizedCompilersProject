@@ -45,10 +45,22 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ILResultView = new System.Windows.Forms.TextBox();
-            this.IlCode = new System.Windows.Forms.Label();
-            this.TaLabel = new System.Windows.Forms.Label();
+            this.taCodeGroupBox = new System.Windows.Forms.GroupBox();
+            this.ilGroupBox = new System.Windows.Forms.GroupBox();
+            this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.codeSplitContainer = new System.Windows.Forms.SplitContainer();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            this.taCodeGroupBox.SuspendLayout();
+            this.ilGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
+            this.mainSplitContainer.Panel1.SuspendLayout();
+            this.mainSplitContainer.Panel2.SuspendLayout();
+            this.mainSplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.codeSplitContainer)).BeginInit();
+            this.codeSplitContainer.Panel1.SuspendLayout();
+            this.codeSplitContainer.Panel2.SuspendLayout();
+            this.codeSplitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -139,17 +151,15 @@
             // WorkingArea
             // 
             this.WorkingArea.AcceptsTab = true;
-            this.WorkingArea.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.WorkingArea.Dock = System.Windows.Forms.DockStyle.Fill;
             this.WorkingArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.WorkingArea.Location = new System.Drawing.Point(0, 26);
+            this.WorkingArea.Location = new System.Drawing.Point(0, 0);
             this.WorkingArea.Margin = new System.Windows.Forms.Padding(2);
             this.WorkingArea.MaxLength = 0;
             this.WorkingArea.Multiline = true;
             this.WorkingArea.Name = "WorkingArea";
             this.WorkingArea.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.WorkingArea.Size = new System.Drawing.Size(553, 536);
+            this.WorkingArea.Size = new System.Drawing.Size(600, 536);
             this.WorkingArea.TabIndex = 1;
             this.WorkingArea.WordWrap = false;
             this.WorkingArea.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
@@ -157,16 +167,16 @@
             // 
             // ResultView
             // 
-            this.ResultView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ResultView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ResultView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResultView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ResultView.Location = new System.Drawing.Point(553, 48);
+            this.ResultView.Location = new System.Drawing.Point(3, 16);
             this.ResultView.Margin = new System.Windows.Forms.Padding(2);
             this.ResultView.Multiline = true;
             this.ResultView.Name = "ResultView";
             this.ResultView.ReadOnly = true;
             this.ResultView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.ResultView.Size = new System.Drawing.Size(432, 260);
+            this.ResultView.Size = new System.Drawing.Size(375, 254);
             this.ResultView.TabIndex = 2;
             this.ResultView.WordWrap = false;
             // 
@@ -195,51 +205,83 @@
             // 
             // ILResultView
             // 
-            this.ILResultView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.ILResultView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ILResultView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ILResultView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ILResultView.Location = new System.Drawing.Point(553, 338);
+            this.ILResultView.Location = new System.Drawing.Point(3, 16);
             this.ILResultView.Margin = new System.Windows.Forms.Padding(2);
             this.ILResultView.Multiline = true;
             this.ILResultView.Name = "ILResultView";
             this.ILResultView.ReadOnly = true;
             this.ILResultView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.ILResultView.Size = new System.Drawing.Size(432, 224);
+            this.ILResultView.Size = new System.Drawing.Size(375, 240);
             this.ILResultView.TabIndex = 4;
             this.ILResultView.WordWrap = false;
             // 
-            // IlCode
+            // taCodeGroupBox
             // 
-            this.IlCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.IlCode.AutoSize = true;
-            this.IlCode.Location = new System.Drawing.Point(553, 320);
-            this.IlCode.Name = "IlCode";
-            this.IlCode.Size = new System.Drawing.Size(47, 13);
-            this.IlCode.TabIndex = 5;
-            this.IlCode.Text = "IL Code:";
+            this.taCodeGroupBox.Controls.Add(this.ResultView);
+            this.taCodeGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.taCodeGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.taCodeGroupBox.Name = "taCodeGroupBox";
+            this.taCodeGroupBox.Size = new System.Drawing.Size(381, 273);
+            this.taCodeGroupBox.TabIndex = 7;
+            this.taCodeGroupBox.TabStop = false;
+            this.taCodeGroupBox.Text = "TA Code";
             // 
-            // TaLabel
+            // ilGroupBox
             // 
-            this.TaLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TaLabel.AutoSize = true;
-            this.TaLabel.Location = new System.Drawing.Point(553, 32);
-            this.TaLabel.Name = "TaLabel";
-            this.TaLabel.Size = new System.Drawing.Size(52, 13);
-            this.TaLabel.TabIndex = 6;
-            this.TaLabel.Text = "TA Code:";
+            this.ilGroupBox.Controls.Add(this.ILResultView);
+            this.ilGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ilGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.ilGroupBox.Name = "ilGroupBox";
+            this.ilGroupBox.Size = new System.Drawing.Size(381, 259);
+            this.ilGroupBox.TabIndex = 8;
+            this.ilGroupBox.TabStop = false;
+            this.ilGroupBox.Text = "IL Code";
+            // 
+            // mainSplitContainer
+            // 
+            this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 28);
+            this.mainSplitContainer.Name = "mainSplitContainer";
+            // 
+            // mainSplitContainer.Panel1
+            // 
+            this.mainSplitContainer.Panel1.Controls.Add(this.WorkingArea);
+            // 
+            // mainSplitContainer.Panel2
+            // 
+            this.mainSplitContainer.Panel2.Controls.Add(this.codeSplitContainer);
+            this.mainSplitContainer.Size = new System.Drawing.Size(985, 536);
+            this.mainSplitContainer.SplitterDistance = 600;
+            this.mainSplitContainer.TabIndex = 9;
+            // 
+            // codeSplitContainer
+            // 
+            this.codeSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.codeSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.codeSplitContainer.Name = "codeSplitContainer";
+            this.codeSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // codeSplitContainer.Panel1
+            // 
+            this.codeSplitContainer.Panel1.Controls.Add(this.taCodeGroupBox);
+            // 
+            // codeSplitContainer.Panel2
+            // 
+            this.codeSplitContainer.Panel2.Controls.Add(this.ilGroupBox);
+            this.codeSplitContainer.Size = new System.Drawing.Size(381, 536);
+            this.codeSplitContainer.SplitterDistance = 273;
+            this.codeSplitContainer.TabIndex = 0;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(985, 586);
-            this.Controls.Add(this.TaLabel);
-            this.Controls.Add(this.IlCode);
-            this.Controls.Add(this.ILResultView);
+            this.Controls.Add(this.mainSplitContainer);
             this.Controls.Add(this.statusStrip);
-            this.Controls.Add(this.ResultView);
-            this.Controls.Add(this.WorkingArea);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -250,6 +292,19 @@
             this.menuStrip1.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.taCodeGroupBox.ResumeLayout(false);
+            this.taCodeGroupBox.PerformLayout();
+            this.ilGroupBox.ResumeLayout(false);
+            this.ilGroupBox.PerformLayout();
+            this.mainSplitContainer.Panel1.ResumeLayout(false);
+            this.mainSplitContainer.Panel1.PerformLayout();
+            this.mainSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
+            this.mainSplitContainer.ResumeLayout(false);
+            this.codeSplitContainer.Panel1.ResumeLayout(false);
+            this.codeSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.codeSplitContainer)).EndInit();
+            this.codeSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,8 +328,10 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.TextBox ILResultView;
-        private System.Windows.Forms.Label IlCode;
-        private System.Windows.Forms.Label TaLabel;
+        private System.Windows.Forms.GroupBox taCodeGroupBox;
+        private System.Windows.Forms.GroupBox ilGroupBox;
+        private System.Windows.Forms.SplitContainer mainSplitContainer;
+        private System.Windows.Forms.SplitContainer codeSplitContainer;
     }
 }
 
