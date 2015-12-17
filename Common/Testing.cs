@@ -92,17 +92,32 @@ namespace SimpleCompiler
             }
 
             Console.WriteLine("\nDom Tree Class");
-            DomTree test = new DomTree(code);
-            //Console.WriteLine(test.FirstDomSeccond(code.blocks[0], code.blocks[1]).ToString());
-            //Console.WriteLine(test.FirstDomSeccond(code.blocks[3], code.blocks[4]).ToString());
-            //Console.WriteLine(test.FirstDomSeccond(code.blocks[1], code.blocks[3]).ToString());
-            //IEnumerable<Block> list = test.UpperDominators(code.blocks[3]);
-            //foreach (Block block in list)
-            //    Console.WriteLine(block);
-            //IEnumerable<Block> list = test.DownDominators(code.blocks[0]);
-            //foreach (Block block in list)
-            //    Console.WriteLine(block);
-
+            Console.WriteLine("\nTesting FirstDomSecond function:");
+            DomTree domTree = new DomTree(code);
+            for (int i = 0; i < code.blocks.Count; ++i)
+                for (int j = 0; j < code.blocks.Count; ++j )
+                {
+                    bool res = domTree.FirstDomSeccond(code.blocks[i], code.blocks[j]);
+                    Console.WriteLine((i + 1).ToString() + " dom " + (j + 1).ToString() + " = " + res);
+                }
+            Console.WriteLine("\nTesting UpperDominators function:");
+            for (int i = 0; i < code.blocks.Count; ++i)
+            {
+                IEnumerable<Block> list = domTree.UpperDominators(code.blocks[i]);
+                Console.Write("UpperDominators({0}) = ( ", (i + 1));
+                foreach (Block block in list)
+                    Console.Write("{0} ", code.blocks.IndexOf(block) + 1);
+                Console.WriteLine(")");
+            }
+            Console.WriteLine("\nTesting DownDominators function:");
+            for (int i = 0; i < code.blocks.Count; ++i)
+            {
+                IEnumerable<Block> list = domTree.DownDominators(code.blocks[i]);
+                Console.Write("DownDominators({0}) = ( ", (i + 1));
+                foreach (Block block in list)
+                    Console.Write("{0} ", code.blocks.IndexOf(block) + 1);
+                Console.WriteLine(")");
+            }
 
             Console.WriteLine("\nReversed Edges");
             List<DomGraph.ValPair<Block>> listEdges = DomGraph.ReverseEdges(blockDoms, code.graph) as List<DomGraph.ValPair<Block>>;
@@ -345,6 +360,7 @@ namespace SimpleCompiler
                 try
                 {
                     var root = FileLoader.LoadFile(file, System.Text.Encoding.UTF8);
+                    Console.WriteLine("Check " + file + "...\n---");
                     Console.WriteLine("Syntax tree is ready");
 
                     if (root_tests != null && root_tests.Count != 0)
@@ -372,6 +388,8 @@ namespace SimpleCompiler
                             code_tests[i](code);
                         }
                     }
+
+                    Console.WriteLine();
                 }
                 catch (FileNotFoundException)
                 {

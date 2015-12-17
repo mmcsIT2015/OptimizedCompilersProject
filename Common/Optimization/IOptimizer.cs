@@ -20,6 +20,8 @@ namespace iCompiler
     /// </summary>
     public class IOptimizer
     {
+        public int NumberOfChanges { get; protected set; }
+
         public ThreeAddrCode Code { get; protected set; }
 
         public virtual void Optimize(params Object[] values) { }

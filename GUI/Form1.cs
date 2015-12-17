@@ -209,11 +209,38 @@ namespace GUI
 
         private void GrammarToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            type = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 ? FileLoader.GrammarType.PASCAL : FileLoader.GrammarType.PASCALABCNET;
+            type = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 
+                                                               ? FileLoader.GrammarType.PASCAL : FileLoader.GrammarType.PASCALABCNET;
+
+            hideILView(type);
+
             this.toolStripStatusLabel1.Text = "";
             this.startApplicationToolStripMenuItem.Enabled = type == FileLoader.GrammarType.PASCALABCNET;
             openFileDialog.FilterIndex = saveFileDialog.FilterIndex = GrammarToolStripComboBox.SelectedIndex + 1;
             ResultView.Text = string.Empty;
+            ILResultView.Text = string.Empty;
+        }
+
+        private void hideILView(FileLoader.GrammarType type)
+        {
+            switch (type)
+            {
+                case FileLoader.GrammarType.C:
+                case FileLoader.GrammarType.PASCAL:
+                    ILResultView.Visible = true;
+                    IlCode.Visible = true;
+                    break;
+
+                case FileLoader.GrammarType.PASCALABCNET:
+                    ILResultView.Visible = false;
+                    IlCode.Visible = false;
+                    break;
+
+                default:
+                    ILResultView.Visible = false;
+                    IlCode.Visible = false;
+                    break;
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 namespace iCompiler
 {
-    class Optimizer : IOptimizer
+    public class Optimizer : IOptimizer
     {
         protected List<IOptimizer> mOptimizations = new List<IOptimizer>();
 
@@ -13,7 +14,6 @@ namespace iCompiler
         {
             foreach (var o in optimizations)
             {
-                o.Assign(Code);
                 mOptimizations.Add(o);
             }
         }
@@ -21,24 +21,22 @@ namespace iCompiler
         public void AddOptimization(IOptimizer optimization)
         {
             mOptimizations.Add(optimization);
-            optimization.Assign(Code);
         }
 
         public override void Optimize(params Object[] values)
         {
-            foreach (var o in mOptimizations)
-            {
-                o.Optimize(values);
-            }
-        }
+            Debug.Assert(Code != null);
 
-        public override void Assign(ThreeAddrCode code)
-        {
-            Code = code;
-            foreach (var o in mOptimizations)
+            do
             {
-                o.Assign(code);
-            }
+                NumberOfChanges = 0;
+                foreach (var o in mOptimizations)
+                {
+                    o.Assign(Code);
+                    o.Optimize(values);
+                    NumberOfChanges += o.NumberOfChanges;
+                }
+            } while (NumberOfChanges > 0);
         }
     }
 }
