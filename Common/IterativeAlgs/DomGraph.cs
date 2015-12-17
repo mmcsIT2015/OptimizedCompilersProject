@@ -5,7 +5,7 @@ namespace iCompiler
 {
     public class DomTree : IDominatorRelation<Block>
     {
-        private ThreeAddrCode _code;
+        private ThreeAddrCode code;
         private Dictionary<int, List<int>> sets;
         private Dictionary<Block, List<Block>> tree;
 
@@ -16,24 +16,24 @@ namespace iCompiler
             sets = new Dictionary<int, List<int>>();
             foreach (Block block in blockDoms.Keys)
             {
-                List<int> set = new List<int>();
+                List<int> list = new List<int>();
 
                 foreach (Block domBlock in blockDoms[block])
-                    set.Insert(0, code.blocks.IndexOf(domBlock));
+                    list.Insert(0, code.blocks.IndexOf(domBlock));
 
-                sets.Add(code.blocks.IndexOf(block), set);
+                sets.Add(code.blocks.IndexOf(block), list);
             }
 
-            _code = code;
+            this.code = code;
             tree = DomGraph.GenerateDomTree(code);
         }
 
         public bool FirstDomSeccond(Block a, Block b)
         {
-            int a_ind = _code.blocks.IndexOf(a);
-            int b_ind = _code.blocks.IndexOf(b);
+            int aInd = code.blocks.IndexOf(a);
+            int bInd = code.blocks.IndexOf(b);
 
-            if (sets[b_ind].Contains(a_ind))
+            if (sets[bInd].Contains(aInd))
                 return true;
             else
                 return false;
@@ -43,10 +43,10 @@ namespace iCompiler
         {
             List<Block> result = new List<Block>();
 
-            int a_ind = _code.blocks.IndexOf(a);
-            List<int> a_list = sets[a_ind];
-            for (int i = 0; i < a_list.Count; ++i)
-                result.Add(_code.blocks[a_list[i]]);
+            int aInd = code.blocks.IndexOf(a);
+            List<int> aList = sets[aInd];
+            for (int i = 0; i < aList.Count; ++i)
+                result.Add(code.blocks[aList[i]]);
 
             return result;
         }
