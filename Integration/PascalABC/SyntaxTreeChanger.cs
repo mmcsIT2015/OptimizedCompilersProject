@@ -34,13 +34,23 @@ namespace ParsePABC
             var generator = new Gen3AddrCodeVisitor();
             sn.visit(generator);
 
-            Console.WriteLine("\ncode:\n---");
+            Console.WriteLine("\ncode:");
             try
             {
                 Code = generator.CreateCode();
+                Console.WriteLine("\nbefore:\n---");
                 Console.WriteLine(Code);
-                Console.WriteLine("\nvars:\n---");
-                Console.WriteLine(Code.TableOfNamesToString());
+
+                var optimizer = new iCompiler.Optimizer();
+                optimizer.AddOptimization(new iCompiler.DraggingConstantsOptimization());
+                optimizer.AddOptimization(new iCompiler.ReachExprOptimization());
+                optimizer.AddOptimization(new iCompiler.ActiveVarsOptimization());
+                optimizer.AddOptimization(new iCompiler.ConstantFolding());
+                optimizer.Assign(Code);
+                optimizer.Optimize();
+
+                Console.WriteLine("\nafter:\n---");
+                Console.WriteLine(Code);
 
                 Console.WriteLine("\ntest:\n---");
                 PascalABCTreeGenerator gen = new PascalABCTreeGenerator();
