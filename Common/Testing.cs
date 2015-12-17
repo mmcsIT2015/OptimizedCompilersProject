@@ -355,12 +355,17 @@ namespace SimpleCompiler
         /// <param name="code_tests">Список тестов для трехадресного кода</param>
         public static void PerformTests(List<string> files, List<RootTest> root_tests = null, List<CodeTest> code_tests = null)
         {
+            int counter = 1;
             foreach (var file in files)
             {
                 try
                 {
                     var root = FileLoader.LoadFile(file, System.Text.Encoding.UTF8);
+                    Console.WriteLine("File № " + counter.ToString());
+                    Console.WriteLine("Filename is " + file);
                     Console.WriteLine("Syntax tree is ready");
+
+                    counter++;
 
                     if (root_tests != null && root_tests.Count != 0)
                     {
@@ -387,6 +392,8 @@ namespace SimpleCompiler
                             code_tests[i](code);
                         }
                     }
+
+                    Console.WriteLine();
                 }
                 catch (FileNotFoundException)
                 {
