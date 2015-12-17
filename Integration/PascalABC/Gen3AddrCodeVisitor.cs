@@ -9,6 +9,7 @@ using CompilerExceptions;
 using iCompiler.Line;
 using ProgramTree;
 using iCompiler;
+using System.Globalization;
 
 namespace ParsePABC
 {
@@ -224,8 +225,7 @@ namespace ParsePABC
 
         public virtual void Leave(syntax_tree_node node)
         {
-            Console.WriteLine(" Leave: " + node.GetType() + ": " + node.ToString());
-
+            //Console.WriteLine(" Leave: " + node.GetType() + ": " + node.ToString());
             if (node is variable_definitions)
             {
                 mStack.Clear(); // нам в стеке объявления не нужны
@@ -333,7 +333,7 @@ namespace ParsePABC
 
         public virtual void Enter(syntax_tree_node node)
         {
-            Console.WriteLine("Enter: " + node.GetType() + ": " + node.ToString());
+            //Console.WriteLine("Enter: " + node.GetType() + ": " + node.ToString());
             if (node is if_node)
             {
                 mAuxStack.Push(node);
@@ -351,6 +351,25 @@ namespace ParsePABC
                 foreach (var id in defs.vars.idents)
                 {
                     mTableOfNames.Add(id.name, type);
+                    var iv = defs.inital_value;
+                    if (iv is ident || iv is int32_const || iv is double_const)
+                    {
+                        string right = "";
+                        if (iv is ident) {
+                            right = (iv as ident).name;
+                            CheckDefinitionVariable(right);
+                        }
+                        else if (iv is int32_const) {
+                            right = (iv as int32_const).val.ToString();
+                        }
+                        else if (iv is double_const) {
+                            right = (iv as double_const).val.ToString();
+                            right = right.Replace(',', '.');
+                        }
+
+                        Debug.Assert(right.Length > 0);
+                        mLines.Add(new iCompiler.Line.Identity(id.name, right));
+                    }
                 }
             }
             

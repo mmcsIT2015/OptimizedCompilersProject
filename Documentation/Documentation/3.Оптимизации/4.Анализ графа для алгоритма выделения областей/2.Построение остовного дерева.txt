@@ -1,0 +1,90 @@
+﻿__Постановка задачи__
+
+Построение остовного дерева
+
+__От каких задач зависит, входные данные__
+
+На вход алгоритму подаются:
+
+- Список базовых блоков 
+
+~~~~~~~{.cs}
+IEnumerable<T> blocks
+~~~~~~~~~~~~~~
+
+- Граф потока управления
+
+~~~~~~~{.cs}
+IGraph<T> graph
+~~~~~~~~~~~~~~~
+
+__Для каких задач нужна, выходные данные__
+
+Выходные данные алгоритма:
+
+- Номера блоков 
+
+~~~~~~~{.cs}
+tree.Numbers
+~~~~~~~~~~~~~~~
+
+- Остовное дерево
+
+~~~~~~~{.cs}
+tree.Data
+~~~~~~~~~~~~~~~
+
+__Реализация__
+
+Шаблон типа необходим для проведения тестирования алгоритма с помощью типа int, но алгоритм предназначен для использования с типом Block.
+
+~~~~~~~{.cs}
+public abstract class SpanningTree<T>
+{
+	public SpanningTree(IEnumerable<T> blocks, IGraph<T> graph);
+	public Dictionary<T, int> Numbers { get; protected set; }
+	public Dictionary<T, List<T>> Data { get; protected set; }
+}
+public class SpanningTreeWithoutRecursive<T> : SpanningTree<T>
+{
+	public SpanningTreeWithoutRecursive(IEnumerable<T> blocks, IGraph<T> graph)
+            : base(blocks, graph) { }
+}
+~~~~~~~~~~~~~~~
+
+__Пример использования:__
+
+- Инициализация
+
+~~~~~~~{.cs}
+SpanningTree<Block> tree = new SpanningTreeWithoutRecursive<Block>(code.blocks, code.graph);
+~~~~~~~~~~~~~~~
+
+- Получить номер блока b (от 0 до n-1)
+
+~~~~~~~{.cs}
+int i = tree.Numbers[b];
+~~~~~~~~~~~~~~~
+
+- Получить всех потомков блока b в остовном дереве tree
+
+~~~~~~~{.cs}
+List<Block> blocks = tree.Data[b];
+~~~~~~~~~~~~~~~
+
+__Описание__
+
+- Алгоритм строит и хранит произвольное остовное дерево графа и нумерацию блоков при обходе в глубину
+
+- Алгоритм обходит в глубину граф потока управления
+
+__Тесты__
+
+Для прогона тестов необходимо вызвать 
+
+~~~~~~~{.cs}
+SpaningTreeTesting.Test();
+~~~~~~~~~~~~~~
+
+__Команда__
+Альфа

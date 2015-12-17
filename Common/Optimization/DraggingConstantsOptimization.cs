@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-
-
 
 namespace iCompiler
 {
@@ -19,7 +18,7 @@ namespace iCompiler
     /// </summary>
     public class DraggingConstantsOptimization : IOptimizer
     {
-        public DraggingConstantsOptimization(ThreeAddrCode code)
+        public DraggingConstantsOptimization(ThreeAddrCode code = null)
         {
             Code = code;
         }
@@ -41,20 +40,34 @@ namespace iCompiler
                         const_value = variable;
 
                     var iLine = block[targetLine] as Line.BinaryExpr;
-                    if (variable.Equals(iLine.first)) iLine.first = const_value;
-                    else if (variable.Equals(iLine.second)) iLine.second = const_value;
+                    if (variable.Equals(iLine.first))
+                    {
+                        NumberOfChanges += 1;
+                        iLine.first = const_value;
+                    }
+                    else if (variable.Equals(iLine.second))
+                    {
+                        NumberOfChanges += 1;
+                        iLine.second = const_value;
+                    }
+
                     j = -1;
                 }
         }
 
         public override void Optimize(params Object[] values)
         {
+            Debug.Assert(Code != null);
+            NumberOfChanges = 0;
+
             foreach (Block block in Code.blocks)
             {
                 block.CalculateDefUseData();
                 for (int i = 0; i < block.Count; ++i)
+                {
                     if (block[i].Is<Line.BinaryExpr>())
                         CheckDragging(block, i);
+                }
             }
         }
     }

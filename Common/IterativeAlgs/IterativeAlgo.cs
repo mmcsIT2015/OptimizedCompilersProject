@@ -13,7 +13,7 @@ namespace iCompiler
         public Dictionary<Block, IEnumerable<AData>> Out { get; set; }
 
         public ISemilattice<AData> Semilattice; // полурешетка
-        public Dictionary<Block, TrFunc> TransferFuncs; // передаточные функции (для блоков если AData = Block)
+        public Dictionary<Block, TrFunc> TransferFuncs; // передаточные функции
 
         public IterativeAlgo(ISemilattice<AData> semilattice, Dictionary<Block, TrFunc> transferFuncs)
         {

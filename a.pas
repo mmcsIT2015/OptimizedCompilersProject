@@ -1,9 +1,11 @@
 ﻿label A,B,C;
 
 var 
-  i,j: integer := 0;
+  i,j: integer;
   t, k, u, s: integer;
 begin
+  i := 0;
+  j := 0;
   while (i < 1000000) do
   begin
     i := i + 1;
