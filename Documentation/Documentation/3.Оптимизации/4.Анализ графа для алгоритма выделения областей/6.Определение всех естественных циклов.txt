@@ -34,25 +34,13 @@ IDominatorRelation<T>
 за исключением IDominatorRelation<T>, который предоставляется как интерфейс:
 
 ~~~~~~~{.cs}
-    /// <summary>
-    /// Интерфейс для дерева доминатора
-    /// </summary>
-    /// <typeparam name="T">Тип данных</typeparam>
+    // Интерфейс для дерева доминатора
     public interface IDominatorRelation<T>
     {
-        /// <summary>
-        /// Отношение доминирования первой вершины над второй
-        /// </summary>
-        /// <param name="a">Первая вершина</param>
-        /// <param name="b">Вторая вершина</param>
-        /// <returns></returns>
+        // Отношение доминирования первой вершины над второй
         bool FirstDomSeccond(T a, T b);
 
-        /// <summary>
-        /// Все вершины, которые доминируют над текущей
-        /// </summary>
-        /// <param name="a">Вершина</param>
-        /// <returns></returns>
+        // Все вершины, которые доминируют над текущей
         IEnumerable<T> UpperDominators(T a);
     }
 ~~~~~~~~~~~~~~~~
@@ -101,73 +89,39 @@ __Реализация(интерфейс т.е. классы, методы)__
 Тип Cycle< T > является абстрактным классом цикла, который реализуется 2 классами:
 
 ~~~~~~~{.cs}
-    /// <summary>
-    /// Класс цикла
-    /// </summary>
-    /// <typeparam name="T">Тип вершин</typeparam>
+    // Класс цикла
     public abstract class Cycle<T>
     {
-        /// <summary>
-        /// Вход в цикл
-        /// </summary>
+        // Вход в цикл
         public T N { get; set; }
 
-        /// <summary>
-        /// Все вершины, принадлежащие циклу
-        /// </summary>
+        // Все вершины, принадлежащие циклу
         public List<T> DATA { get; set; }
 
-        /// <summary>
-        /// Ребра - выходы из цикла
-        /// </summary>
+        // Ребра - выходы из цикла
         public List<DomGraph.ValPair<T>> OUTS { get; set; }
     }
 
-    /// <summary>
-    /// Цикл с одной обратной дугой
-    /// </summary>
-    /// <typeparam name="T">Тип вершин</typeparam>
+    // Цикл с одной обратной дугой
     public class CycleUsual<T>: Cycle<T>
     {
         public CycleUsual(T n, List<T> data, 
-         	    List<DomGraph.ValPair<T>> outs, T d)
-        {
-            this.N = n;
-            this.DATA = data;
-            this.OUTS = outs;
-            this.D = d;
-        }
+         	    List<DomGraph.ValPair<T>> outs, T d);
 
-        /// <summary>
-        /// Вершина из обратного ребра
-        /// </summary>
+        // Вершина из обратного ребра
         public T D { get; set; }
     }
 
-    /// <summary>
-    /// Цикл с двумя обратными дугами
-    /// </summary>
-    /// <typeparam name="T">Тип вершин</typeparam>
+    // Цикл с двумя обратными дугами
     public class CycleSpecialCase<T> : Cycle<T>
     {
         public CycleSpecialCase(T n, List<T> data, 
-  	    List<DomGraph.ValPair<T>> outs, T d1, T d2)
-        {
-            this.N = n;
-            this.DATA = data;
-            this.OUTS = outs;
-            this.D1 = d1;
-            this.D2 = d2;
-        }
+  	    List<DomGraph.ValPair<T>> outs, T d1, T d2);
 
-        /// <summary>
-        /// Вершина из первого обратного ребра
-        /// </summary>
+        // Вершина из первого обратного ребра
         public T D1 { get; set; }
 
-        /// <summary>
-        /// Вершина из второго обратного ребра
-        /// </summary>
+        // Вершина из второго обратного ребра
         public T D2 { get; set; }
     }
 ~~~~~~~~~~~~~~
