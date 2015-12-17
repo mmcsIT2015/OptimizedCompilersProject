@@ -273,7 +273,18 @@ namespace GUI
         }
 
         private void startApplicationToolStripMenuItem_Click(object sender, EventArgs e)
-        {            
+        {
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.FileName = CompileILCode(ILResultView.Text);
+            p.Start();
+            p.WaitForExit();
+            MessageBox.Show(p.StandardOutput.ReadToEnd(), "Результат работы программы");
+
+            return; // TODO
+
             //NEEDS REWORK: call parameters, can use anything for it.
             Task.Factory.StartNew(() =>
                 {
@@ -313,6 +324,25 @@ namespace GUI
         {
             System.Threading.Thread.Sleep(3000);
             return true;
+        }
+
+        private string CompileILCode(string ilcode)
+        {
+            string ilcomp = Microsoft.Build.Utilities.ToolLocationHelper.GetPathToDotNetFrameworkFile("ILAsm.exe", Microsoft.Build.Utilities.TargetDotNetFrameworkVersion.VersionLatest);
+            string tmp_fn = "_tmp";
+            string tmp_ilfn = tmp_fn + ".il";
+            string tmp_exefn = tmp_fn + ".exe";
+            StreamWriter sw = new StreamWriter(tmp_ilfn);
+            sw.Write(ilcode);
+            sw.Close();
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+            p.StartInfo.FileName = ilcomp;
+            p.StartInfo.Arguments = tmp_ilfn;
+            p.StartInfo.CreateNoWindow = true;
+            p.Start();
+            p.WaitForExit();
+            File.Delete(tmp_fn);
+            return (new FileInfo(tmp_exefn)).FullName;
         }
     }
 }

@@ -5,7 +5,7 @@
 		int j = 0;
 		while (j < 10)
 		{
-			cout<<i*j;
+			cout<<i*j<<endl;
 			j = j + 1;
 		}
 		i = i + 1;

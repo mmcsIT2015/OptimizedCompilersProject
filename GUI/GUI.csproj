@@ -68,6 +68,7 @@
     <Reference Include="Localization">
       <HintPath>..\Integration\dlls\Localization.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="NETGenerator">
       <HintPath>..\Integration\dlls\NETGenerator.dll</HintPath>
     </Reference>

@@ -142,7 +142,6 @@
             // 
             // startApplicationToolStripMenuItem
             // 
-            this.startApplicationToolStripMenuItem.Enabled = false;
             this.startApplicationToolStripMenuItem.Name = "startApplicationToolStripMenuItem";
             this.startApplicationToolStripMenuItem.Size = new System.Drawing.Size(105, 24);
             this.startApplicationToolStripMenuItem.Text = "Start application";
