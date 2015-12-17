@@ -28,7 +28,7 @@ namespace iCompiler
         ///
         /// </summary>
         /// <param name="threeAddrCode">Трехадресный код</param>
-        public DeadCodeElimination(ThreeAddrCode threeAddrCode)
+        public DeadCodeElimination(ThreeAddrCode threeAddrCode = null)
         {
             Code = threeAddrCode;
         }
@@ -127,6 +127,7 @@ namespace iCompiler
             //удаление строк "мертвого" кода
             for (int i = 0; i < removeIndexList.Count; i++)
             {
+                NumberOfChanges += 1;
                 block.RemoveAt(removeIndexList[i]);
             }
 
@@ -135,6 +136,9 @@ namespace iCompiler
 
         public override void Optimize(params Object[] values)
         {
+            Debug.Assert(Code != null);
+            NumberOfChanges = 0;
+
             for (int i = 0; i < Code.blocks.Count; ++i)
             {
                 var idLife = PrepareVitalityVars(Code.blocks[i]);

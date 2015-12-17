@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -39,15 +40,18 @@ namespace iCompiler
     ///     h = a
     /// </summary>
 
-    class ReachExprOptimization : CommonSubexpressionsOptimization
+    public class ReachExprOptimization : CommonSubexpressionsOptimization
     {
         protected InOutData<Line.Expr> InOut;
 
-        public ReachExprOptimization(ThreeAddrCode code) :
+        public ReachExprOptimization(ThreeAddrCode code = null) :
             base(code)
         {
             Code = code;
-            InOut = DataFlowAnalysis.BuildReachableExpressions(Code);
+            if (code != null)
+            {
+                InOut = DataFlowAnalysis.BuildReachableExpressions(Code);
+            }
         }
 
         protected void CreateValue(Dictionary<string, Value> dict, Line.Expr expr) {
@@ -94,9 +98,10 @@ namespace iCompiler
 
         public override void Assign(ThreeAddrCode code)
         {
+            Debug.Assert(code != null);
+
             Code = code;
             InOut = DataFlowAnalysis.BuildReachableExpressions(Code);
-
         }
     }
 }

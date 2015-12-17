@@ -87,7 +87,7 @@ namespace iCompiler
             }
         }
 
-        public CommonSubexpressionsOptimization(ThreeAddrCode code)
+        public CommonSubexpressionsOptimization(ThreeAddrCode code = null)
         {
             Code = code;
         }
@@ -132,6 +132,8 @@ namespace iCompiler
                     dict[op.left] = opp2;
                     opp2.ids.Add(op.left);
 
+                    NumberOfChanges += 1;
+
                     var label = block[ind].label;
                     block[ind] = new Line.Identity(op.left, opp2.ids[0]);
                     block[ind].label = label;
@@ -170,6 +172,8 @@ namespace iCompiler
                 {
                     dict[op.left] = opp2;
                     opp2.ids.Add(op.left);
+
+                    NumberOfChanges += 1;
 
                     var label = block[ind].label;
                     block[ind] = new Line.Identity(op.left, opp2.ids[0]);
@@ -211,16 +215,21 @@ namespace iCompiler
 
         public override void Optimize(params Object[] values)
         {
+            Debug.Assert(Code != null);
+            NumberOfChanges = 0;
+
             foreach (Block block in Code.blocks)
             {
                 var dict = PrepareDictionary(block);
                 for (int i = 0; i < block.Count; ++i)
+                {
                     if (block[i].Is<Line.Identity>())
                         IterationIdentity(dict, block, i);
                     else if (block[i].Is<Line.BinaryExpr>())
                         IterationBinaryExpr(dict, block, i);
                     else if (block[i].Is<Line.UnaryExpr>())
                         IterationUnaryExpr(dict, block, i);
+                }
             }
         }
     }
