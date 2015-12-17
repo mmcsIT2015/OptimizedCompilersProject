@@ -212,7 +212,7 @@ namespace GUI
             type = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 
                                                                ? FileLoader.GrammarType.PASCAL : FileLoader.GrammarType.PASCALABCNET;
 
-            hideIlView(type);
+            hideILView(type);
 
             this.toolStripStatusLabel1.Text = "";
             this.startApplicationToolStripMenuItem.Enabled = type == FileLoader.GrammarType.PASCALABCNET;
@@ -221,7 +221,7 @@ namespace GUI
             ILResultView.Text = string.Empty;
         }
 
-        private void hideIlView(FileLoader.GrammarType type)
+        private void hideILView(FileLoader.GrammarType type)
         {
             switch (type)
             {
@@ -242,8 +242,6 @@ namespace GUI
                     break;
             }
         }
-
-
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
