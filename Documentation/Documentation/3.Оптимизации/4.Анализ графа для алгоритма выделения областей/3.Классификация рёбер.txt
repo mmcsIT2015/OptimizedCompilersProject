@@ -77,5 +77,5 @@ __Тесты__
 Для запуска теста необходимо вызвать
 
 ~~~~~~~{.cs}
-TestGraphEdges(ProgramTree.BlockNode root)
+Testing.TestGraphEdges(ProgramTree.BlockNode root)
 ~~~~~~~~~~~~~~
