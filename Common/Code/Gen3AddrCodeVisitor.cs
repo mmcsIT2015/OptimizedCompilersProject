@@ -22,6 +22,39 @@ namespace iCompiler
     /// </summary>
     public class Gen3AddrCodeVisitor : IVisitor
     {
+
+        /// <summary>
+        /// Класс описывает ошибку компиляции кода
+        /// </summary>
+        public class ErrorDescription
+        {
+            public enum ErrorType { LexError, SyntaxError, SemanticError }
+            public ErrorDescription(string Message, int Line, ErrorType Type)
+            {
+                this.Message = Message;
+                this.Line = Line;
+                this.Type = Type;
+            }
+            string Message { get; set; }
+            int Line { get; set; }
+            ErrorType Type { get; set; }
+
+            public override string ToString()
+            {
+                switch(Type)
+                {
+                    case ErrorType.LexError:
+                        return "Lexer error: " + Message; //+line
+                    case ErrorType.SemanticError:
+                        return "Semantic error: " + Message; //+line
+                    case ErrorType.SyntaxError:
+                        return "Syntax error: " + Message; //+line
+                    default:
+                        return "Cannot happen";
+                }
+            }
+        }        
+
         /// <summary>
         /// Код, возвращаемый этой ф-ей, уже разбит на блоки
         /// </summary>
@@ -35,12 +68,13 @@ namespace iCompiler
             return code;
         }
 
+        public List<ErrorDescription> mErrors = new List<ErrorDescription>();
         private iCompiler.Block mLines = new iCompiler.Block();
         private Stack<string> mStack = new Stack<string>();
         private Dictionary<string, SimpleVarType> mTableOfNames = new Dictionary<string, SimpleVarType>();
 
         public Gen3AddrCodeVisitor()
-        {
+        {            
             UniqueIdsGenerator.Instance().Reset();
         }
 
@@ -65,7 +99,8 @@ namespace iCompiler
             {
                 if (!mTableOfNames.ContainsKey(variable))
                 {
-                    throw new SemanticException("Используется необъявленная переменная: " + variable);
+                    mErrors.Add(new ErrorDescription("Используется необъявленная переменная: " + variable, 0, ErrorDescription.ErrorType.SemanticError));
+                    //throw new SemanticException();
                 }
             }
         }
@@ -237,7 +272,8 @@ namespace iCompiler
 
             if (node.AssOp != AssignType.Assign)
             {
-                throw new ArgumentException("Разрешено только присваивание типа `AssignType.Assign`!");
+                mErrors.Add(new ErrorDescription("Разрешено только присваивание типа `AssignType.Assign`!", 0, ErrorDescription.ErrorType.SemanticError));                
+                //throw new ArgumentException();
             }
             else if (node.Expr is BinaryNode)
             {
@@ -261,7 +297,7 @@ namespace iCompiler
             if (node.HasLabel())
             {
                 string desc = "Некорректная метка: " + node.Label.Name + "! Запрещено использование меток при объявлении переменной!";
-                throw new SemanticException(desc);
+                mErrors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
             }
 
             foreach (var item in node.VariablesList)
@@ -276,7 +312,7 @@ namespace iCompiler
             if (mTableOfNames.ContainsKey(node.GetID().Name))
             {
                 string desc = "Повторное объявление переменной: " + node.GetID().Name + "!";
-                throw new SemanticException(desc);
+                mErrors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
             }
 
             if (node.IsAssigned())
@@ -442,7 +478,7 @@ namespace iCompiler
             if (node.Operation == Operator.Not)
             {
                 var desc = "Оператор " + node.Operation + " не является бинарным оператором!";
-                throw new SemanticException(desc);
+                mErrors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));                
             }
 
             node.LeftOperand.Accept(this);
@@ -463,14 +499,14 @@ namespace iCompiler
             {
                 var desc = "Унарный оператор " + node.Op + " не может быть применен в операнду типа `string`!\n";
                 desc += "> " + node.Op + (node.Expr as StringLiteralNode).Str;
-                throw new SemanticException(desc);
+                mErrors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
             }
 
             if (node.Op != Operator.Minus && node.Op != Operator.Not && node.Op != Operator.Plus)
             {
                 var desc = "Недопустимый унарный оператор: " + node.Op + "!\n";
                 desc += "Разрешены лишь операторы " + Operator.Minus + ", " + Operator.Not + " и " + Operator.Plus + ".";
-                throw new SemanticException(desc);
+                mErrors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
             }
 
             node.Expr.Accept(this);

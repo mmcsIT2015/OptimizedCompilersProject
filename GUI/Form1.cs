@@ -95,7 +95,7 @@ namespace GUI
 
                 ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
                 ILResultView.Text = ILCodeGenerator.Generate(code);
-            }
+        }
 
             catch (LexException ee)
             {
@@ -123,7 +123,8 @@ namespace GUI
                 try
                 {
                     fullFilename = openFileDialog.FileName;
-                    WorkingArea.Text = File.ReadAllText(openFileDialog.FileName, Encoding.UTF8);
+                    string text = File.ReadAllText(openFileDialog.FileName, Encoding.UTF8);                    
+                    WorkingArea.Text = text;
                     type = FileLoader.GetGrammarType(openFileDialog.FileName);
                     switch (type)
                     {
@@ -162,13 +163,21 @@ namespace GUI
                     var codeGenerator = new iCompiler.Gen3AddrCodeVisitor();
                     codeGenerator.Visit(root);
 
-                    code = codeGenerator.CreateCode();
+                    if (codeGenerator.mErrors.Count == 0)
+                    {
+                        var code = codeGenerator.CreateCode();
 
                     ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
                     ILResultView.Text = ILCodeGenerator.Generate(code);
                     optimizeToolStripMenuItem.Enabled = true;
 
                     //MessageBox.Show(iCompiler.Region.Test(code));
+                }
+                else
+                {
+                        string errors = String.Join(System.Environment.NewLine, codeGenerator.mErrors.Select(x => x.ToString()));
+                        MessageBox.Show(errors);
+                    }
                 }
                 else
                 {
@@ -229,7 +238,7 @@ namespace GUI
             else
             {
                 File.Delete(output);
-                ResultView.Text = changer.Code.ToString().Replace("\n", Environment.NewLine);
+            ResultView.Text = changer.Code.ToString().Replace("\n", Environment.NewLine);
             }
 
             File.Delete(path);
@@ -391,8 +400,8 @@ namespace GUI
             }
             else
             {
-                p.Start();
-                p.WaitForExit();
+            p.Start();
+            p.WaitForExit();
                 //MessageBox.Show(p.StandardOutput.ReadToEnd(), "Результат работы программы");
                 outputTextBox.Text = p.StandardOutput.ReadToEnd();
                 outputTextBox.Text += "\r\nSuccessfully finished";
@@ -461,9 +470,9 @@ namespace GUI
             p.WaitForExit();
             File.Delete(tmp_fn);
             if (p.StandardOutput.ReadToEnd().Contains("Operation completed successfully"))
-                return (new FileInfo(tmp_exefn)).FullName;
+            return (new FileInfo(tmp_exefn)).FullName;
             else
                 return null;
-        }        
+        }
     }
 }
