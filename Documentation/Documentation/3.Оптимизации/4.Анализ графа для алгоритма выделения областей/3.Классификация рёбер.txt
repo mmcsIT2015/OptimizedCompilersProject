@@ -4,8 +4,7 @@ __Постановка задачи__
 
 __Основная идея алгоритма__
 
-Основная идея заключена в анализе связей и отношений доминирования между вершинами графа. В зависимости от этих признаков ребро относится 
-к тому или иному классу по следующему набору правил:
+Основная идея заключена в анализе связей и отношений доминирования между вершинами графа. В зависимости от этих признаков ребро относится к тому или иному классу по следующему набору правил:
 
 1. Если вершина A доминирует над вершиной B, то ребро (A,B) называется прямым ребром.
 
@@ -19,6 +18,64 @@ __Основная идея алгоритма__
 
 __Входные данные__
 
+- Остовное дерево графа
+
+~~~~~~~{.cs}
+SpanningTree<T> spanningTree
+~~~~~~~~~~~~~~
+
+- Коллекция, содержащая отношения доминирования
+
+~~~~~~~{.cs}
+Dictionary<T, IEnumerable<T>> Dom
+~~~~~~~~~~~~~~
+
 __Выходные данные__
 
+Список ребер заданного типа. Каждому типу ребер соответствует свой метод.
+
 __Пример использования__
+
+- Инициализация
+
+~~~~~~~{.cs}
+GraphEdges<Block> graphEdges = new GraphEdges<Block>(spanningTree, blockDoms);
+~~~~~~~~~~~~~~~
+
+- Получить список наступающих ребер
+
+~~~~~~~{.cs}
+List<DomGraph.ValPair<Block>> listEdges = graphEdges.AdvancingEdges() as List<DomGraph.ValPair<Block>>;
+~~~~~~~~~~~~~~~
+
+- Получить список отступающих ребер
+
+~~~~~~~{.cs}
+List<DomGraph.ValPair<Block>> listEdges = graphEdges.RetreatingEdges() as List<DomGraph.ValPair<Block>>;
+~~~~~~~~~~~~~~~
+
+- Получить список поперечных ребер
+
+~~~~~~~{.cs}
+List<DomGraph.ValPair<Block>> listEdges = graphEdges.CrossingEdges() as List<DomGraph.ValPair<Block>>;
+~~~~~~~~~~~~~~~
+
+- Получить список прямых ребер
+
+~~~~~~~{.cs}
+List<DomGraph.ValPair<Block>> listEdges = graphEdges.StraightEdges(blockDoms) as List<DomGraph.ValPair<Block>>;
+~~~~~~~~~~~~~~~
+
+- Получить список обратных ребер
+
+~~~~~~~{.cs}
+List<DomGraph.ValPair<Block>> listEdges = graphEges.ReversedEdges(blockDoms) as List<DomGraph.ValPair<Block>>;
+~~~~~~~~~~~~~~~
+
+__Тесты__
+
+Для запуска теста необходимо вызвать
+
+~~~~~~~{.cs}
+TestGraphEdges(ProgramTree.BlockNode root)
+~~~~~~~~~~~~~~
