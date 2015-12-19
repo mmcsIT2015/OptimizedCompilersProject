@@ -340,7 +340,7 @@
             this.errorsPage.Location = new System.Drawing.Point(4, 22);
             this.errorsPage.Name = "errorsPage";
             this.errorsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.errorsPage.Size = new System.Drawing.Size(592, 238);
+            this.errorsPage.Size = new System.Drawing.Size(592, 156);
             this.errorsPage.TabIndex = 0;
             this.errorsPage.Text = "Errors";
             this.errorsPage.UseVisualStyleBackColor = true;
@@ -362,6 +362,7 @@
             this.outputTextBox.Location = new System.Drawing.Point(3, 3);
             this.outputTextBox.Multiline = true;
             this.outputTextBox.Name = "outputTextBox";
+            this.outputTextBox.ReadOnly = true;
             this.outputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.outputTextBox.Size = new System.Drawing.Size(586, 150);
             this.outputTextBox.TabIndex = 0;
@@ -373,8 +374,9 @@
             this.errorsTextBox.Location = new System.Drawing.Point(3, 3);
             this.errorsTextBox.Multiline = true;
             this.errorsTextBox.Name = "errorsTextBox";
+            this.errorsTextBox.ReadOnly = true;
             this.errorsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.errorsTextBox.Size = new System.Drawing.Size(586, 232);
+            this.errorsTextBox.Size = new System.Drawing.Size(586, 150);
             this.errorsTextBox.TabIndex = 0;
             this.errorsTextBox.WordWrap = false;
             // 
