@@ -27,19 +27,14 @@ namespace ParsePABC
         public void Change(syntax_tree_node sn)
         {
             sn.visit(new LoweringVisitor());
-
-            Console.WriteLine("\nlowering:\n---");
-            sn.visit(new SimplePrettyPrinterVisitor());
-
             var generator = new Gen3AddrCodeVisitor();
             sn.visit(generator);
 
-            Console.WriteLine("\ncode:");
             try
             {
                 Code = generator.CreateCode();
-                Console.WriteLine("\nbefore:\n---");
-                Console.WriteLine(Code);
+                //Console.WriteLine("\nbefore:\n---");
+                //Console.WriteLine(Code);
 
                 var optimizer = new iCompiler.Optimizer();
                 optimizer.AddOptimization(new iCompiler.DraggingConstantsOptimization());
@@ -49,13 +44,13 @@ namespace ParsePABC
                 optimizer.Assign(Code);
                 optimizer.Optimize();
 
-                Console.WriteLine("\nafter:\n---");
-                Console.WriteLine(Code);
+                //Console.WriteLine("\nafter:\n---");
+                //Console.WriteLine(Code);
 
-                Console.WriteLine("\ntest:\n---");
+                //Console.WriteLine("\ntest:\n---");
                 PascalABCTreeGenerator gen = new PascalABCTreeGenerator();
                 sn = gen.generate(Code);
-                sn.visit(new SimplePrettyPrinterVisitor());
+                //sn.visit(new SimplePrettyPrinterVisitor());
             }
             catch (SemanticException e)
             {

@@ -195,8 +195,24 @@ namespace GUI
             var changer = new SyntaxTreeChanger();
             compiler.SyntaxTreeChanger = changer;
             var opts = new CompilerOptions(filename, CompilerOptions.OutputType.ConsoleApplicaton);
-            //opts.GenerateCode = true;
-            compiler.Compile(opts);
+            opts.GenerateCode = true;
+            opts.Optimise = false;
+            
+            var output = compiler.Compile(opts);
+            if (compiler.ErrorsList.Count > 0)
+            {
+                var path = Path.GetFullPath(filename);
+                foreach (var error in compiler.ErrorsList)
+                {
+                    string desc = error.ToString();
+                    if (error.ToString().Contains("PABCSystem"))
+                    {
+                        desc += "\n PABCSystem.pcu должен быть рядом с файлом " + path;
+                    }
+
+                    MessageBox.Show("PascalABC.Net error: " + error);
+                }
+            }
 
             ResultView.Text = changer.Code.ToString().Replace("\n", Environment.NewLine);
             File.Delete(filename);
@@ -412,7 +428,8 @@ namespace GUI
 
         private string CompileILCode(string ilcode)
         {
-            string ilcomp = Microsoft.Build.Utilities.ToolLocationHelper.GetPathToDotNetFrameworkFile("ILAsm.exe", Microsoft.Build.Utilities.TargetDotNetFrameworkVersion.VersionLatest);
+            var version = Microsoft.Build.Utilities.TargetDotNetFrameworkVersion.VersionLatest;
+            string ilcomp = Microsoft.Build.Utilities.ToolLocationHelper.GetPathToDotNetFrameworkFile("ILAsm.exe", version);
             string tmp_fn = "_tmp";
             string tmp_ilfn = tmp_fn + ".il";
             string tmp_exefn = tmp_fn + ".exe";

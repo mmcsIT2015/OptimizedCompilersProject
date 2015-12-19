@@ -22,9 +22,20 @@ namespace ParsePABC
             Compiler compiler = new Compiler();
             compiler.SyntaxTreeChanger = new SyntaxTreeChanger();
             var opts = new CompilerOptions(filename, CompilerOptions.OutputType.ConsoleApplicaton);
-            //opts.GenerateCode = true;
+            opts.Optimise = false;
+            opts.GenerateCode = true;
 
-            compiler.Compile(opts);
+            var output = compiler.Compile(opts);
+
+            if (compiler.ErrorsList.Count > 0)
+            {
+                foreach (var error in compiler.ErrorsList)
+                {
+                    Console.WriteLine(error.ToString());
+                }
+            }
+
+            Console.WriteLine("Output: " + output);
 
             Console.ReadKey();
         }
