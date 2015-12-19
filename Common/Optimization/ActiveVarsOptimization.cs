@@ -25,15 +25,26 @@ namespace iCompiler
         protected override Dictionary<string, bool> PrepareVitalityVars(Block block)
         {
             var dict = new Dictionary<string, bool>();
-            foreach (var e in block)
+
+            if (!block.Equals(Code.graph.ExitPoint()))
             {
-                if (e.IsNot<Line.Expr>()) continue;
-                var expr = e as Line.Expr;
-                if (!OutData[block].Contains(expr.left))
+                foreach (var e in block)
                 {
-                    dict[expr.left] = false;
+                    if (e.IsNot<Line.Expr>()) continue;
+                    var expr = e as Line.Expr;
+                    if (!OutData[block].Contains(expr.left))
+                    {
+                        dict[expr.left] = false;
+                    }
                 }
-                // else dict[expr.left] = true; // Это нужно? Хз...
+            }
+            else
+            {
+                foreach (var e in block)
+                {
+                    if (e.IsNot<Line.Expr>()) continue;
+                    dict[(e as Line.Expr).left] = true;
+                }
             }
 
             return dict;
