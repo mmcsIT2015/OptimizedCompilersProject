@@ -128,7 +128,9 @@ namespace iCompiler
             for (int i = 0; i < removeIndexList.Count; i++)
             {
                 NumberOfChanges += 1;
-                block.RemoveAt(removeIndexList[i]);
+                var line = block[removeIndexList[i]];
+                if (line.HasLabel()) block[removeIndexList[i]] = new Line.EmptyLine(line.label);
+                else  block.RemoveAt(removeIndexList[i]);
             }
 
             return block as Block; //возвращаем измененный блок
