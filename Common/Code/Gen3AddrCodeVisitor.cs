@@ -99,8 +99,7 @@ namespace iCompiler
             {
                 if (!mTableOfNames.ContainsKey(variable))
                 {
-                    mErrors.Add(new ErrorDescription("Используется необъявленная переменная: " + variable, 0, ErrorDescription.ErrorType.SemanticError));
-                    //throw new SemanticException();
+                    mErrors.Add(new ErrorDescription("Используется необъявленная переменная: " + variable, 0, ErrorDescription.ErrorType.SemanticError));                    
                 }
             }
         }
@@ -285,6 +284,7 @@ namespace iCompiler
                 mLines.Add(new Line.Identity(variable, expression));
                 CheckRealLabel(node, nextLine);
             }
+            CheckDefinitionVariable(variable);
         }
 
         public void Visit(StringLiteralNode node)
