@@ -25,6 +25,7 @@ namespace GUI
         bool textModified = false;
         FileLoader.GrammarType type;
         string formName = "OptimizedCompilersProject";
+        ThreeAddrCode code;
 
         public Form1()
         {
@@ -34,6 +35,74 @@ namespace GUI
             GrammarToolStripComboBox.SelectedIndexChanged += GrammarToolStripComboBox_SelectedIndexChanged;
             type = FileLoader.GrammarType.C;
             CreateNewFile_Click(null, EventArgs.Empty);
+            FillingOptimizationTypes();
+        }
+
+        private void FillingOptimizationTypes()
+        {
+            optimizationTypeToolStripComboBox.Items.Add("CommonSubexpressionsOptimization");
+            optimizationTypeToolStripComboBox.Items.Add("DraggingConstantsOptimization");
+            optimizationTypeToolStripComboBox.Items.Add("ReachExprOptimization");
+            optimizationTypeToolStripComboBox.Items.Add("ActiveVarsOptimization");
+            optimizationTypeToolStripComboBox.Items.Add("ConstantFolding");
+            optimizationTypeToolStripComboBox.Items.Add("AllOptimizations");
+        }
+
+        private void optimizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                switch(optimizationTypeToolStripComboBox.Text)
+                {
+                    case "CommonSubexpressionsOptimization":
+                        CommonSubexpressionsOptimization cso = new CommonSubexpressionsOptimization(code);
+                        cso.Optimize();
+                        break;
+                    case "DraggingConstantsOptimization":
+                        DraggingConstantsOptimization dco = new DraggingConstantsOptimization(code);
+                        dco.Optimize();
+                        break;
+                    case "ReachExprOptimization":
+                        ReachExprOptimization reo = new ReachExprOptimization(code);
+                        reo.Optimize();
+                        break;
+                    case "ActiveVarsOptimization":
+                        ActiveVarsOptimization avo = new ActiveVarsOptimization(code);
+                        avo.Optimize();
+                        break;
+                    case "ConstantFolding":
+                        ConstantFolding cf = new ConstantFolding(code);
+                        cf.Optimize();
+                        break;
+                    case "AllOptimizations":
+                        var optimizer = new iCompiler.Optimizer();
+                        optimizer.AddOptimization(new iCompiler.DraggingConstantsOptimization());
+                        optimizer.AddOptimization(new iCompiler.ReachExprOptimization());
+                        optimizer.AddOptimization(new iCompiler.ActiveVarsOptimization());
+                        optimizer.AddOptimization(new iCompiler.ConstantFolding());
+                        optimizer.AddOptimization(new iCompiler.CommonSubexpressionsOptimization());
+                        optimizer.Assign(code);
+                        optimizer.Optimize();
+                        break;
+                }
+                
+
+                ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
+                ILResultView.Text = ILCodeGenerator.Generate(code);
+            }
+
+            catch (LexException ee)
+            {
+                MessageBox.Show("Lexer error: " + ee.Message);
+            }
+            catch (SyntaxException ee)
+            {
+                MessageBox.Show("Syntax error: " + ee.Message);
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("Unexpected error: " + ee.Message);
+            }
         }
 
         private void OpenFile_Click(object sender, EventArgs e)
@@ -82,17 +151,19 @@ namespace GUI
                     var codeGenerator = new iCompiler.Gen3AddrCodeVisitor();
                     codeGenerator.Visit(root);
 
-                    var code = codeGenerator.CreateCode();
+                    code = codeGenerator.CreateCode();
 
-                    CommonSubexpressionsOptimization cso = new CommonSubexpressionsOptimization(code);
-                    cso.Optimize();
+                    //CommonSubexpressionsOptimization cso = new CommonSubexpressionsOptimization(code);
+                    //cso.Optimize();
 
                     ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
                     ILResultView.Text = ILCodeGenerator.Generate(code);
+                    optimizeToolStripMenuItem.Enabled = true;
                 }
                 else
                 {
                     ProcessPascalABCNETCode(content);
+                    optimizeToolStripMenuItem.Enabled = false;
                 }
             }
 
@@ -344,5 +415,7 @@ namespace GUI
             File.Delete(tmp_fn);
             return (new FileInfo(tmp_exefn)).FullName;
         }
+
+        
     }
 }

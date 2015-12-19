@@ -49,6 +49,8 @@
             this.ilGroupBox = new System.Windows.Forms.GroupBox();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.codeSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.optimizationTypeToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
+            this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.taCodeGroupBox.SuspendLayout();
@@ -70,7 +72,9 @@
             this.FileMenu,
             this.GrammarToolStripComboBox,
             this.RunItem,
-            this.startApplicationToolStripMenuItem});
+            this.startApplicationToolStripMenuItem,
+            this.optimizationTypeToolStripComboBox,
+            this.optimizeToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
@@ -92,28 +96,28 @@
             // CreateNew
             // 
             this.CreateNew.Name = "CreateNew";
-            this.CreateNew.Size = new System.Drawing.Size(133, 22);
+            this.CreateNew.Size = new System.Drawing.Size(152, 22);
             this.CreateNew.Text = "Create new";
             this.CreateNew.Click += new System.EventHandler(this.CreateNewFile_Click);
             // 
             // OpenFile
             // 
             this.OpenFile.Name = "OpenFile";
-            this.OpenFile.Size = new System.Drawing.Size(133, 22);
+            this.OpenFile.Size = new System.Drawing.Size(152, 22);
             this.OpenFile.Text = "Open";
             this.OpenFile.Click += new System.EventHandler(this.OpenFile_Click);
             // 
             // SaveFile
             // 
             this.SaveFile.Name = "SaveFile";
-            this.SaveFile.Size = new System.Drawing.Size(133, 22);
+            this.SaveFile.Size = new System.Drawing.Size(152, 22);
             this.SaveFile.Text = "Save";
             this.SaveFile.Click += new System.EventHandler(this.Save_Click);
             // 
             // SaveFileAs
             // 
             this.SaveFileAs.Name = "SaveFileAs";
-            this.SaveFileAs.Size = new System.Drawing.Size(133, 22);
+            this.SaveFileAs.Size = new System.Drawing.Size(152, 22);
             this.SaveFileAs.Text = "Save as";
             this.SaveFileAs.Click += new System.EventHandler(this.SaveAs_Click);
             // 
@@ -274,6 +278,20 @@
             this.codeSplitContainer.SplitterDistance = 273;
             this.codeSplitContainer.TabIndex = 0;
             // 
+            // optimizationTypeToolStripComboBox
+            // 
+            this.optimizationTypeToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.optimizationTypeToolStripComboBox.Name = "optimizationTypeToolStripComboBox";
+            this.optimizationTypeToolStripComboBox.Size = new System.Drawing.Size(200, 24);
+            // 
+            // optimizeToolStripMenuItem
+            // 
+            this.optimizeToolStripMenuItem.Enabled = false;
+            this.optimizeToolStripMenuItem.Name = "optimizeToolStripMenuItem";
+            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
+            this.optimizeToolStripMenuItem.Text = "Optimize";
+            this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -331,6 +349,8 @@
         private System.Windows.Forms.GroupBox ilGroupBox;
         private System.Windows.Forms.SplitContainer mainSplitContainer;
         private System.Windows.Forms.SplitContainer codeSplitContainer;
+        private System.Windows.Forms.ToolStripComboBox optimizationTypeToolStripComboBox;
+        private System.Windows.Forms.ToolStripMenuItem optimizeToolStripMenuItem;
     }
 }
 
