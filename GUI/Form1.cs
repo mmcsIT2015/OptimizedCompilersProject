@@ -166,7 +166,6 @@ namespace GUI
                     optimizeToolStripMenuItem.Enabled = false;
                 }
             }
-
             catch (FileNotFoundException ee)
             {
                 MessageBox.Show("File not found: " + ee.FileName);
@@ -350,10 +349,15 @@ namespace GUI
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.FileName = CompileILCode(ILResultView.Text);
-            p.Start();
-            p.WaitForExit();
-            MessageBox.Show(p.StandardOutput.ReadToEnd(), "Результат работы программы");
 
+            if (p.StartInfo.FileName == null)
+                MessageBox.Show("Ошибка компиляции IL-кода");
+            else
+            {
+                p.Start();
+                p.WaitForExit();
+                MessageBox.Show(p.StandardOutput.ReadToEnd(), "Результат работы программы");
+            }
             return; // TODO
 
             //NEEDS REWORK: call parameters, can use anything for it.
@@ -410,12 +414,15 @@ namespace GUI
             p.StartInfo.FileName = ilcomp;
             p.StartInfo.Arguments = tmp_ilfn;
             p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
             p.Start();
             p.WaitForExit();
             File.Delete(tmp_fn);
-            return (new FileInfo(tmp_exefn)).FullName;
-        }
-
-        
+            if (p.StandardOutput.ReadToEnd().Contains("Operation completed successfully"))
+                return (new FileInfo(tmp_exefn)).FullName;
+            else
+                return null;
+        }        
     }
 }

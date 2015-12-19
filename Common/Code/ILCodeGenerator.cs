@@ -95,7 +95,7 @@ namespace iCompiler
                 fop.isConstant = !code.tableOfNames.ContainsKey(be.first);
                 fop.isFloat = fop.isConstant ? !be.FirstParamIsIntNumber() : (code.tableOfNames[be.first] == SimpleVarType.Float);
                 sop.isConstant = !code.tableOfNames.ContainsKey(be.second);
-                sop.isFloat = sop.isConstant ? !be.SecondParamIsIntNumber() : (code.tableOfNames[be.first] == SimpleVarType.Float);
+                sop.isFloat = sop.isConstant ? !be.SecondParamIsIntNumber() : (code.tableOfNames[be.second] == SimpleVarType.Float);
 
                 rop.isFloat = fop.isFloat || sop.isFloat;
                 sb.Append(GenOperandLoading(be.first, fop, rop));
