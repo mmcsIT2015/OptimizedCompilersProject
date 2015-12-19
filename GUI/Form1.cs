@@ -153,12 +153,11 @@ namespace GUI
 
                     code = codeGenerator.CreateCode();
 
-                    //CommonSubexpressionsOptimization cso = new CommonSubexpressionsOptimization(code);
-                    //cso.Optimize();
-
                     ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
                     ILResultView.Text = ILCodeGenerator.Generate(code);
                     optimizeToolStripMenuItem.Enabled = true;
+
+                    //MessageBox.Show(iCompiler.Region.Test(code));
                 }
                 else
                 {
