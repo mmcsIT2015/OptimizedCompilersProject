@@ -38,6 +38,12 @@ namespace GUI
             FillingOptimizationTypes();
         }
 
+        private void AcceptError(string error)
+        {
+            errorsTextBox.Text = error + "\r\n";
+            outputTabControl.SelectTab(0);
+        }
+
         private void FillingOptimizationTypes()
         {
             optimizationTypeToolStripComboBox.Items.Add("CommonSubexpressionsOptimization");
@@ -93,15 +99,19 @@ namespace GUI
 
             catch (LexException ee)
             {
-                MessageBox.Show("Lexer error: " + ee.Message);
+                AcceptError("Lexer error: " + ee.Message);
             }
             catch (SyntaxException ee)
             {
-                MessageBox.Show("Syntax error: " + ee.Message);
+                AcceptError("Syntax error: " + ee.Message);
+            }
+            catch (SemanticException ee)
+            {
+                AcceptError("Semantic error: " + ee.Message);
             }
             catch (Exception ee)
             {
-                MessageBox.Show("Unexpected error: " + ee.Message);
+                AcceptError("Unexpected error: " + ee.Message);
             }
         }
 
@@ -133,7 +143,8 @@ namespace GUI
                 }
                 catch (FileNotFoundException ex)
                 {
-                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                    var error = "Error: Could not read file from disk. Original error: \r\n";
+                    AcceptError(error + ex.Message);
                 }
             }
         }
@@ -167,19 +178,23 @@ namespace GUI
             }
             catch (FileNotFoundException ee)
             {
-                MessageBox.Show("File not found: " + ee.FileName);
+                AcceptError("File not found: " + ee.FileName);
             }
             catch (LexException ee)
             {
-                MessageBox.Show("Lexer error: " + ee.Message);
+                AcceptError("Lexer error: " + ee.Message);
             }
             catch (SyntaxException ee)
             {
-                MessageBox.Show("Syntax error: " + ee.Message);
+                AcceptError("Syntax error: " + ee.Message);
+            }
+            catch (SemanticException ee)
+            {
+                AcceptError("Semantic error: " + ee.Message);
             }
             catch (Exception ee)
             {
-                MessageBox.Show("Unexpected error: " + ee.Message);
+                AcceptError("Unexpected error: " + ee.Message);
             }
         }
 
@@ -187,16 +202,37 @@ namespace GUI
         {
             var filename = String.Format(@"{0}.pas", System.Guid.NewGuid());
             File.WriteAllText(filename, WorkingArea.Text);
+            var path = Path.GetFullPath(filename);
 
             Compiler compiler = new Compiler();
             var changer = new SyntaxTreeChanger();
             compiler.SyntaxTreeChanger = changer;
             var opts = new CompilerOptions(filename, CompilerOptions.OutputType.ConsoleApplicaton);
-            //opts.GenerateCode = true;
-            compiler.Compile(opts);
+            opts.GenerateCode = true;
+            opts.Optimise = false;
+            
+            var output = compiler.Compile(opts);
+            if (compiler.ErrorsList.Count > 0)
+            {
+                foreach (var error in compiler.ErrorsList)
+                {
+                    string desc = error.ToString();
+                    if (desc.Contains("PABCSystem"))
+                    {
+                        var temp = path.Substring(0, path.LastIndexOf('\\') + 1);
+                        desc += "\r\nPABCSystem.pcu должен находиться в папке " + temp;
+                    }
 
-            ResultView.Text = changer.Code.ToString().Replace("\n", Environment.NewLine);
-            File.Delete(filename);
+                    AcceptError("PascalABC.Net error: " + desc);
+                }
+            }
+            else
+            {
+                File.Delete(output);
+                ResultView.Text = changer.Code.ToString().Replace("\n", Environment.NewLine);
+            }
+
+            File.Delete(path);
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -350,12 +386,17 @@ namespace GUI
             p.StartInfo.FileName = CompileILCode(ILResultView.Text);
 
             if (p.StartInfo.FileName == null)
-                MessageBox.Show("Ошибка компиляции IL-кода");
+            {
+                AcceptError("Ошибка компиляции IL-кода");
+            }
             else
             {
                 p.Start();
                 p.WaitForExit();
-                MessageBox.Show(p.StandardOutput.ReadToEnd(), "Результат работы программы");
+                //MessageBox.Show(p.StandardOutput.ReadToEnd(), "Результат работы программы");
+                outputTextBox.Text = p.StandardOutput.ReadToEnd();
+                outputTextBox.Text += "\r\nSuccessfully finished";
+                outputTabControl.SelectTab(1);
             }
             return; // TODO
 
@@ -402,7 +443,8 @@ namespace GUI
 
         private string CompileILCode(string ilcode)
         {
-            string ilcomp = Microsoft.Build.Utilities.ToolLocationHelper.GetPathToDotNetFrameworkFile("ILAsm.exe", Microsoft.Build.Utilities.TargetDotNetFrameworkVersion.VersionLatest);
+            var version = Microsoft.Build.Utilities.TargetDotNetFrameworkVersion.VersionLatest;
+            string ilcomp = Microsoft.Build.Utilities.ToolLocationHelper.GetPathToDotNetFrameworkFile("ILAsm.exe", version);
             string tmp_fn = "_tmp";
             string tmp_ilfn = tmp_fn + ".il";
             string tmp_exefn = tmp_fn + ".exe";

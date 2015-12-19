@@ -6,10 +6,32 @@ Common/bin/
 GUI/bin/
 obj/
 
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
 # Visual studio files.
 *.sdf
 *.pdb
-*.suo
-*.dll
 Documentation/OptimizedCompilersProjectDocumentation.docx
 Documentation/OptimizedCompilersProjectDocumentation.txt
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Build results
+*.exe
+*.dll
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
