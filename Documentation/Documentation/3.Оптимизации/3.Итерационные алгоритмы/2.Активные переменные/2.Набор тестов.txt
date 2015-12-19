@@ -1,0 +1,34 @@
+# Набор тестов для анализа активных переменных
+
+__Постановка задачи__
+
+Необходимо реализовать набор тестов для алгоритма анализа активных переменных
+
+__Результаты__
+
+Было разработано несколько тестов для проверки корректности работы алгоритма анализа активных переменных.
+Данные тесты расположены среди общего набора файлов для тестирования, а именно в файлах: `test-avo-1.cn` и `test-avo-2.cn`.
+
+__Пример использования__
+
+~~~~~~~{.cs}
+
+	List<string> files = new List<string>();
+    files.Add(@"..\..\tests\test-avo-1.cn");
+	files.Add(@"..\..\tests\test-avo-2.cn");
+	
+	// ...
+	
+	List<Testing.RootTest> root_tests = new List<Testing.RootTest>();
+
+    // ...            
+
+	List<Testing.CodeTest> code_tests = new List<Testing.CodeTest>();
+
+	// ...
+
+	Testing.PerformTests(files, root_tests, code_tests);
+		
+	// ...
+
+~~~~~~~~~~~~~~ 
