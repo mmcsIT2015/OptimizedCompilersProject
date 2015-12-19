@@ -38,6 +38,8 @@
             this.GrammarToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.RunItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optimizationTypeToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
+            this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WorkingArea = new System.Windows.Forms.TextBox();
             this.ResultView = new System.Windows.Forms.TextBox();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -49,8 +51,12 @@
             this.ilGroupBox = new System.Windows.Forms.GroupBox();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.codeSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.optimizationTypeToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ErAndOutSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.outputTabControl = new System.Windows.Forms.TabControl();
+            this.errorsPage = new System.Windows.Forms.TabPage();
+            this.outputPage = new System.Windows.Forms.TabPage();
+            this.outputTextBox = new System.Windows.Forms.TextBox();
+            this.errorsTextBox = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.taCodeGroupBox.SuspendLayout();
@@ -63,6 +69,13 @@
             this.codeSplitContainer.Panel1.SuspendLayout();
             this.codeSplitContainer.Panel2.SuspendLayout();
             this.codeSplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ErAndOutSplitContainer)).BeginInit();
+            this.ErAndOutSplitContainer.Panel1.SuspendLayout();
+            this.ErAndOutSplitContainer.Panel2.SuspendLayout();
+            this.ErAndOutSplitContainer.SuspendLayout();
+            this.outputTabControl.SuspendLayout();
+            this.errorsPage.SuspendLayout();
+            this.outputPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -96,28 +109,28 @@
             // CreateNew
             // 
             this.CreateNew.Name = "CreateNew";
-            this.CreateNew.Size = new System.Drawing.Size(152, 22);
+            this.CreateNew.Size = new System.Drawing.Size(133, 22);
             this.CreateNew.Text = "Create new";
             this.CreateNew.Click += new System.EventHandler(this.CreateNewFile_Click);
             // 
             // OpenFile
             // 
             this.OpenFile.Name = "OpenFile";
-            this.OpenFile.Size = new System.Drawing.Size(152, 22);
+            this.OpenFile.Size = new System.Drawing.Size(133, 22);
             this.OpenFile.Text = "Open";
             this.OpenFile.Click += new System.EventHandler(this.OpenFile_Click);
             // 
             // SaveFile
             // 
             this.SaveFile.Name = "SaveFile";
-            this.SaveFile.Size = new System.Drawing.Size(152, 22);
+            this.SaveFile.Size = new System.Drawing.Size(133, 22);
             this.SaveFile.Text = "Save";
             this.SaveFile.Click += new System.EventHandler(this.Save_Click);
             // 
             // SaveFileAs
             // 
             this.SaveFileAs.Name = "SaveFileAs";
-            this.SaveFileAs.Size = new System.Drawing.Size(152, 22);
+            this.SaveFileAs.Size = new System.Drawing.Size(133, 22);
             this.SaveFileAs.Text = "Save as";
             this.SaveFileAs.Click += new System.EventHandler(this.SaveAs_Click);
             // 
@@ -151,6 +164,20 @@
             this.startApplicationToolStripMenuItem.Text = "Start application";
             this.startApplicationToolStripMenuItem.Click += new System.EventHandler(this.startApplicationToolStripMenuItem_Click);
             // 
+            // optimizationTypeToolStripComboBox
+            // 
+            this.optimizationTypeToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.optimizationTypeToolStripComboBox.Name = "optimizationTypeToolStripComboBox";
+            this.optimizationTypeToolStripComboBox.Size = new System.Drawing.Size(200, 24);
+            // 
+            // optimizeToolStripMenuItem
+            // 
+            this.optimizeToolStripMenuItem.Enabled = false;
+            this.optimizeToolStripMenuItem.Name = "optimizeToolStripMenuItem";
+            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
+            this.optimizeToolStripMenuItem.Text = "Optimize";
+            this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
+            // 
             // WorkingArea
             // 
             this.WorkingArea.AcceptsTab = true;
@@ -162,7 +189,7 @@
             this.WorkingArea.Multiline = true;
             this.WorkingArea.Name = "WorkingArea";
             this.WorkingArea.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.WorkingArea.Size = new System.Drawing.Size(600, 536);
+            this.WorkingArea.Size = new System.Drawing.Size(600, 350);
             this.WorkingArea.TabIndex = 1;
             this.WorkingArea.WordWrap = false;
             this.WorkingArea.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
@@ -251,7 +278,7 @@
             // 
             // mainSplitContainer.Panel1
             // 
-            this.mainSplitContainer.Panel1.Controls.Add(this.WorkingArea);
+            this.mainSplitContainer.Panel1.Controls.Add(this.ErAndOutSplitContainer);
             // 
             // mainSplitContainer.Panel2
             // 
@@ -278,19 +305,78 @@
             this.codeSplitContainer.SplitterDistance = 273;
             this.codeSplitContainer.TabIndex = 0;
             // 
-            // optimizationTypeToolStripComboBox
+            // ErAndOutSplitContainer
             // 
-            this.optimizationTypeToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.optimizationTypeToolStripComboBox.Name = "optimizationTypeToolStripComboBox";
-            this.optimizationTypeToolStripComboBox.Size = new System.Drawing.Size(200, 24);
+            this.ErAndOutSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ErAndOutSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.ErAndOutSplitContainer.Name = "ErAndOutSplitContainer";
+            this.ErAndOutSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // optimizeToolStripMenuItem
+            // ErAndOutSplitContainer.Panel1
             // 
-            this.optimizeToolStripMenuItem.Enabled = false;
-            this.optimizeToolStripMenuItem.Name = "optimizeToolStripMenuItem";
-            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
-            this.optimizeToolStripMenuItem.Text = "Optimize";
-            this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
+            this.ErAndOutSplitContainer.Panel1.Controls.Add(this.WorkingArea);
+            // 
+            // ErAndOutSplitContainer.Panel2
+            // 
+            this.ErAndOutSplitContainer.Panel2.Controls.Add(this.outputTabControl);
+            this.ErAndOutSplitContainer.Size = new System.Drawing.Size(600, 536);
+            this.ErAndOutSplitContainer.SplitterDistance = 350;
+            this.ErAndOutSplitContainer.TabIndex = 2;
+            // 
+            // outputTabControl
+            // 
+            this.outputTabControl.Controls.Add(this.errorsPage);
+            this.outputTabControl.Controls.Add(this.outputPage);
+            this.outputTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.outputTabControl.Location = new System.Drawing.Point(0, 0);
+            this.outputTabControl.Name = "outputTabControl";
+            this.outputTabControl.SelectedIndex = 0;
+            this.outputTabControl.Size = new System.Drawing.Size(600, 182);
+            this.outputTabControl.TabIndex = 0;
+            // 
+            // errorsPage
+            // 
+            this.errorsPage.Controls.Add(this.errorsTextBox);
+            this.errorsPage.Location = new System.Drawing.Point(4, 22);
+            this.errorsPage.Name = "errorsPage";
+            this.errorsPage.Padding = new System.Windows.Forms.Padding(3);
+            this.errorsPage.Size = new System.Drawing.Size(592, 238);
+            this.errorsPage.TabIndex = 0;
+            this.errorsPage.Text = "Errors";
+            this.errorsPage.UseVisualStyleBackColor = true;
+            // 
+            // outputPage
+            // 
+            this.outputPage.Controls.Add(this.outputTextBox);
+            this.outputPage.Location = new System.Drawing.Point(4, 22);
+            this.outputPage.Name = "outputPage";
+            this.outputPage.Padding = new System.Windows.Forms.Padding(3);
+            this.outputPage.Size = new System.Drawing.Size(592, 156);
+            this.outputPage.TabIndex = 1;
+            this.outputPage.Text = "Output";
+            this.outputPage.UseVisualStyleBackColor = true;
+            // 
+            // outputTextBox
+            // 
+            this.outputTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.outputTextBox.Location = new System.Drawing.Point(3, 3);
+            this.outputTextBox.Multiline = true;
+            this.outputTextBox.Name = "outputTextBox";
+            this.outputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.outputTextBox.Size = new System.Drawing.Size(586, 150);
+            this.outputTextBox.TabIndex = 0;
+            this.outputTextBox.WordWrap = false;
+            // 
+            // errorsTextBox
+            // 
+            this.errorsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.errorsTextBox.Location = new System.Drawing.Point(3, 3);
+            this.errorsTextBox.Multiline = true;
+            this.errorsTextBox.Name = "errorsTextBox";
+            this.errorsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.errorsTextBox.Size = new System.Drawing.Size(586, 232);
+            this.errorsTextBox.TabIndex = 0;
+            this.errorsTextBox.WordWrap = false;
             // 
             // Form1
             // 
@@ -314,7 +400,6 @@
             this.ilGroupBox.ResumeLayout(false);
             this.ilGroupBox.PerformLayout();
             this.mainSplitContainer.Panel1.ResumeLayout(false);
-            this.mainSplitContainer.Panel1.PerformLayout();
             this.mainSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
             this.mainSplitContainer.ResumeLayout(false);
@@ -322,6 +407,16 @@
             this.codeSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.codeSplitContainer)).EndInit();
             this.codeSplitContainer.ResumeLayout(false);
+            this.ErAndOutSplitContainer.Panel1.ResumeLayout(false);
+            this.ErAndOutSplitContainer.Panel1.PerformLayout();
+            this.ErAndOutSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ErAndOutSplitContainer)).EndInit();
+            this.ErAndOutSplitContainer.ResumeLayout(false);
+            this.outputTabControl.ResumeLayout(false);
+            this.errorsPage.ResumeLayout(false);
+            this.errorsPage.PerformLayout();
+            this.outputPage.ResumeLayout(false);
+            this.outputPage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -351,6 +446,12 @@
         private System.Windows.Forms.SplitContainer codeSplitContainer;
         private System.Windows.Forms.ToolStripComboBox optimizationTypeToolStripComboBox;
         private System.Windows.Forms.ToolStripMenuItem optimizeToolStripMenuItem;
+        private System.Windows.Forms.SplitContainer ErAndOutSplitContainer;
+        private System.Windows.Forms.TabControl outputTabControl;
+        private System.Windows.Forms.TabPage errorsPage;
+        private System.Windows.Forms.TabPage outputPage;
+        private System.Windows.Forms.TextBox errorsTextBox;
+        private System.Windows.Forms.TextBox outputTextBox;
     }
 }
 

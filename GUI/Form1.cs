@@ -36,6 +36,8 @@ namespace GUI
             type = FileLoader.GrammarType.C;
             CreateNewFile_Click(null, EventArgs.Empty);
             FillingOptimizationTypes();
+
+            errorsTextBox.Text = "Very Errors" + "\r\n" + "Much mistakes";
         }
 
         private void FillingOptimizationTypes()
@@ -351,12 +353,19 @@ namespace GUI
             p.StartInfo.FileName = CompileILCode(ILResultView.Text);
 
             if (p.StartInfo.FileName == null)
-                MessageBox.Show("Ошибка компиляции IL-кода");
+            {
+                //MessageBox.Show("Ошибка компиляции IL-кода");
+                errorsTextBox.Text = "Ошибка компиляции IL-кода" + "\r\n";
+                outputTabControl.SelectTab(0);
+            }
             else
             {
                 p.Start();
                 p.WaitForExit();
-                MessageBox.Show(p.StandardOutput.ReadToEnd(), "Результат работы программы");
+                //MessageBox.Show(p.StandardOutput.ReadToEnd(), "Результат работы программы");
+                outputTextBox.Text = p.StandardOutput.ReadToEnd();
+                outputTextBox.Text += "\r\nSuccessfully finished";
+                outputTabControl.SelectTab(1);
             }
             return; // TODO
 
