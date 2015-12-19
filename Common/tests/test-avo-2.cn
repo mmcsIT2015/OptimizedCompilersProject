@@ -1,0 +1,24 @@
+{
+  int a1 = 1;
+  int a2 = 2;
+  int a3 = 3;
+
+  if (a1 > 5)
+  {
+    do 
+	{
+	  int c1 = 8 + a2;
+	  int c2 = a2;	
+       int c3 = c1 + a1;
+	} while (a1 > 5);
+  }
+  else 
+    while (a3 < 5)
+	{
+	  c1 = 8 + a2;
+	  c2 = a2;
+	  c3 = c1 + a1;
+      c2 = a5;
+	} 
+  int a = 7;
+}

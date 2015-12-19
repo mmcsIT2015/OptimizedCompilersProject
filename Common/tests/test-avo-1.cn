@@ -1,0 +1,19 @@
+{
+	float a = 57;
+	float b = 41;
+	float c = 13;
+	float d = 3;
+	float e = 1;
+	
+	if (c > 2)
+	{
+		b = 7;
+	}
+	else
+	{
+		b = a + d;
+		e = b;
+	}
+	
+	
+}
