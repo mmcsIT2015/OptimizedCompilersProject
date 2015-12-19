@@ -1,0 +1,11 @@
+{
+  int x, y, z, c, a, b, s, m, n;
+  x = 2;
+  y = x + z;
+  c = 5;
+  b = a + x;
+  z = c + x;
+  s = c;
+  m = s + 32;
+  n = x - s;
+}
