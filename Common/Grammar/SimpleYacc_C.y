@@ -108,9 +108,9 @@ decl_type_list:
 
 decl_list:
 	| ident { $$ = new List<VarDeclNode>(); $$.Add(new VarDeclNode($1 as IdNode)); }
-	| assign { $$ = new List<VarDeclNode>(); $$.Add(new VarDeclNode($1 as AssignNode)); }
+	| assign { $$ = new List<VarDeclNode>(); ($1 as AssignNode).IsDeclaration = true; $$.Add(new VarDeclNode($1 as AssignNode)); }
 	| decl_list COMMA ident { $1.Add(new VarDeclNode($3 as IdNode)); $$ = $1; }
-	| decl_list COMMA assign { $1.Add(new VarDeclNode($3 as AssignNode)); $$ = $1; }
+	| decl_list COMMA assign { ($3 as AssignNode).IsDeclaration = true; $1.Add(new VarDeclNode($3 as AssignNode)); $$ = $1; }
 	;
 	
 funcallst : funcall { $$ = new FunctionNodeSt(); $$.Function = $1; }

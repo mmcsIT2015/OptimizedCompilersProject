@@ -180,9 +180,11 @@ namespace ProgramTree
         public IdNode Id { get; set; }
         public ExprNode Expr { get; set; }
         public AssignType AssOp { get; set; }
+        public bool IsDeclaration { get; set; }
 
-        public AssignNode(IdNode id, ExprNode expr, AssignType assop = AssignType.Assign)
+        public AssignNode(IdNode id, ExprNode expr, AssignType assop = AssignType.Assign, bool IsDeclaration = false)
         {
+            this.IsDeclaration = IsDeclaration;
             Id = id;
             Expr = expr;
             AssOp = assop;

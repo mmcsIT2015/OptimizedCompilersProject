@@ -170,13 +170,11 @@ namespace GUI
                     ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
                     ILResultView.Text = ILCodeGenerator.Generate(code);
                     optimizeToolStripMenuItem.Enabled = true;
-
-                    //MessageBox.Show(iCompiler.Region.Test(code));
                 }
                 else
                 {
                         string errors = String.Join(System.Environment.NewLine, codeGenerator.mErrors.Select(x => x.ToString()));
-                        MessageBox.Show(errors);
+                        AcceptError(errors);
                     }
                 }
                 else
@@ -403,6 +401,7 @@ namespace GUI
             p.Start();
             p.WaitForExit();
                 //MessageBox.Show(p.StandardOutput.ReadToEnd(), "Результат работы программы");
+                errorsTextBox.Text = "";
                 outputTextBox.Text = p.StandardOutput.ReadToEnd();
                 outputTextBox.Text += "\r\nSuccessfully finished";
                 outputTabControl.SelectTab(1);

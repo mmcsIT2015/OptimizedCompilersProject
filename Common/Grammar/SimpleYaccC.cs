@@ -4,7 +4,7 @@
 
 // GPPG version 1.3.6
 // Machine:  DESKTOP-U94NV7T
-// DateTime: 11.12.2015 17:53:36
+// DateTime: 19.12.2015 23:11:01
 // UserName: jedik
 // Input file <SimpleYacc_C.y>
 
@@ -348,13 +348,13 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
 { CurrentSemanticValue.listDeclRawVal = new List<VarDeclNode>(); CurrentSemanticValue.listDeclRawVal.Add(new VarDeclNode(ValueStack[ValueStack.Depth-1].eVal as IdNode)); }
         break;
       case 28: // decl_list -> assign
-{ CurrentSemanticValue.listDeclRawVal = new List<VarDeclNode>(); CurrentSemanticValue.listDeclRawVal.Add(new VarDeclNode(ValueStack[ValueStack.Depth-1].stVal as AssignNode)); }
+{ CurrentSemanticValue.listDeclRawVal = new List<VarDeclNode>(); (ValueStack[ValueStack.Depth-1].stVal as AssignNode).IsDeclaration = true; CurrentSemanticValue.listDeclRawVal.Add(new VarDeclNode(ValueStack[ValueStack.Depth-1].stVal as AssignNode)); }
         break;
       case 29: // decl_list -> decl_list, COMMA, ident
 { ValueStack[ValueStack.Depth-3].listDeclRawVal.Add(new VarDeclNode(ValueStack[ValueStack.Depth-1].eVal as IdNode)); CurrentSemanticValue.listDeclRawVal = ValueStack[ValueStack.Depth-3].listDeclRawVal; }
         break;
       case 30: // decl_list -> decl_list, COMMA, assign
-{ ValueStack[ValueStack.Depth-3].listDeclRawVal.Add(new VarDeclNode(ValueStack[ValueStack.Depth-1].stVal as AssignNode)); CurrentSemanticValue.listDeclRawVal = ValueStack[ValueStack.Depth-3].listDeclRawVal; }
+{ (ValueStack[ValueStack.Depth-1].stVal as AssignNode).IsDeclaration = true; ValueStack[ValueStack.Depth-3].listDeclRawVal.Add(new VarDeclNode(ValueStack[ValueStack.Depth-1].stVal as AssignNode)); CurrentSemanticValue.listDeclRawVal = ValueStack[ValueStack.Depth-3].listDeclRawVal; }
         break;
       case 31: // funcallst -> funcall
 { CurrentSemanticValue.funStVal = new FunctionNodeSt(); CurrentSemanticValue.funStVal.Function = ValueStack[ValueStack.Depth-1].funVal; }

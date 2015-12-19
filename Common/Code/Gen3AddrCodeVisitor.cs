@@ -53,6 +53,18 @@ namespace iCompiler
                         return "Cannot happen";
                 }
             }
+
+            public override bool Equals(object obj)
+            {                
+                if (obj.GetType() != this.GetType()) return false;
+                var err = obj as ErrorDescription;
+                return err.Message == this.Message;                    
+            }
+
+            public override int GetHashCode()
+            {
+                return Message.GetHashCode();
+            }
         }        
 
         /// <summary>
@@ -68,7 +80,7 @@ namespace iCompiler
             return code;
         }
 
-        public List<ErrorDescription> mErrors = new List<ErrorDescription>();
+        public HashSet<ErrorDescription> mErrors = new HashSet<ErrorDescription>();
         private iCompiler.Block mLines = new iCompiler.Block();
         private Stack<string> mStack = new Stack<string>();
         private Dictionary<string, SimpleVarType> mTableOfNames = new Dictionary<string, SimpleVarType>();
@@ -284,7 +296,8 @@ namespace iCompiler
                 mLines.Add(new Line.Identity(variable, expression));
                 CheckRealLabel(node, nextLine);
             }
-            CheckDefinitionVariable(variable);
+            if (!node.IsDeclaration)
+                CheckDefinitionVariable(variable);
         }
 
         public void Visit(StringLiteralNode node)
@@ -303,7 +316,7 @@ namespace iCompiler
             foreach (var item in node.VariablesList)
             {
                 item.Accept(this);
-                mTableOfNames.Add(item.GetID().Name, node.VariablesType);
+                mTableOfNames.Add(item.GetID().Name, node.VariablesType);                
             }
         }
 
