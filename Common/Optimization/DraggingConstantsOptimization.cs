@@ -25,7 +25,10 @@ namespace iCompiler
 
         public void CheckDragging(Block block, int targetLine)
         {
+            StringBuilder sb = new StringBuilder();
             foreach (string variable in block.GetAliveVariables(targetLine))
+            {
+                sb.Append(variable + " ");
                 for (int j = targetLine - 1; j >= 0; --j)
                 {
                     if (block.IsVariableAlive(variable, j)) continue;
@@ -39,20 +42,38 @@ namespace iCompiler
                     else
                         const_value = variable;
 
-                    var iLine = block[targetLine] as Line.BinaryExpr;
-                    if (variable.Equals(iLine.first))
+                    if (block[targetLine].Is<Line.BinaryExpr>())
                     {
-                        NumberOfChanges += 1;
-                        iLine.first = const_value;
-                    }
-                    else if (variable.Equals(iLine.second))
-                    {
-                        NumberOfChanges += 1;
-                        iLine.second = const_value;
-                    }
+                        var iLine = block[targetLine] as Line.BinaryExpr;
+                        if (variable.Equals(iLine.first))
+                        {
+                            NumberOfChanges += 1;
+                            iLine.first = const_value;
+                        }
+                        else if (variable.Equals(iLine.second))
+                        {
+                            NumberOfChanges += 1;
+                            iLine.second = const_value;
+                        }
 
-                    j = -1;
+                        j = -1;
+                    }
+                    else if (block[targetLine].Is<Line.Identity>())
+                    {
+                        var iLine = block[targetLine] as Line.Identity;
+                        if (variable.Equals(iLine.right))
+                        {
+                            NumberOfChanges += 1;
+                            iLine.right = const_value;
+                            
+                        }
+                        j = -1;
+                    }
                 }
+                sb.Append("\n");
+            }
+            
+            
         }
 
         public override void Optimize(params Object[] values)
@@ -65,7 +86,7 @@ namespace iCompiler
                 block.CalculateDefUseData();
                 for (int i = 0; i < block.Count; ++i)
                 {
-                    if (block[i].Is<Line.BinaryExpr>())
+                    if (block[i].Is<Line.BinaryExpr>() || block[i].Is<Line.Identity>())
                         CheckDragging(block, i);
                 }
             }
