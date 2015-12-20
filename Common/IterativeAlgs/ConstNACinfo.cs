@@ -13,7 +13,8 @@ namespace iCompiler
     {
         public bool Equals(ConstNACInfo c1, ConstNACInfo c2)
         {
-            return c1.VarName == c2.VarName;
+            bool res = c1.VarName == c2.VarName;
+            return res;
         }
 
         public int GetHashCode(ConstNACInfo c)
@@ -22,18 +23,19 @@ namespace iCompiler
         }
     }
 
-    public class ConstNACInfo
+    public class ConstNACInfo: ICloneable
     {
         //Состояние переменной
-        public VariableConstType mType = VariableConstType.UNDEFINED;
-
-        //Хранит список выражений, в которых текущей переменной что-то присваивается
-        public List<Line.Expr> mAssigns;
+        public VariableConstType mType;
 
         //Имя переменной
         private string mVName;
 
-        public string VarName { get { return mVName; } }// get { return mAssigns.First().left; } }
+        //Хранит список выражений, в которых текущей переменной что-то присваивается
+        public List<Line.Expr> mAssigns;
+
+
+        public string VarName { get { return mVName; } }
 
         public bool NameEquals(ConstNACInfo c1)
         {
@@ -48,16 +50,33 @@ namespace iCompiler
                     (mAssigns.First() as Identity).right : "";
             }
         }
-        /* public bool Equal(ConstNACInfo cInfo)
+
+        public Object Clone()
+        {
+            return new ConstNACInfo(this);
+        }
+         public override bool Equals(Object cInfo)
          {
-             return this.VarName == cInfo.VarName;
+             if (!(cInfo is ConstNACInfo))
+                 return false;
+             ConstNACInfo c = cInfo as ConstNACInfo;
+             return this.ToString() == c.ToString();
          }
-         */
+         
+
         public ConstNACInfo(VariableConstType vType, string vName, IEnumerable<Line.Expr> assigns)
         {
             mVName = vName;
             mType = vType;
             mAssigns = assigns.ToList<Line.Expr>();
+            checkVariable();
+        }
+
+        public ConstNACInfo(ConstNACInfo c)
+        {
+            mVName = c.VarName;
+            mType = c.mType;
+            mAssigns = new List<Expr>(c.mAssigns);
             checkVariable();
         }
 
@@ -91,6 +110,8 @@ namespace iCompiler
         /// </summary>
         private bool checkVariable()
         {
+            if (this.mType == VariableConstType.NOT_A_CONSTANT)
+                return false;
             string currentConstValue = "";
             foreach (var e in mAssigns)
             {
@@ -106,7 +127,9 @@ namespace iCompiler
                 currentConstValue = (e as Identity).right;
             }
             this.mType = VariableConstType.CONSTANT;
-            this.mAssigns.Insert(0, new Identity(this.VarName, currentConstValue));
+            mAssigns.Clear();
+            mAssigns.Add(new Identity(this.VarName, currentConstValue));
+            //this.mAssigns.Insert(0, new Identity(this.VarName, currentConstValue));
             return true;
         }
 
@@ -114,8 +137,9 @@ namespace iCompiler
         /// <summary>
         /// Заменяет переменную на ее константное значение
         /// </summary>
-        public void replaceConsts(IEnumerable<ConstNACInfo> varsInfo)
+        public bool replaceConsts(IEnumerable<ConstNACInfo> varsInfo)
         {
+            bool hasChanged = false;
             List<Line.Expr> assigns = new List<Line.Expr>();
 
             foreach (var e in mAssigns)
@@ -125,37 +149,73 @@ namespace iCompiler
                 {
                     string fstVal = (e as BinaryExpr).first;
                     string sndVal = (e as BinaryExpr).second;
-                    var tmpFst = varsInfo.First<ConstNACInfo>((e as BinaryExpr).first.Equals);
-                    var tmpSnd = varsInfo.First<ConstNACInfo>((e as BinaryExpr).second.Equals);
-
+                    var tmpFst = varsInfo.Where(el => el.mVName == (e as BinaryExpr).first);
+                    var tmpSnd = varsInfo.Where(el => el.mVName == (e as BinaryExpr).second);
+                
                     //Заменяем входящие в правую часть константы, если возможно
-                    if (tmpFst != null)
+                    if (tmpFst.Count() > 0)
                     {
-                        if (tmpFst.mType == VariableConstType.CONSTANT)
-                            fstVal = tmpFst.ConstVal;
+                        if (tmpFst.First().mType == VariableConstType.CONSTANT)
+                        {
+                            fstVal = tmpFst.First().ConstVal;
+                            hasChanged = true;
+                        }
+                        else if (tmpFst.First().mType == VariableConstType.NOT_A_CONSTANT)
+                        {
+                            this.mType = VariableConstType.NOT_A_CONSTANT;
+                            hasChanged = true;
+                        }
                     }
-                    if (tmpSnd != null)
+                    if (tmpSnd.Count() > 0)
                     {
-                        if (tmpSnd.mType == VariableConstType.CONSTANT)
-                            sndVal = tmpFst.ConstVal;
+                        if (tmpSnd.First().mType == VariableConstType.CONSTANT)
+                        {
+                            sndVal = tmpSnd.First().ConstVal;
+                            hasChanged = true;
+                        }
+                        else if (tmpSnd.First().mType == VariableConstType.NOT_A_CONSTANT)
+                        {
+                            this.mType = VariableConstType.NOT_A_CONSTANT;
+                            hasChanged = true;
+                        }
                     }
+
                     //Пытаемся выполнить арифметическую операцию
                     Expr newExpr = doOperation(new BinaryExpr(e.left, fstVal, (e as BinaryExpr).operation, sndVal));
-
+                    
+                    //Если удалось свернуть выражение
+                    hasChanged = hasChanged || (newExpr is Identity);
                     assigns.Add(newExpr);
                 }
                 //Если выражение является тождеством
                 else if (e.Is<Identity>())
                 {
-                    var tmpFst = varsInfo.First<ConstNACInfo>((e as Identity).right.Equals);
-                    if (tmpFst != null)
-                        assigns.Add(tmpFst.mAssigns.First());
+                    var tmpFst = varsInfo.Where(el => el.mVName == (e as Identity).right);
+                    if (tmpFst.Count() > 0)
+                    {
+                        if (tmpFst.First().mType == VariableConstType.CONSTANT)
+                        {
+                            assigns.Add(tmpFst.First().mAssigns.First());
+                            hasChanged = true;
+                        }
+                        else if (tmpFst.First().mType == VariableConstType.NOT_A_CONSTANT)
+                        {
+                            this.mType = VariableConstType.NOT_A_CONSTANT;
+                            hasChanged = true;
+                        }
+                    }
                     else
                         assigns.Add(e);
                 }
             }
-            checkVariable();
             this.mAssigns = assigns;
+
+            //Проверка, не изменилось ли состояние (на NAC, например)
+            VariableConstType cur_type = this.mType;
+            checkVariable();
+            hasChanged = hasChanged || cur_type != this.mType;
+            
+            return hasChanged;
         }
 
         private static VariableConstType Max(VariableConstType t1, VariableConstType t2)
@@ -166,9 +226,9 @@ namespace iCompiler
         public static ConstNACInfo MaxLowerBound(ConstNACInfo v1, ConstNACInfo v2)
         {
             if (v1 == null)
-                return v2;
+                return new ConstNACInfo(v2);
             else if (v2 == null)
-                return v1;
+                return new ConstNACInfo(v1);
             if ((v1.mType == VariableConstType.CONSTANT && v1.mType == v2.mType && v1.ConstVal == v2.ConstVal)
                    || (v1.mType == VariableConstType.CONSTANT && v2.mType == VariableConstType.UNDEFINED))
                 return new ConstNACInfo(VariableConstType.CONSTANT, v1.VarName, v1.mAssigns.Union(v2.mAssigns));
