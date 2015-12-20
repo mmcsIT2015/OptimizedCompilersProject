@@ -36,7 +36,7 @@ namespace iCompiler
             HashSet<string> currentlyAlive = new HashSet<string>();
 
             for (int i = this.Count - 1; i >= 0; --i)
-            {                
+            {
                 if (this[i] is Line.FunctionParam)
                 {
                     var line = this[i] as Line.FunctionParam;
@@ -70,27 +70,35 @@ namespace iCompiler
                             currentlyAlive.Add(line.condition);
                         }
                     }
-                }                
+                }
                 else if (this[i] is Line.BinaryExpr)
                 {
                     var line = this[i] as Line.BinaryExpr;
-                    
+
                     if (line.left != "" && currentlyAlive.Contains(line.left))
                     {
                         currentlyAlive.Remove(line.left);
                     }
-                    
+
                     if (line.first != "" && !line.FirstParamIsNumber() && !currentlyAlive.Contains(line.first))
                     {
                         currentlyAlive.Add(line.first);
                     }
-                    
+
                     if (line.second != "" && !line.SecondParamIsNumber() && !currentlyAlive.Contains(line.second))
                     {
                         currentlyAlive.Add(line.second);
                     }
                 }
+                else if (this[i] is Line.Identity)
+                {
+                    var line = this[i] as Line.Identity;
+                    if (currentlyAlive.Contains(line.left))
+                        currentlyAlive.Remove(line.left);
 
+                    if (!line.RightIsNumber())
+                        currentlyAlive.Add(line.right);
+                }
                 mDefUseData.Add(new HashSet<string>(currentlyAlive.Clone()));
             }
 

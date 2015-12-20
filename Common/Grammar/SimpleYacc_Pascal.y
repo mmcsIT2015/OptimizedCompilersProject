@@ -91,7 +91,9 @@ funcall	: ID LB params RB
 decl_assign: VAR ident COLON TYPE ASSIGN expr 
 		{ 
 			List<VarDeclNode> ls = new List<VarDeclNode>();
-			ls.Add(new VarDeclNode(new AssignNode($2 as IdNode, $6)));
+			AssignNode assop = new AssignNode($2 as IdNode, $6);
+			assop.IsDeclaration = true;
+			ls.Add(new VarDeclNode(assop));
 			
 			SimpleVarType type;
 			if ($4 == "integer")

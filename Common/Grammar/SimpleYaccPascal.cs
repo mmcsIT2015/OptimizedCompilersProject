@@ -3,9 +3,9 @@
 // (see accompanying GPPGcopyright.rtf)
 
 // GPPG version 1.3.6
-// Machine:  JEDIKNIGHT-PC
-// DateTime: 10.12.2015 18:53:35
-// UserName: jediknight
+// Machine:  DESKTOP-U94NV7T
+// DateTime: 20.12.2015 3:19:45
+// UserName: jedik
 // Input file <SimpleYacc_Pascal.y>
 
 // options: no-lines gplex
@@ -292,7 +292,9 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
       case 20: // decl_assign -> VAR, ident, COLON, TYPE, ASSIGN, expr
 { 
 			List<VarDeclNode> ls = new List<VarDeclNode>();
-			ls.Add(new VarDeclNode(new AssignNode(ValueStack[ValueStack.Depth-5].eVal as IdNode, ValueStack[ValueStack.Depth-1].eVal)));
+			AssignNode assop = new AssignNode(ValueStack[ValueStack.Depth-5].eVal as IdNode, ValueStack[ValueStack.Depth-1].eVal);
+			assop.IsDeclaration = true;
+			ls.Add(new VarDeclNode(assop));
 			
 			SimpleVarType type;
 			if (ValueStack[ValueStack.Depth-3].typeVal == "integer")
