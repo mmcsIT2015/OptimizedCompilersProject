@@ -165,14 +165,14 @@ namespace GUI
 
                     if (codeGenerator.mErrors.Count == 0)
                     {
-                        var code = codeGenerator.CreateCode();
+                        code = codeGenerator.CreateCode();
 
-                    ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
-                    ILResultView.Text = ILCodeGenerator.Generate(code);
-                    optimizeToolStripMenuItem.Enabled = true;
-                }
-                else
-                {
+                        ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
+                        ILResultView.Text = ILCodeGenerator.Generate(code);
+                        optimizeToolStripMenuItem.Enabled = true;
+                    }
+                    else
+                    {
                         string errors = String.Join(System.Environment.NewLine, codeGenerator.mErrors.Select(x => x.ToString()));
                         AcceptError(errors);
                     }
