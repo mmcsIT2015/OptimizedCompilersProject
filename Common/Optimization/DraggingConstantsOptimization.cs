@@ -25,10 +25,7 @@ namespace iCompiler
 
         public void CheckDragging(Block block, int targetLine)
         {
-            StringBuilder sb = new StringBuilder();
             foreach (string variable in block.GetAliveVariables(targetLine))
-            {
-                sb.Append(variable + " ");
                 for (int j = targetLine - 1; j >= 0; --j)
                 {
                     if (block.IsVariableAlive(variable, j)) continue;
@@ -70,8 +67,6 @@ namespace iCompiler
                         j = -1;
                     }
                 }
-                sb.Append("\n");
-            }
             
             
         }
@@ -85,10 +80,8 @@ namespace iCompiler
             {
                 block.CalculateDefUseData();
                 for (int i = 0; i < block.Count; ++i)
-                {
                     if (block[i].Is<Line.BinaryExpr>() || block[i].Is<Line.Identity>())
                         CheckDragging(block, i);
-                }
             }
         }
     }
