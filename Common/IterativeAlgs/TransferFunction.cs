@@ -94,4 +94,38 @@ namespace iCompiler
             return tf;
         }
     }
+    
+    public class TransferFunctionForDraggingConstants : ITransferFunction<ConstNACInfo>
+    {
+        private IEnumerable<ConstNACInfo> mGen;
+
+        public TransferFunctionForDraggingConstants(IEnumerable<ConstNACInfo> gen)
+        {
+            mGen = gen;
+        }
+
+        /// <summary>
+        /// Т.к. перегрузить круглые скобки нельзя, вызов этой функции будет аналогом вызова f(x)
+        /// </summary>
+        public IEnumerable<ConstNACInfo> Map(IEnumerable<ConstNACInfo> x)
+        {
+            var newGen = new HashSet<ConstNACInfo>();
+            foreach (var elem in mGen)
+            {
+                elem.replaceConsts(x);
+                newGen.Add(elem);
+            }
+            return newGen.Union(x, new NameEqualsComparer());
+        }
+
+        /// <summary>
+        /// Композиция двух передаточных функций: (`this` . f1)
+        /// </summary>
+        public ITransferFunction<ConstNACInfo> Map(ITransferFunction<ConstNACInfo> f1)
+        {
+            Debug.Assert(f1 is TransferFunctionForDraggingConstants);
+
+            return new TransferFunctionForDraggingConstants(this.Map(mGen));
+        }
+    }
 }
