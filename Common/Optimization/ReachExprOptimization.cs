@@ -87,7 +87,7 @@ namespace iCompiler
         protected override Dictionary<string, Value> PrepareDictionary(Block block)
         {
             var dict = new Dictionary<string, Value>();
-            /* заполним словать данными из In */
+            /* заполним словарь данными из In */
             foreach (var e in InOut.In[block])
             {
                 CreateValue(dict, e);
