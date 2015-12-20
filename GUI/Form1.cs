@@ -21,11 +21,11 @@ namespace GUI
 {
     public partial class Form1 : Form
     {
-        string fullFilename = null;
-        bool textModified = false;
-        FileLoader.GrammarType type;
-        string formName = "OptimizedCompilersProject";
-        ThreeAddrCode code;
+        private string mFullFilename = null;
+        private bool mTextModified = false;
+        private FileLoader.GrammarType mType;
+        private string mFormName = "OptimizedCompilersProject";
+        private ThreeAddrCode mCode;
 
         public Form1()
         {
@@ -33,7 +33,7 @@ namespace GUI
             GrammarToolStripComboBox.SelectedIndexChanged -= GrammarToolStripComboBox_SelectedIndexChanged;
             GrammarToolStripComboBox.SelectedIndex = 0;
             GrammarToolStripComboBox.SelectedIndexChanged += GrammarToolStripComboBox_SelectedIndexChanged;
-            type = FileLoader.GrammarType.C;
+            mType = FileLoader.GrammarType.C;
             CreateNewFile_Click(null, EventArgs.Empty);
             FillingOptimizationTypes();
         }
@@ -61,23 +61,23 @@ namespace GUI
                 switch(optimizationTypeToolStripComboBox.Text)
                 {
                     case "CommonSubexpressionsOptimization":
-                        CommonSubexpressionsOptimization cso = new CommonSubexpressionsOptimization(code);
+                        CommonSubexpressionsOptimization cso = new CommonSubexpressionsOptimization(mCode);
                         cso.Optimize();
                         break;
                     case "DraggingConstantsOptimization":
-                        DraggingConstantsOptimization dco = new DraggingConstantsOptimization(code);
+                        DraggingConstantsOptimization dco = new DraggingConstantsOptimization(mCode);
                         dco.Optimize();
                         break;
                     case "ReachExprOptimization":
-                        ReachExprOptimization reo = new ReachExprOptimization(code);
+                        ReachExprOptimization reo = new ReachExprOptimization(mCode);
                         reo.Optimize();
                         break;
                     case "ActiveVarsOptimization":
-                        ActiveVarsOptimization avo = new ActiveVarsOptimization(code);
+                        ActiveVarsOptimization avo = new ActiveVarsOptimization(mCode);
                         avo.Optimize();
                         break;
                     case "ConstantFolding":
-                        ConstantFolding cf = new ConstantFolding(code);
+                        ConstantFolding cf = new ConstantFolding(mCode);
                         cf.Optimize();
                         break;
                     case "AllOptimizations":
@@ -87,14 +87,14 @@ namespace GUI
                         optimizer.AddOptimization(new iCompiler.ActiveVarsOptimization());
                         optimizer.AddOptimization(new iCompiler.ConstantFolding());
                         optimizer.AddOptimization(new iCompiler.CommonSubexpressionsOptimization());
-                        optimizer.Assign(code);
+                        optimizer.Assign(mCode);
                         optimizer.Optimize();
                         break;
                 }
                 
 
-                ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
-                ILResultView.Text = ILCodeGenerator.Generate(code);
+                ResultView.Text = mCode.ToString().Replace("\n", Environment.NewLine);
+                ILResultView.Text = ILCodeGenerator.Generate(mCode);
         }
 
             catch (LexException ee)
@@ -122,11 +122,11 @@ namespace GUI
             {
                 try
                 {
-                    fullFilename = openFileDialog.FileName;
+                    mFullFilename = openFileDialog.FileName;
                     string text = File.ReadAllText(openFileDialog.FileName, Encoding.UTF8);                    
                     WorkingArea.Text = text;
-                    type = FileLoader.GetGrammarType(openFileDialog.FileName);
-                    switch (type)
+                    mType = FileLoader.GetGrammarType(openFileDialog.FileName);
+                    switch (mType)
                     {
                         case FileLoader.GrammarType.C:
                             GrammarToolStripComboBox.SelectedIndex = 0;
@@ -138,8 +138,8 @@ namespace GUI
                             GrammarToolStripComboBox.SelectedIndex = 2;
                             break;
                     }
-                    textModified = false;
-                    Text = formName + " - " + openFileDialog.FileName;
+                    mTextModified = false;
+                    Text = mFormName + " - " + openFileDialog.FileName;
                     RunParser_Click(null, EventArgs.Empty);                
                 }
                 catch (FileNotFoundException ex)
@@ -156,19 +156,19 @@ namespace GUI
             {
                 ResultView.Text = string.Empty;
                 string content = WorkingArea.Text;
-                if (type != FileLoader.GrammarType.PASCALABCNET)
+                if (mType != FileLoader.GrammarType.PASCALABCNET)
                 {
-                    var root = FileLoader.Parse(content, type);
+                    var root = FileLoader.Parse(content, mType);
 
                     var codeGenerator = new iCompiler.Gen3AddrCodeVisitor();
                     codeGenerator.Visit(root);
 
                     if (codeGenerator.Errors.Count == 0)
                     {
-                        code = codeGenerator.CreateCode();
+                        mCode = codeGenerator.CreateCode();
 
-                        ResultView.Text = code.ToString().Replace("\n", Environment.NewLine);
-                        ILResultView.Text = ILCodeGenerator.Generate(code);
+                        ResultView.Text = mCode.ToString().Replace("\n", Environment.NewLine);
+                        ILResultView.Text = ILCodeGenerator.Generate(mCode);
                         optimizeToolStripMenuItem.Enabled = true;
                     }
                     else
@@ -244,13 +244,13 @@ namespace GUI
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (fullFilename == null)
+            if (mFullFilename == null)
                 SaveAs_Click(sender, e);
             else
             {
-                File.WriteAllText(fullFilename, WorkingArea.Text, Encoding.UTF8);
-                textModified = false;
-                Text = formName + " - " + fullFilename;
+                File.WriteAllText(mFullFilename, WorkingArea.Text, Encoding.UTF8);
+                mTextModified = false;
+                Text = mFormName + " - " + mFullFilename;
             }
         }
 
@@ -259,18 +259,18 @@ namespace GUI
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 File.WriteAllText(saveFileDialog.FileName, WorkingArea.Text, Encoding.UTF8);
-                textModified = false;
-                fullFilename = saveFileDialog.FileName;
-                Text = formName + " - " + fullFilename;
+                mTextModified = false;
+                mFullFilename = saveFileDialog.FileName;
+                Text = mFormName + " - " + mFullFilename;
             }
         }
 
         private void CreateNewFile_Click(object sender, EventArgs e)
         {
-            if (textModified)
+            if (mTextModified)
             {
                 // Display a MsgBox asking the user to save changes or abort.
-                DialogResult dRes = MessageBox.Show("Do you want to save changes?", formName, MessageBoxButtons.YesNoCancel);
+                DialogResult dRes = MessageBox.Show("Do you want to save changes?", mFormName, MessageBoxButtons.YesNoCancel);
                 if (dRes == DialogResult.Yes)
                 {
                     // Call method to save file...
@@ -281,19 +281,19 @@ namespace GUI
                     return;
                 }
             }
-            fullFilename = null;
+            mFullFilename = null;
             WorkingArea.Text = string.Empty;
             ResultView.Text = string.Empty;
-            Text = formName + " - new file";
-            textModified = false;
+            Text = mFormName + " - new file";
+            mTextModified = false;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if (!textModified)
+            if (!mTextModified)
             {
                 Text += "*";
-                textModified = true;
+                mTextModified = true;
             }
         }
 
@@ -321,13 +321,13 @@ namespace GUI
 
         private void GrammarToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            type = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 
+            mType = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 
                                                                ? FileLoader.GrammarType.PASCAL : FileLoader.GrammarType.PASCALABCNET;
 
-            hideILView(type);
+            hideILView(mType);
 
             this.toolStripStatusLabel1.Text = "";
-            this.startApplicationToolStripMenuItem.Enabled = type == FileLoader.GrammarType.PASCALABCNET;
+            this.startApplicationToolStripMenuItem.Enabled = mType == FileLoader.GrammarType.PASCALABCNET;
             openFileDialog.FilterIndex = saveFileDialog.FilterIndex = GrammarToolStripComboBox.SelectedIndex + 1;
             ResultView.Text = string.Empty;
             ILResultView.Text = string.Empty;
@@ -358,10 +358,10 @@ namespace GUI
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (textModified)
+            if (mTextModified)
             {
                 // Display a MsgBox asking the user to save changes or abort.
-                DialogResult dRes = MessageBox.Show("Do you want to save changes?", formName, MessageBoxButtons.YesNoCancel);
+                DialogResult dRes = MessageBox.Show("Do you want to save changes?", mFormName, MessageBoxButtons.YesNoCancel);
                 if (dRes == DialogResult.Yes)
                 {
                     // Call method to save file...
