@@ -99,6 +99,16 @@ namespace iCompiler
                     if (!line.RightIsNumber())
                         currentlyAlive.Add(line.right);
                 }
+                else if (this[i] is Line.UnaryExpr)
+                {
+                    var line = this[i] as Line.UnaryExpr;
+                    if (currentlyAlive.Contains(line.left))
+                        currentlyAlive.Remove(line.left);
+
+                    if (!line.ArgIsNumber())
+                        currentlyAlive.Add(line.argument);
+                        
+                }
                 mDefUseData.Add(new HashSet<string>(currentlyAlive.Clone()));
             }
 
