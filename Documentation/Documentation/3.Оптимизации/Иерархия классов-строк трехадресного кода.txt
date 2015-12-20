@@ -1,0 +1,46 @@
+# Иерархия наследования
+
+```
+Line
+|
+|--- EmptyLine
+|
+|--- NonEmptyLine
+		|
+		|--- FunctionCall
+		|	- IsVoid()  // есть ли у функции возвращаемый параметр
+		|
+		|--- FunctionParam
+		|	- ParamIsNumber()
+		|	- ParamIsIntNumber()
+		|
+		|--- GoTo
+		|	|
+		|	|--- СonditionalJump
+		|
+		|--- Expr
+			|
+			|--- BinaryExpr
+			|	- IsBoolExpr() // является ли строка логическим выр-ем
+			|	- IsArithmExpr() // является ли строка арфим. выр-ем
+			|	- FirstParamIsNumber()
+			|	- FirstParamIsIntNumber()
+			|	- SecondParamIsNumber()
+			|	- SecondParamIsIntNumber()
+			|
+			|--- UnaryExpr
+			|	- IsBoolExpr() // является ли строка логическим выр-ем
+			|	- IsArithmExpr() // является ли строка арфим. выр-ем
+			|	- ArgIsNumber()
+			|	- ArgIsIntNumber()
+			|
+			|--- Identity
+					- RightIsNumber()
+					- RightIsIntNumber
+
+```
+
+- У каждого наследника `Line` есть поле `label`, котрое определяет метку строки
+- У каждого наследника `Line` есть метод `HasLabel()`, который позволяет проверить, есть ли у указанной строки кода метка
+- У каждого наследника `Line` есть метод `IsEmpty()`, который позволяет проверить, является ли строка пустым оператором (т.н. `nop`)
+- У каждого наследника `Expr` есть метод `IsEqualRightSide(Expr other)`, который позволяет проверить, равны ли правые части у двух выражений. Этот метод перегружен всеми наследниками Expr (`BinaryExpr`, `UnaryExpr`, `Identity`).
