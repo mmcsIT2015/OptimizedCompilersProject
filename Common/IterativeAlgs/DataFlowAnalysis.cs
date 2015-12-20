@@ -69,5 +69,26 @@ namespace iCompiler
 
             return result;
         }
+
+        /// <summary>
+        /// Протяжка констант
+        /// </summary>
+        public static InOutData<ConstNACInfo> buildConsts(ThreeAddrCode code)
+        {
+            var semilattice = new SemilatticeForDragingConsts();
+            var funcs = TransferFuncFactory.TransferFuncsForDraggingConst(code);
+            var alg = new IterativeAlgo<ConstNACInfo, TransferFunctionForDraggingConstants>(semilattice, funcs);
+            alg.Run(code);
+
+            var result = new InOutData<ConstNACInfo>();
+            foreach (Block block in code.blocks)
+            {
+                result.In[block] = alg.In[block];
+                result.Out[block] = alg.Out[block];
+            }
+
+
+            return result;
+        }
     }
 }

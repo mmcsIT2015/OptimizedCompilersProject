@@ -219,6 +219,42 @@ namespace SimpleCompiler
             }
         }
 
+
+        /// <summary>
+        ///Выводит список ConstNACInfo для каждого блока. Каждую переменную в текущем блоке, помеченную как CONSTANT, 
+        ///можно заменить (в НЁМ же) на ее значение
+        /// </summary>
+        public static void TestDraggingConsts(ProgramTree.BlockNode root)
+        {
+            Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+            codeGenerator.Visit(root);
+
+            var code = codeGenerator.CreateCode();
+
+            WriteBlocksToConsole(code);
+
+            InOutData<ConstNACInfo> constsInfo = DataFlowAnalysis.buildConsts(code);
+
+            foreach (Block block in code.blocks)
+            {
+                
+                Console.WriteLine();
+                Console.WriteLine("block: {0}", code.blocks.IndexOf(block) + 1);
+
+                Console.WriteLine("in:");
+                foreach (ConstNACInfo cInfo in constsInfo.In[block])
+                {
+                    Console.WriteLine("\t" + cInfo.ToString());
+                }
+
+                Console.WriteLine("\r\nout:");
+                foreach (ConstNACInfo cInfo in constsInfo.Out[block])
+                {
+                    Console.WriteLine(cInfo.ToString());
+                }
+            }
+        }
+
         public static void TestReachableExpressions(ProgramTree.BlockNode root)
         {
             Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
