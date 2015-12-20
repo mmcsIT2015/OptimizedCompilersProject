@@ -46,7 +46,7 @@ namespace iCompiler
                     }
 
                     double temp;
-                    if (!double.TryParse(line.param, out temp))
+                    if ((!double.TryParse(line.param, out temp)) && (line.param != "endl"))
                     {
                         if (!currentlyAlive.Contains(line.param))
                         {
