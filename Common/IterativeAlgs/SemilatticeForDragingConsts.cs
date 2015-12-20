@@ -23,12 +23,14 @@ namespace iCompiler
         public IEnumerable<ConstNACInfo> Join(IEnumerable<ConstNACInfo> lhs, IEnumerable<ConstNACInfo> rhs)
         {
             List<ConstNACInfo> resL = new List<ConstNACInfo>();
-            var lrhs = lhs.Union(rhs);
-            foreach(var e in lrhs)
+
+            var varNames = lhs.Select(el => el.VarName).Union(rhs.Select(el => el.VarName));
+
+            foreach (var v in varNames)
             {
-                var tmpr = rhs.First(e.NameEquals);
-                var tmpl = rhs.First(e.NameEquals);
-                resL.Add(ConstNACInfo.MaxLowerBound(tmpl, tmpr));
+                ConstNACInfo tmpL = lhs.FirstOrDefault(el => el.VarName.Equals(v));
+                ConstNACInfo tmpR = rhs.FirstOrDefault(el => el.VarName.Equals(v));
+                resL.Add(ConstNACInfo.MaxLowerBound(tmpL, tmpR));
             }
             return resL;
         }

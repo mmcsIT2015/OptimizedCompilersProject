@@ -113,9 +113,22 @@ namespace iCompiler
             foreach (var elem in mGen)
             {
                 elem.replaceConsts(x);
-                newGen.Add(elem);
+                newGen.Add(new ConstNACInfo(elem));
             }
-            return newGen.Union(x, new NameEqualsComparer());
+          
+            //var result = new List<ConstNACInfo>);// new HashSet<ConstNACInfo>(mGen);
+            //result.AddRange(mGen);
+            //foreach (var n in result)
+           //     n.mType = VariableConstType.NOT_A_CONSTANT;
+            var tmp = (mGen.Where<ConstNACInfo>(el => x.Select(e=>e.VarName).Contains(el.VarName))).Select(el => el.VarName);
+
+            var tmp1 = x.Where(el => !tmp.Contains(el.VarName));
+            foreach (var el in tmp1)
+               newGen.Add(new ConstNACInfo(el));
+            //var result = mGen.Union<ConstNACInfo>(x, new NameEqualsComparer());
+
+            return newGen;
+            //return (newGen.Intersect(x, new NameEqualsComparer()));
         }
 
         /// <summary>
