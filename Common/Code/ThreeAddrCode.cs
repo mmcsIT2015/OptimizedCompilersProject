@@ -392,6 +392,40 @@ namespace iCompiler
             return defUseInfoList;
         }
 
+        /// <summary>
+        /// Строит ConstNACInfo для каждой переменной каждого блока
+        /// </summary>
+        public List<List<ConstNACInfo>> GetConstInfo()
+        {
+            List<List<ConstNACInfo>> res = new List<List<ConstNACInfo>>();
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                HashSet<string> variables = new HashSet<string>(); //Все переменные в левых частях всех выражений блока
+                HashSet<Expr> exprs = new HashSet<Expr>();          //Все выражения блока
+                List<ConstNACInfo> blockRes = new List<ConstNACInfo>();
+                for (int j = 0; j < blocks[i].Count; ++j)
+                {
+                    if (blocks[i][j].Is<Expr>())
+                    {
+                        variables.Add((blocks[i][j] as Expr).left);
+                        exprs.Add(blocks[i][j] as Expr);
+                    }
+                }
+
+                //Для каждой найденной переменной в блоке находим все выражения, в которых она находится в левой части
+                foreach (string variable in variables)
+                {
+                    List<Expr> varRes = new List<Expr>();
+                    foreach (var e in exprs)
+                        if (e.left == variable)
+                            varRes.Add(e);
+                    blockRes.Add(new ConstNACInfo(VariableConstType.UNDEFINED, variable, varRes));
+                }
+
+                res.Add(blockRes);
+            }
+            return res;
+        }
         public List<InOutInfo<String>> GetAliveVariablesIterationAlgo()
         {
 

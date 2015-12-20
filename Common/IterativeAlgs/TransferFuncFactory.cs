@@ -58,9 +58,13 @@ namespace iCompiler
             return funcs;
         }
 
-        public static Dictionary<Block, TransferFunction<Block>> TransferFuncsForDraggingConst(ThreeAddrCode code)
+        public static Dictionary<Block, TransferFunctionForDraggingConstants> TransferFuncsForDraggingConst(ThreeAddrCode code)
         {
-            return null;
+            var funcs = new Dictionary<Block, TransferFunctionForDraggingConstants>();
+            var source = code.GetConstInfo();
+            for (int i = 0; i < code.blocks.Count; ++i)
+                funcs[code.blocks[i]] = new TransferFunctionForDraggingConstants(source[i]);
+            return funcs;
         }
     }
 }

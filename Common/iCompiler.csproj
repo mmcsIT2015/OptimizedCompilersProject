@@ -94,6 +94,7 @@
     <Compile Include="Grammar\SimpleYaccPascal.cs" />
     <Compile Include="IGraph.cs" />
     <Compile Include="IterativeAlgs\ActiveVariablesSemilattice.cs" />
+    <Compile Include="IterativeAlgs\ConstNACinfo.cs" />
     <Compile Include="IterativeAlgs\ReachableExprSemilattice.cs" />
     <Compile Include="IterativeAlgs\DataFlowAnalysis.cs" />
     <Compile Include="IterativeAlgs\DomGraph.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="IterativeAlgs\ITransferFunction.cs" />
     <Compile Include="IterativeAlgs\ReachableExpressionsGenerator.cs" />
     <Compile Include="IterativeAlgs\ReachDefSemilattice.cs" />
+    <Compile Include="IterativeAlgs\SemilatticeForDragingConsts.cs" />
     <Compile Include="IterativeAlgs\TransferFuncFactory.cs" />
     <Compile Include="IterativeAlgs\TransferFunction.cs" />
     <Compile Include="IterativeAlgs\UnionSemilattice.cs" />
