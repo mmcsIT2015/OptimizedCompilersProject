@@ -73,6 +73,8 @@ namespace iCompiler
         /// <returns></returns>
         public iCompiler.ThreeAddrCode CreateCode()
         {
+            if (mLines.Count == 0) mLines.Add(new Line.EmptyLine()); // это хак
+
             EraseEmptyLines();
             CompleteTableOfNames();
             var code = new iCompiler.ThreeAddrCode(mLines);
@@ -236,7 +238,7 @@ namespace iCompiler
 
         private void EraseEmptyLines()
         {
-            Debug.Assert(mLines.Count != 0);
+            Debug.Assert(mLines.Count > 0);
 
             for (int i = mLines.Count - 2; i >= 0; --i)
             {

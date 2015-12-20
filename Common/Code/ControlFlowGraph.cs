@@ -90,7 +90,6 @@ namespace iCompiler
             mExitPoint = blocks.Last();
             mEntryPoint = blocks.First();
 
-
             mGraph = new Dictionary<Block, IList<Block>>();
             var indGr = getIndexedGraph(blocks);
             for (int i = 0; i < blocks.Count; i++)
