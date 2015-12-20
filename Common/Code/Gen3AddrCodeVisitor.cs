@@ -82,10 +82,11 @@ namespace iCompiler
             return code;
         }
 
-        public HashSet<ErrorDescription> mErrors = new HashSet<ErrorDescription>();
         private iCompiler.Block mLines = new iCompiler.Block();
         private Stack<string> mStack = new Stack<string>();
         private Dictionary<string, SimpleVarType> mTableOfNames = new Dictionary<string, SimpleVarType>();
+
+        public HashSet<ErrorDescription> Errors = new HashSet<ErrorDescription>();
 
         public Gen3AddrCodeVisitor()
         {            
@@ -113,7 +114,7 @@ namespace iCompiler
             {
                 if (!mTableOfNames.ContainsKey(variable))
                 {
-                    mErrors.Add(new ErrorDescription("Используется необъявленная переменная: " + variable, 0, ErrorDescription.ErrorType.SemanticError));                    
+                    Errors.Add(new ErrorDescription("Используется необъявленная переменная: " + variable, 0, ErrorDescription.ErrorType.SemanticError));                    
                 }
             }
         }
@@ -285,7 +286,7 @@ namespace iCompiler
 
             if (node.AssOp != AssignType.Assign)
             {
-                mErrors.Add(new ErrorDescription("Разрешено только присваивание типа `AssignType.Assign`!", 0, ErrorDescription.ErrorType.SemanticError));                
+                Errors.Add(new ErrorDescription("Разрешено только присваивание типа `AssignType.Assign`!", 0, ErrorDescription.ErrorType.SemanticError));                
                 //throw new ArgumentException();
             }
             else if (node.Expr is BinaryNode)
@@ -312,7 +313,7 @@ namespace iCompiler
             if (node.HasLabel())
             {
                 string desc = "Некорректная метка: " + node.Label.Name + "! Запрещено использование меток при объявлении переменной!";
-                mErrors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
+                Errors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
             }
 
             foreach (var item in node.VariablesList)
@@ -327,7 +328,7 @@ namespace iCompiler
             if (mTableOfNames.ContainsKey(node.GetID().Name))
             {
                 string desc = "Повторное объявление переменной: " + node.GetID().Name + "!";
-                mErrors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
+                Errors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
             }
 
             if (node.IsAssigned())
@@ -493,7 +494,7 @@ namespace iCompiler
             if (node.Operation == Operator.Not)
             {
                 var desc = "Оператор " + node.Operation + " не является бинарным оператором!";
-                mErrors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));                
+                Errors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));                
             }
 
             node.LeftOperand.Accept(this);
@@ -514,14 +515,14 @@ namespace iCompiler
             {
                 var desc = "Унарный оператор " + node.Op + " не может быть применен в операнду типа `string`!\n";
                 desc += "> " + node.Op + (node.Expr as StringLiteralNode).Str;
-                mErrors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
+                Errors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
             }
 
             if (node.Op != Operator.Minus && node.Op != Operator.Not && node.Op != Operator.Plus)
             {
                 var desc = "Недопустимый унарный оператор: " + node.Op + "!\n";
                 desc += "Разрешены лишь операторы " + Operator.Minus + ", " + Operator.Not + " и " + Operator.Plus + ".";
-                mErrors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
+                Errors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
             }
 
             node.Expr.Accept(this);

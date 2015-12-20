@@ -163,7 +163,7 @@ namespace GUI
                     var codeGenerator = new iCompiler.Gen3AddrCodeVisitor();
                     codeGenerator.Visit(root);
 
-                    if (codeGenerator.mErrors.Count == 0)
+                    if (codeGenerator.Errors.Count == 0)
                     {
                         code = codeGenerator.CreateCode();
 
@@ -173,7 +173,7 @@ namespace GUI
                     }
                     else
                     {
-                        string errors = String.Join(System.Environment.NewLine, codeGenerator.mErrors.Select(x => x.ToString()));
+                        string errors = String.Join(System.Environment.NewLine, codeGenerator.Errors.Select(x => x.ToString()));
                         AcceptError(errors);
                     }
                 }
