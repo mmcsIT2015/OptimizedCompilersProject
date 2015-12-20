@@ -1,0 +1,17 @@
+{
+  int x = 4;
+  int c = 5;
+  if (x > 0)
+  { 
+	  int y, z, a, b, s, m, n;
+	  x = 2;
+	  y = x + z;
+	  c = 5;
+	  b = a + x;
+	  z = c + x;
+	  s = c;
+	  m = s + 32;
+	  n = x - s;
+  }
+  int f = x + c;
+}

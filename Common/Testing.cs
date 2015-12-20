@@ -244,13 +244,15 @@ namespace SimpleCompiler
                 Console.WriteLine("in:");
                 foreach (ConstNACInfo cInfo in constsInfo.In[block])
                 {
-                    Console.WriteLine("\t" + cInfo.ToString());
+                    Console.WriteLine(cInfo.ToString());
+                    Console.WriteLine();
                 }
 
                 Console.WriteLine("\r\nout:");
                 foreach (ConstNACInfo cInfo in constsInfo.Out[block])
                 {
                     Console.WriteLine(cInfo.ToString());
+                    Console.WriteLine();
                 }
             }
         }
