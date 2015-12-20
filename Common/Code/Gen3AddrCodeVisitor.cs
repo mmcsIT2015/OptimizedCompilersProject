@@ -318,19 +318,19 @@ namespace iCompiler
 
             foreach (var item in node.VariablesList)
             {
+                if (mTableOfNames.ContainsKey(item.GetID().Name))
+                {
+                    string desc = "Повторное объявление переменной: " + item.GetID().Name + "!";
+                    Errors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
+                }
+                else mTableOfNames.Add(item.GetID().Name, node.VariablesType);
+
                 item.Accept(this);
-                mTableOfNames.Add(item.GetID().Name, node.VariablesType);                
-            }
+            }          
         }
 
         public void Visit(VarDeclNode node)
         {
-            if (mTableOfNames.ContainsKey(node.GetID().Name))
-            {
-                string desc = "Повторное объявление переменной: " + node.GetID().Name + "!";
-                Errors.Add(new ErrorDescription(desc, 0, ErrorDescription.ErrorType.SemanticError));
-            }
-
             if (node.IsAssigned())
             {
                 Visit(node.ValueAssignment);
@@ -537,6 +537,10 @@ namespace iCompiler
         public void Visit(IdNode node)
         {
             mStack.Push(node.Name);
+            if (node.Name[0] != '@')
+            {
+                CheckDefinitionVariable(node.Name);
+            }
         }
 
         public void Visit(IntNumNode node)
