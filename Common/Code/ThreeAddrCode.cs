@@ -407,6 +407,8 @@ namespace iCompiler
                 {
                     if (blocks[i][j].Is<Expr>())
                     {
+                        if ((blocks[i][j] as Expr).left[0] == '@')
+                            continue;
                         variables.Add((blocks[i][j] as Expr).left);
                         exprs.Add(blocks[i][j] as Expr);
                     }
@@ -422,7 +424,17 @@ namespace iCompiler
                     blockRes.Add(new ConstNACInfo(VariableConstType.UNDEFINED, variable, varRes));
                 }
 
+                bool hasChanged = true;
+                var tmp = new List<ConstNACInfo>();
+                while (hasChanged)
+                {
+                    hasChanged = false;
+                    for (int v = 0; v < blockRes.Count(); ++v )
+                        hasChanged = hasChanged || blockRes[v].replaceConsts(blockRes);
+                }
                 res.Add(blockRes);
+
+                
             }
             return res;
         }
