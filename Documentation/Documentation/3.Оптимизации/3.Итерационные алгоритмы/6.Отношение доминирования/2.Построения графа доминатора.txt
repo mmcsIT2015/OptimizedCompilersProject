@@ -1,0 +1,116 @@
+__Постановка задачи__
+
+Построение графа доминатора(графа, в котором узлы будут связанны отношением доминирования)
+Говорят, что вершина А доминирует(dom) над В(А dom В), если любой путь в CFG из входа в В проходит через А.
+
+__Входные данные__
+
+На вход алгоритму подается трехадресный код, разбитый на базовые блоки
+
+__Выходные данные__
+
+Граф, в котором базовые блоки будут связаны отношением доминирования.
+Либо специальная структура(DomTree), которая предоставляет интерфейс для работы с графом доминатора.
+
+__Описание алгоритма__
+
+Для построения графа доминатор используется выходные данные итерационного алгоритма вычисления dom множеств для базовых блоков.
+Сам алгоритм построения состоит из двух основных частей:
+	1. Опеределение корневого блока.
+	2. Обход всех dom множеств блоков и дальнейшее построение дерева. 
+
+__Пример использования__
+
+~~~~~~~{.cs}
+
+Поддерживается дальнейшая возможность работы с dom графом напрямую используя функцию GenerateDomTree:
+	
+	ThreeAddrCode code;
+	
+	// ...
+	
+	Dictionary<Block, List<Block>> tree = DomGraph.GenerateDomTree(code);
+	
+	// Дальнейшее использование tree
+	
+Либо возможность воспользоваться специальным классом для dom графа DomTree, который реализует интерфейс IDominatorRelation<Block>:
+
+	ThreeAddrCode code;
+	
+	// ...
+	
+	DomTree domTree = new DomTree(code);
+	Block blockA = code.blocks[0];
+	Block blockB = code.blocks[1];
+	
+	// ...
+	
+	domTree.FirstDomSeccond(blockA, blockB); // = blockA dom blockB
+	
+	domTree.UpperDominators(blockA); // = List<Block>
+	
+	domTree.DownDominators(blockA); // = List<Block>
+
+~~~~~~~~~~~~~~
+
+__Пример работы алгоритма__
+
+Трехадресный код:
+
+	Block 1 :
+			i1 = 1
+			if 1 goto @l0
+			
+	Block 2 :
+			goto @l1
+
+	Block 3 :
+	@l0:    i3 = 3
+			if 3 goto @l2
+
+	Block 4 :
+			goto @l1
+
+	Block 5 :
+	@l2:    iu = 0
+
+	Block 6 :
+	@l1:    <empty statement>
+	
+	
+Результат работы алгоритма:
+	
+	Dom Tree Algorithm
+	
+		Block(1) <===> Childs: 2; 3; 6;
+		Block(2) <===> Childs:
+		Block(3) <===> Childs: 4; 5;
+		Block(4) <===> Childs:
+		Block(5) <===> Childs:
+		Block(6) <===> Childs:
+
+	Dom Tree Class
+	
+		1 dom 1 = True
+		1 dom 2 = True
+		1 dom 3 = True
+		1 dom 4 = True
+		1 dom 5 = True
+		1 dom 6 = True
+		2 dom 1 = False
+		2 dom 2 = True ...
+
+		UpperDominators(1) = ( 1 )
+		UpperDominators(2) = ( 1 2 )
+		UpperDominators(3) = ( 1 3 )
+		UpperDominators(4) = ( 1 3 4 )
+		UpperDominators(5) = ( 1 3 5 )
+		UpperDominators(6) = ( 1 6 )
+
+		DownDominators(1) = ( 1 6 3 5 4 2 )
+		DownDominators(2) = ( 2 )
+		DownDominators(3) = ( 3 5 4 )
+		DownDominators(4) = ( 4 )
+		DownDominators(5) = ( 5 )
+		DownDominators(6) = ( 6 )
+	
