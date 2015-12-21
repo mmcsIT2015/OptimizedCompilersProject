@@ -107,10 +107,10 @@ namespace iCompiler
         {
             var builder = new StringBuilder();
             builder.Append(mVName);
-            builder.Append(" (" + mType.ToString() + "): ");
+            builder.Append(" (" + mType.ToString() + ")");
 
             if (mType == VariableConstType.CONSTANT)
-                builder.Append(ConstVal);
+                builder.Append(": " + ConstVal);
             return builder.ToString();
         }
     }
