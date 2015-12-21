@@ -338,14 +338,17 @@ namespace iCompiler
                     //DEF
                     var line = blocks[i][j];
                     if (line.IsEmpty()) continue;
-                    if (line is Line.GoTo || line is Line.FunctionParam || line is Line.FunctionCall) continue;
+                    if (line is Line.GoTo || line is Line.FunctionCall) continue;
 
-                    String currentIndDef = (line as Line.Expr).left;
+                    if (!(line is Line.FunctionParam))
+                    {
+                        String currentIndDef = (line as Line.Expr).left;
 
-                    if (defUseInfoList[i].Def.Contains(currentIndDef))
-                        defUseInfoList[i].Def.Remove(currentIndDef);
+                        if (defUseInfoList[i].Def.Contains(currentIndDef))
+                            defUseInfoList[i].Def.Remove(currentIndDef);
 
-                    defUseInfoList[i].Def.Add(currentIndDef);
+                        defUseInfoList[i].Def.Add(currentIndDef);
+                    }
 
                     //USE
                     String usedVar = "";
@@ -360,6 +363,17 @@ namespace iCompiler
                     else if (line is Line.Identity && !(line as Line.Identity).RightIsNumber())
                     {
                         usedVar = (line as Line.Identity).right;
+                    }
+                    else if (line is Line.FunctionParam)
+                    {
+                        if ((!(line as Line.FunctionParam).ParamIsNumber()) && (!"endl".Equals((line as Line.FunctionParam).param)))
+                            usedVar = (line as Line.FunctionParam).param;
+                    }
+                    else if (line is Line.СonditionalJump)
+                    {
+                        double res;
+                        if (!double.TryParse((line as Line.СonditionalJump).condition, out res))
+                            usedVar = (line as Line.СonditionalJump).condition;                   
                     }
 
                     if (usedVar.Length > 0)
