@@ -88,13 +88,13 @@ namespace iCompiler
 
             for (int i = funcs.Length - 2; i >= 0; --i)
             {
-                 tf = funcs[i].Map(tf) as TransferFunction<T>;
+                tf = funcs[i].Map(tf) as TransferFunction<T>;
             }
 
             return tf;
         }
     }
-    
+
     public class TransferFunctionForDraggingConstants : ITransferFunction<ConstNACInfo>
     {
         private IEnumerable<ConstNACInfo> mGen;
@@ -109,26 +109,19 @@ namespace iCompiler
         /// </summary>
         public IEnumerable<ConstNACInfo> Map(IEnumerable<ConstNACInfo> x)
         {
-            var newGen = new HashSet<ConstNACInfo>();
-            foreach (var elem in mGen)
+            var newGen = new HashSet<ConstNACInfo>(mGen);
+            foreach (ConstNACInfo c in x)
             {
-                elem.replaceConsts(x);
-                newGen.Add(new ConstNACInfo(elem));
+                var tmp = mGen.Count(el => el.VarName == c.VarName);
+
+                foreach (var kk in mGen)
+                    Debug.Assert(mGen.Count(el => el.VarName == kk.VarName) <= 1);
+                if (tmp > 0)
+                    continue;
+                else
+                    newGen.Add(new ConstNACInfo(c));
             }
-          
-            //var result = new List<ConstNACInfo>);// new HashSet<ConstNACInfo>(mGen);
-            //result.AddRange(mGen);
-            //foreach (var n in result)
-           //     n.mType = VariableConstType.NOT_A_CONSTANT;
-            var tmp = (mGen.Where<ConstNACInfo>(el => x.Select(e=>e.VarName).Contains(el.VarName))).Select(el => el.VarName);
-
-            var tmp1 = x.Where(el => !tmp.Contains(el.VarName));
-            foreach (var el in tmp1)
-               newGen.Add(new ConstNACInfo(el));
-            //var result = mGen.Union<ConstNACInfo>(x, new NameEqualsComparer());
-
             return newGen;
-            //return (newGen.Intersect(x, new NameEqualsComparer()));
         }
 
         /// <summary>
