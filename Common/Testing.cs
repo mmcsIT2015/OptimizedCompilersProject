@@ -351,9 +351,6 @@ namespace SimpleCompiler
                 Console.WriteLine("Test GraphInt 2 passed");
             else
                 Console.WriteLine("Test GraphInt 2 did not pass");
-
-
-
         }
         //пример из лекции неприводимого графа
         public static void GraphIntTesting3()
@@ -380,9 +377,6 @@ namespace SimpleCompiler
                 Console.WriteLine("Test GraphInt 3 passed");
             else
                 Console.WriteLine("Test GraphInt 3 did not pass");
-
-
-
         }
 
         /// <summary>
