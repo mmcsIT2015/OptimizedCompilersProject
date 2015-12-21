@@ -82,7 +82,8 @@ namespace SimpleCompiler
 
                 List<Testing.RootTest> root_tests = new List<Testing.RootTest>();
                 // Add your root tests here
-                root_tests.Add(Testing.TestDraggingConsts);
+                //root_tests.Add(Testing.TestConstantsPropagation_sets);
+                root_tests.Add(Testing.TestConstantsPropagation);
                 //root_tests.Add(Testing.TestDomIterativeAlogrithm);
                 
                 //\

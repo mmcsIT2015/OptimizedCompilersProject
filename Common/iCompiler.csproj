@@ -114,6 +114,7 @@
     <Compile Include="Optimization\ActiveVarsOptimization.cs" />
     <Compile Include="Optimization\CommonSubexpressionsOptimization.cs" />
     <Compile Include="Optimization\ConstantFolding.cs" />
+    <Compile Include="Optimization\ConstantsPropagationOptimization.cs" />
     <Compile Include="Optimization\DeadCodeElimination.cs" />
     <Compile Include="Optimization\DraggingConstantsOptimization.cs" />
     <Compile Include="Optimization\Optimizer.cs" />

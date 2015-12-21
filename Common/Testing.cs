@@ -224,7 +224,7 @@ namespace SimpleCompiler
         ///Выводит список ConstNACInfo для каждого блока. Каждую переменную в текущем блоке, помеченную как CONSTANT, 
         ///можно заменить (в НЁМ же) на ее значение
         /// </summary>
-        public static void TestDraggingConsts(ProgramTree.BlockNode root)
+        public static void TestConstantsPropagation_sets(ProgramTree.BlockNode root)
         {
             Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
             codeGenerator.Visit(root);
@@ -378,6 +378,46 @@ namespace SimpleCompiler
             else
                 Console.WriteLine("Test GraphInt 3 did not pass");
         }
+
+
+        /// <summary>
+        ///Выводит список ConstNACInfo для каждого блока. Каждую переменную в текущем блоке, помеченную как CONSTANT, 
+        ///можно заменить (в НЁМ же) на ее значение
+        /// </summary>
+        public static void TestConstantsPropagation(ProgramTree.BlockNode root)
+        {
+            Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+            codeGenerator.Visit(root);
+
+            var code = codeGenerator.CreateCode();
+
+            Console.WriteLine("code: \r\n");
+            Console.WriteLine(code.ToString());
+
+            ConstantsPropagationOptimization opt = new ConstantsPropagationOptimization(code);
+            opt.Optimize();
+            Console.WriteLine("transformed code: \r\n");
+            Console.WriteLine(code.ToString());
+        }
+
+
+        /// <summary>
+        /// Протяжка констант + сворачивание констант
+        /// </summary>
+        public static void TestDraggingConstants(ProgramTree.BlockNode root)
+        {
+            Gen3AddrCodeVisitor codeGenerator = new Gen3AddrCodeVisitor();
+            codeGenerator.Visit(root);
+
+            var code = codeGenerator.CreateCode();
+
+            WriteBlocksToConsole(code);
+            (new DraggingConstantsOptimization(code)).Optimize();
+            (new ConstantFolding(code)).Optimize();
+
+            WriteBlocksToConsole(code);
+        }
+
 
         /// <summary>
         /// Провести тесты
