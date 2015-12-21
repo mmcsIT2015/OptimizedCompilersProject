@@ -48,8 +48,7 @@ namespace iCompiler
             // цикл по строкам кода ББл
             for (int i = listSize - 1; i >= 0; --i)
             {
-                //if (block[i].IsNot<Line.Identity>() && block[i].IsNot<Line.BinaryExpr>() && block[i].IsNot<Line.UnaryExpr>()) continue;
-
+                bool isAlive;
                 if (block[i].Is<Line.Identity>())
                 {
                     var temp = block[i] as Line.Identity;
@@ -64,7 +63,6 @@ namespace iCompiler
                         idLife[temp.right] = true;
 
                         //если для переменной в левой части есть значение "живучести"
-                        bool isAlive;
                         if (idLife.TryGetValue(temp.left, out isAlive))
                         {
                             //если переменная в левой части "живая"
@@ -79,7 +77,6 @@ namespace iCompiler
                             idLife[temp.left] = false; //делаем ее "мертвой"
                         }
                     }
-
                 }
                 else if (block[i].Is<Line.BinaryExpr>())
                 {
@@ -89,7 +86,6 @@ namespace iCompiler
                     idLife[line.second] = true; //второй операнд правой части "живой"
 
                     //если для переменной в левой части есть значение "живучести"
-                    bool isAlive;
                     if (idLife.TryGetValue(line.left, out isAlive))
                     {
                         //если переменная в левой части "живая"
@@ -109,7 +105,6 @@ namespace iCompiler
                         idLife[line.argument] = true;
 
                     //если для переменной в левой части есть значение "живучести"
-                    bool isAlive;
                     if (idLife.TryGetValue(line.left, out isAlive))
                     {
                         //если переменная в левой части "живая"
@@ -120,7 +115,22 @@ namespace iCompiler
                     {
                         idLife[line.left] = false; //делаем ее "мертвой"
                     }
-
+                }
+                else if (block[i].Is<Line.ConditionalJump>())
+                {
+                    var jump = block[i] as Line.ConditionalJump;
+                    if (!jump.ConditionIsNumber())
+                    {
+                        idLife[jump.condition] = true;
+                    }
+                }
+                else if (block[i].Is<Line.FunctionParam>())
+                {
+                    var line = block[i] as Line.FunctionParam;
+                    if (!line.ParamIsNumber())
+                    {
+                        idLife[line.param] = true;
+                    }
                 }
             }
 

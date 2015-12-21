@@ -17,6 +17,7 @@ Line
 		|--- GoTo
 		|	|
 		|	|--- СonditionalJump
+		|		- ConditionIsNumber() // условие - число?
 		|
 		|--- Expr
 			|
