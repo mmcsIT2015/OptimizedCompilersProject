@@ -41,9 +41,6 @@ namespace iCompiler
             FindSpanningTree(blocks.First(), ref index, graph);
         }
 
-        /// <summary>
-        /// Ничего не делает
-        /// </summary>
         protected SpanningTree() { }
 
         public Dictionary<T, int> Numbers { get; protected set; }
@@ -60,8 +57,6 @@ namespace iCompiler
                     FindSpanningTree(b, ref index, graph);
                 }
         }
-
-
     }
 
     /// <summary>
@@ -85,6 +80,7 @@ namespace iCompiler
             while (true)
             {
                 while (e.MoveNext())
+                {
                     if (!Numbers.ContainsKey(e.Current))
                     {
                         Data[root].Add(e.Current);
@@ -95,8 +91,10 @@ namespace iCompiler
                         Numbers[root] = index;
                         index++;
                     }
-                if (enumers.Count() == 0)
-                    break;
+                }
+
+                if (enumers.Count() == 0) break;
+
                 e = enumers.Pop();
                 root = parents.Pop();
             }
