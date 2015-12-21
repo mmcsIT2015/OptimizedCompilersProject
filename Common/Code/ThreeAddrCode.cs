@@ -407,48 +407,52 @@ namespace iCompiler
         }
 
         /// <summary>
+        /// Выполняет оптимизации и возвращает true, если произошли изменения
+        /// </summary>
+        public bool makePreoptimization(params IOptimizer[] opts)
+        {
+            bool hasChanges = false;
+            foreach (IOptimizer opt in opts)
+            {
+                opt.Optimize();
+                hasChanges |= opt.NumberOfChanges > 0;
+            }
+            return hasChanges;
+        }
+        /// <summary>
         /// Строит ConstNACInfo для каждой переменной каждого блока
         /// </summary>
-        public List<List<ConstNACInfo>> GetConstInfo()
+        public List<HashSet<ConstNACInfo>> GetConstInfo()
         {
-            List<List<ConstNACInfo>> res = new List<List<ConstNACInfo>>();
+            bool hasChanges = false;
+            do
+            {
+                DraggingConstantsOptimization opt1 = new DraggingConstantsOptimization(this);
+                ConstantFolding opt2 = new ConstantFolding(this);
+                hasChanges = makePreoptimization(opt1, opt2);
+            } while (hasChanges);
+
+            Console.WriteLine(this.ToString());
+            List<HashSet<ConstNACInfo>> res = new List<HashSet<ConstNACInfo>>();
             for (int i = 0; i < blocks.Count; i++)
             {
                 HashSet<string> variables = new HashSet<string>(); //Все переменные в левых частях всех выражений блока
-                HashSet<Expr> exprs = new HashSet<Expr>();          //Все выражения блока
-                List<ConstNACInfo> blockRes = new List<ConstNACInfo>();
-                for (int j = 0; j < blocks[i].Count; ++j)
+                HashSet<ConstNACInfo> blockRes = new HashSet<ConstNACInfo>();
+                for (int j = blocks[i].Count - 1; j >= 0; --j)
                 {
-                    if (blocks[i][j].Is<Expr>())
+
+                    if (blocks[i][j].Is<Identity>())
                     {
-                        if ((blocks[i][j] as Expr).left[0] == '@')
+                        Identity ident = blocks[i][j] as Identity;
+
+                        //Если уже есть константное значение для этой переменной, то пропускаем. 
+                        if (variables.Contains(ident.left) || !ident.RightIsNumber())
                             continue;
-                        variables.Add((blocks[i][j] as Expr).left);
-                        exprs.Add(blocks[i][j] as Expr);
+                        blockRes.Add(new ConstNACInfo(VariableConstType.CONSTANT, ident.left, ident.right));
+                        variables.Add(ident.left.ToString());
                     }
                 }
-
-                //Для каждой найденной переменной в блоке находим все выражения, в которых она находится в левой части
-                foreach (string variable in variables)
-                {
-                    List<Expr> varRes = new List<Expr>();
-                    foreach (var e in exprs)
-                        if (e.left == variable)
-                            varRes.Add(e);
-                    blockRes.Add(new ConstNACInfo(VariableConstType.UNDEFINED, variable, varRes));
-                }
-
-                bool hasChanged = true;
-                var tmp = new List<ConstNACInfo>();
-                while (hasChanged)
-                {
-                    hasChanged = false;
-                    for (int v = 0; v < blockRes.Count(); ++v )
-                        hasChanged = hasChanged || blockRes[v].replaceConsts(blockRes);
-                }
                 res.Add(blockRes);
-
-                
             }
             return res;
         }
