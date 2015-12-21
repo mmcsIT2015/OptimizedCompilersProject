@@ -4,14 +4,16 @@
   if (x > 0)
   { 
 	  int y, z, a, b, s, m, n;
-	  x = 2;
 	  y = x + z;
 	  c = 5;
+	  x = 2;
 	  b = a + x;
 	  z = c + x;
+	  x = 4;
 	  s = c;
 	  m = s + 32;
-	  n = x - s;
+	  n = x - z;
   }
   int f = x + c;
+  f = f + a;
 }
