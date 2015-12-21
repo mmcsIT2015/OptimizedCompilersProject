@@ -186,7 +186,7 @@ namespace iCompiler
             return sb.ToString();
         }
 
-        private static string GenConditionalJump(ThreeAddrCode code, Line.СonditionalJump cj)
+        private static string GenConditionalJump(ThreeAddrCode code, Line.ConditionalJump cj)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -270,8 +270,8 @@ namespace iCompiler
                         sb.Append(GenUnaryExpr(code, l as Line.UnaryExpr));
                     else if (l.Is<Line.Identity>())
                         sb.Append(GenIdentity(code, l as Line.Identity));
-                    else if (l.Is<Line.СonditionalJump>())
-                        sb.Append(GenConditionalJump(code, l as Line.СonditionalJump));
+                    else if (l.Is<Line.ConditionalJump>())
+                        sb.Append(GenConditionalJump(code, l as Line.ConditionalJump));
                     else if (l.Is<Line.GoTo>())
                         sb.Append(GenGoTo(code, l as Line.GoTo));
                     else if (l.Is<Line.FunctionParam>())

@@ -43,7 +43,7 @@ namespace iCompiler
                 var line = blocks[i].Last();
                 if (line is Line.GoTo)
                 {
-                    if (line is Line.СonditionalJump)
+                    if (line is Line.ConditionalJump)
                     {
                         if (i < blocks.Count() - 1) graph[i].Add(i + 1);
                     }

@@ -246,7 +246,7 @@ namespace iCompiler
         public override string ToString()
         { 
             var builder = new StringBuilder();
-            builder.Append(mVName + " (" + mType.ToString() + "): \r\n");
+            builder.Append(mVName + " (" + mType.ToString() + "): ");
             foreach (var el in mAssigns)
                 builder.Append(el.ToString());
             return builder.ToString();

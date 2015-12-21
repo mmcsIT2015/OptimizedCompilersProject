@@ -369,11 +369,11 @@ namespace iCompiler
                         if ((!(line as Line.FunctionParam).ParamIsNumber()) && (!"endl".Equals((line as Line.FunctionParam).param)))
                             usedVar = (line as Line.FunctionParam).param;
                     }
-                    else if (line is Line.СonditionalJump)
+                    else if (line is Line.ConditionalJump)
                     {
                         double res;
-                        if (!double.TryParse((line as Line.СonditionalJump).condition, out res))
-                            usedVar = (line as Line.СonditionalJump).condition;                   
+                        if (!double.TryParse((line as Line.ConditionalJump).condition, out res))
+                            usedVar = (line as Line.ConditionalJump).condition;                   
                     }
 
                     if (usedVar.Length > 0)

@@ -54,9 +54,9 @@ namespace iCompiler
                         }
                     }
                 }
-                else if (this[i] is Line.СonditionalJump)
+                else if (this[i] is Line.ConditionalJump)
                 {
-                    var line = this[i] as Line.СonditionalJump;
+                    var line = this[i] as Line.ConditionalJump;
                     if (line.condition == "")
                     {
                         throw new ArgumentException("Critical error! Empty `condition` operand for `СonditionalJump` command in " + i + " line.");

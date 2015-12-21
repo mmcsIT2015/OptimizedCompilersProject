@@ -6,11 +6,11 @@ using ProgramTree;
 
 namespace iCompiler.Line
 {
-    public class СonditionalJump : GoTo
+    public class ConditionalJump : GoTo
     {
         public string condition;
 
-        public СonditionalJump(string condition, string target):
+        public ConditionalJump(string condition, string target):
             base(target)
         {
             this.condition = condition;

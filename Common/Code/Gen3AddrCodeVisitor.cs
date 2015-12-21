@@ -122,7 +122,7 @@ namespace iCompiler
         private void CompleteTableOfNames()
         {
             // тип переменных в услови СonditionalJump - bool
-            foreach (var line in mLines.Where(e => e is Line.СonditionalJump).Select(e => e as Line.СonditionalJump))
+            foreach (var line in mLines.Where(e => e is Line.ConditionalJump).Select(e => e as Line.ConditionalJump))
             {
                 if (mTableOfNames.ContainsKey(line.condition))
                 {
@@ -352,7 +352,7 @@ namespace iCompiler
             var labelForTrue = UniqueIdsGenerator.Instance().Get("l");
             var labelForFalse = UniqueIdsGenerator.Instance().Get("l");
 
-            var conditionalLine = new Line.СonditionalJump(condition, labelForTrue);
+            var conditionalLine = new Line.ConditionalJump(condition, labelForTrue);
             mLines.Add(conditionalLine);
             CheckRealLabel(node, nextLine);
 
@@ -450,7 +450,7 @@ namespace iCompiler
             node.Expr.Accept(this);
             string condition = mStack.Pop();
 
-            mLines.Add(new Line.СonditionalJump(condition, labelForTrue));
+            mLines.Add(new Line.ConditionalJump(condition, labelForTrue));
 
             string jumpLabel;
             if (node.HasLabel()) jumpLabel = node.Label.Name;
@@ -485,7 +485,7 @@ namespace iCompiler
             else if (mLines[entryPoint].HasLabel()) label = mLines[entryPoint].label;
             else label = UniqueIdsGenerator.Instance().Get("l");
 
-            mLines.Add(new Line.СonditionalJump(condition, label));
+            mLines.Add(new Line.ConditionalJump(condition, label));
             mLines[entryPoint].label = label;
         }
 

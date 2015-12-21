@@ -173,9 +173,9 @@ namespace ParsePABC
                         var expr = new bin_expr(first, second, Map(st.operation));
                         root.program_code.Add(new assign(left, expr));
                     }
-                    else if (line is iCompiler.Line.СonditionalJump)
+                    else if (line is iCompiler.Line.ConditionalJump)
                     {
-                        var st = line as iCompiler.Line.СonditionalJump;
+                        var st = line as iCompiler.Line.ConditionalJump;
                         var condition = MakeExpr(st.condition);
                         var if_body = new goto_statement(new ident(st.target));
                         root.program_code.Add(new if_node(condition, if_body));

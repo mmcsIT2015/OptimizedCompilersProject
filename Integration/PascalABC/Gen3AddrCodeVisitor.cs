@@ -64,7 +64,7 @@ namespace ParsePABC
         private void CompleteTableOfNames()
         {
             // тип переменных в услови СonditionalJump - bool
-            foreach (var line in mLines.Where(e => e is iCompiler.Line.СonditionalJump).Select(e => e as iCompiler.Line.СonditionalJump))
+            foreach (var line in mLines.Where(e => e is iCompiler.Line.ConditionalJump).Select(e => e as iCompiler.Line.ConditionalJump))
             {
                 if (mTableOfNames.ContainsKey(line.condition))
                 {
@@ -311,7 +311,7 @@ namespace ParsePABC
                     var temp = mStack.Pop();
                     var last = mAuxStack.Pop() as if_node;
                     var ifLabel = UniqueIdsGenerator.Instance().Get("l");
-                    mLines.Add(new iCompiler.Line.СonditionalJump(temp, ifLabel));
+                    mLines.Add(new iCompiler.Line.ConditionalJump(temp, ifLabel));
                     mStack.Push("if:" + mLines.Count());
 
                     mLines.Add(new iCompiler.Line.GoTo("")); // goto на тело else
