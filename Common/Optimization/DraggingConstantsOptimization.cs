@@ -35,9 +35,14 @@ namespace iCompiler
 
                     string const_value = "";
                     if (jLine.left.Equals(variable) && !block.GetAliveVariables(j).Contains(jLine.right))
+                    {
                         const_value = jLine.right;
+                    }
                     else
-                        const_value = variable;
+                    {
+                        //const_value = variable; // при таком случае мы можем получить зацикливание
+                        continue;
+                    }
 
                     if (block[targetLine].Is<Line.BinaryExpr>())
                     {
@@ -67,8 +72,6 @@ namespace iCompiler
                         j = -1;
                     }
                 }
-            
-            
         }
 
         public override void Optimize(params Object[] values)
@@ -80,8 +83,10 @@ namespace iCompiler
             {
                 block.CalculateDefUseData();
                 for (int i = 0; i < block.Count; ++i)
+                {
                     if (block[i].Is<Line.BinaryExpr>() || block[i].Is<Line.Identity>())
                         CheckDragging(block, i);
+                }
             }
         }
     }
