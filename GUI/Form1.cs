@@ -47,10 +47,12 @@ namespace GUI
         private void FillingOptimizationTypes()
         {
             optimizationTypeToolStripComboBox.Items.Add("CommonSubexpressionsOptimization");
+            optimizationTypeToolStripComboBox.Items.Add("DeadCodeElimination");
             optimizationTypeToolStripComboBox.Items.Add("DraggingConstantsOptimization");
             optimizationTypeToolStripComboBox.Items.Add("ReachExprOptimization");
             optimizationTypeToolStripComboBox.Items.Add("ActiveVarsOptimization");
             optimizationTypeToolStripComboBox.Items.Add("ConstantFolding");
+            optimizationTypeToolStripComboBox.Items.Add("ConstantsPropagationOptimization");
             optimizationTypeToolStripComboBox.Items.Add("AllOptimizations");
         }
 
@@ -61,24 +63,32 @@ namespace GUI
                 switch(optimizationTypeToolStripComboBox.Text)
                 {
                     case "CommonSubexpressionsOptimization":
-                        CommonSubexpressionsOptimization cso = new CommonSubexpressionsOptimization(mCode);
+                        var cso = new CommonSubexpressionsOptimization(mCode);
                         cso.Optimize();
                         break;
                     case "DraggingConstantsOptimization":
-                        DraggingConstantsOptimization dco = new DraggingConstantsOptimization(mCode);
+                        var dco = new DraggingConstantsOptimization(mCode);
                         dco.Optimize();
                         break;
                     case "ReachExprOptimization":
-                        ReachExprOptimization reo = new ReachExprOptimization(mCode);
+                        var reo = new ReachExprOptimization(mCode);
                         reo.Optimize();
                         break;
                     case "ActiveVarsOptimization":
-                        ActiveVarsOptimization avo = new ActiveVarsOptimization(mCode);
+                        var avo = new ActiveVarsOptimization(mCode);
                         avo.Optimize();
                         break;
                     case "ConstantFolding":
-                        ConstantFolding cf = new ConstantFolding(mCode);
+                        var cf = new ConstantFolding(mCode);
                         cf.Optimize();
+                        break;
+                    case "ConstantsPropagationOptimization":
+                        var cpo = new ConstantsPropagationOptimization(mCode);
+                        cpo.Optimize();
+                        break;
+                    case "DeadCodeElimination":
+                        var dce = new DeadCodeElimination(mCode);
+                        dce.Optimize();
                         break;
                     case "AllOptimizations":
                         var optimizer = new iCompiler.Optimizer();
@@ -87,6 +97,7 @@ namespace GUI
                         optimizer.AddOptimization(new iCompiler.ActiveVarsOptimization());
                         optimizer.AddOptimization(new iCompiler.ConstantFolding());
                         optimizer.AddOptimization(new iCompiler.CommonSubexpressionsOptimization());
+                        optimizer.AddOptimization(new iCompiler.ConstantsPropagationOptimization());
                         optimizer.Assign(mCode);
                         optimizer.Optimize();
                         break;

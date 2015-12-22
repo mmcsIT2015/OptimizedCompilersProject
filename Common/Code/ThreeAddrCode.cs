@@ -407,32 +407,11 @@ namespace iCompiler
         }
 
         /// <summary>
-        /// Выполняет оптимизации и возвращает true, если произошли изменения
-        /// </summary>
-        public bool makePreoptimization(params IOptimizer[] opts)
-        {
-            bool hasChanges = false;
-            foreach (IOptimizer opt in opts)
-            {
-                opt.Optimize();
-                hasChanges |= opt.NumberOfChanges > 0;
-            }
-            return hasChanges;
-        }
-        /// <summary>
         /// Строит ConstNACInfo для каждой переменной каждого блока
         /// </summary>
         public List<HashSet<ConstNACInfo>> GetConstInfo()
         {
-            bool hasChanges = false;
-            do
-            {
-                DraggingConstantsOptimization opt1 = new DraggingConstantsOptimization(this);
-                ConstantFolding opt2 = new ConstantFolding(this);
-                hasChanges = makePreoptimization(opt1, opt2);
-            } while (hasChanges);
-
-            Console.WriteLine(this.ToString());
+            //Console.WriteLine(this.ToString());
             List<HashSet<ConstNACInfo>> res = new List<HashSet<ConstNACInfo>>();
             for (int i = 0; i < blocks.Count; i++)
             {
@@ -440,7 +419,6 @@ namespace iCompiler
                 HashSet<ConstNACInfo> blockRes = new HashSet<ConstNACInfo>();
                 for (int j = blocks[i].Count - 1; j >= 0; --j)
                 {
-
                     if (blocks[i][j].Is<Identity>())
                     {
                         Identity ident = blocks[i][j] as Identity;
@@ -456,6 +434,7 @@ namespace iCompiler
             }
             return res;
         }
+
         public List<InOutInfo<String>> GetAliveVariablesIterationAlgo()
         {
 
