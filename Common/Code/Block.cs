@@ -136,13 +136,17 @@ namespace iCompiler
             return mDefUseData[step];
         }
 
-        public void ReplaceLines(Line.Line what, Line.Line who)
+        public void ReplaceLines(Line.Line what, Line.Line who, bool replaceLabels = false)
         {
             for (int i = 0; i < Count; ++i)
             {
                 if (this[i] == what)
                 {
                     this[i] = who;
+                    if (replaceLabels && what.label.Length > 0)
+                    {
+                        who.label = what.label;
+                    }
                     return;
                 }
             }

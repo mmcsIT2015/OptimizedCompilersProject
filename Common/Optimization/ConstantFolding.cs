@@ -54,19 +54,19 @@ namespace iCompiler
                     {
                         case Operator.Minus:
                             NumberOfChanges += 1;
-                            block.ReplaceLines(line, new Line.Identity(line.left, (x - y).ToString()));
+                            block.ReplaceLines(line, new Line.Identity(line.left, (x - y).ToString()), true);
                             break;
                         case Operator.Plus:
                             NumberOfChanges += 1;
-                            block.ReplaceLines(line, new Line.Identity(line.left, (x + y).ToString()));
+                            block.ReplaceLines(line, new Line.Identity(line.left, (x + y).ToString()), true);
                             break;
                         case Operator.Mult:
                             NumberOfChanges += 1;
-                            block.ReplaceLines(line, new Line.Identity(line.left, (x * y).ToString()));
+                            block.ReplaceLines(line, new Line.Identity(line.left, (x * y).ToString()), true);
                             break;
                         case Operator.Div:
                             NumberOfChanges += 1;
-                            block.ReplaceLines(line, new Line.Identity(line.left, (x / y).ToString()));
+                            block.ReplaceLines(line, new Line.Identity(line.left, (x / y).ToString()), true);
                             break;
                     }
                 }
@@ -77,11 +77,11 @@ namespace iCompiler
         {
             foreach (Block block in Code.blocks)
             {
-                foreach (var l in block)
+                for (int i = 0; i < block.Count; ++i)
                 {
-                    if (l.IsNot<Line.BinaryExpr>()) continue;
+                    if (block[i].IsNot<Line.BinaryExpr>()) continue;
 
-                    var line = l as Line.BinaryExpr;
+                    var line = block[i] as Line.BinaryExpr;
                     if (!line.IsArithmExpr()) continue;
 
                     double first, second;
@@ -94,22 +94,22 @@ namespace iCompiler
                             if (line.operation == Operator.Plus)
                             {
                                 NumberOfChanges += 1;
-                                block.ReplaceLines(line, new Line.Identity(line.left, line.second));
+                                block.ReplaceLines(line, new Line.Identity(line.left, line.second), true);
                             }
                             else if (line.operation == Operator.Minus)
                             {
                                 NumberOfChanges += 1;
-                                block.ReplaceLines(line, new Line.Identity(line.left, "-" + second));
+                                block.ReplaceLines(line, new Line.Identity(line.left, "-" + second), true);
                             }
                             else if (line.operation == Operator.Mult)
                             {
                                 NumberOfChanges += 1;
-                                block.ReplaceLines(line, new Line.Identity(line.left, "0"));
+                                block.ReplaceLines(line, new Line.Identity(line.left, "0"), true);
                             }
                             else if (line.operation == Operator.Div)
                             {
                                 NumberOfChanges += 1;
-                                block.ReplaceLines(line, new Line.Identity(line.left, "0"));
+                                block.ReplaceLines(line, new Line.Identity(line.left, "0"), true);
                             }
                         }
                         else if (first == 1)
@@ -117,7 +117,7 @@ namespace iCompiler
                             if (line.operation == Operator.Mult)
                             {
                                 NumberOfChanges += 1;
-                                block.ReplaceLines(line, new Line.Identity(line.left, line.second));
+                                block.ReplaceLines(line, new Line.Identity(line.left, line.second), true);
                             }
                         }
                     }
@@ -128,12 +128,12 @@ namespace iCompiler
                             if (line.operation == Operator.Mult)
                             {
                                 NumberOfChanges += 1;
-                                block.ReplaceLines(line, new Line.Identity(line.left, "0"));
+                                block.ReplaceLines(line, new Line.Identity(line.left, "0"), true);
                             }
                             else if (line.operation == Operator.Plus || line.operation == Operator.Minus)
                             {
                                 NumberOfChanges += 1;
-                                block.ReplaceLines(line, new Line.Identity(line.left, line.first));
+                                block.ReplaceLines(line, new Line.Identity(line.left, line.first), true);
                             }
                         }
                         else if (second == 1)
@@ -141,7 +141,7 @@ namespace iCompiler
                             if (line.operation == Operator.Mult || line.operation == Operator.Div)
                             {
                                 NumberOfChanges += 1;
-                                block.ReplaceLines(line, new Line.Identity(line.left, line.first));
+                                block.ReplaceLines(line, new Line.Identity(line.left, line.first), true);
                             }
                         }
                     }
