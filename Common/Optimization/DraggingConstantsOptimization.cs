@@ -8,7 +8,6 @@ namespace iCompiler
 {
     /// <summary>
     /// Оптимизация: Протяжка констант
-    /// Примечание: Использовать после разбиения на внутренние блоки
     /// 
     /// Пример применения:
     /// iCompiler.DraggingConstantsOptimization dco = new iCompiler.DraggingConstantsOptimization(codeGenerator.Code);

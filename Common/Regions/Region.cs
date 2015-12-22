@@ -134,7 +134,7 @@ namespace iCompiler
             return block_to_region[code.blocks[0]];
         }
 
-        private static void TestR(ThreeAddrCode code, StringBuilder sb, Region reg, string delim = "")
+        public static void TestR(ThreeAddrCode code, StringBuilder sb, Region reg, string delim = "")
         {
             if (reg is SimpleRegion)
             {
@@ -170,6 +170,9 @@ namespace iCompiler
         /// </summary>
         public Block Block { get; set; }
         public SimpleRegion() : base() { }
+        public SimpleRegion(Block block) : base() {
+            Block = block;
+        }
     }
 
     /// <summary>
