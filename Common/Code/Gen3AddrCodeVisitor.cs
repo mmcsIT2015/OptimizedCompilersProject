@@ -258,6 +258,7 @@ namespace iCompiler
         {
             foreach (StatementNode st in node.StList)
             {
+                if (st == null) continue;
                 st.Accept(this);
             }
         }
