@@ -158,6 +158,71 @@ namespace iCompiler
             TestR(code, sb, first);
             return sb.ToString();
         }
+
+        private static void AscendingSequenceOfRegionsR(List<Region> regions, List<Region> regions2, List<Region> todo, Region cur)
+        {
+            if (cur is SimpleRegion)
+            {
+                regions.Add(cur);
+            }
+            else if (cur is CycleRegion)
+            {
+                CycleRegion cr = cur as CycleRegion;
+                regions2.Add(cr);
+                regions.Add(cr.CycleBody);
+                todo.Add(cr.CycleBody.Head);
+            }
+            foreach (Region r in cur.NextRegions)
+                AscendingSequenceOfRegionsR(regions, regions2, todo, r);
+        }
+
+        public static List<Region> AscendingSequenceOfRegions(Region first)
+        {
+            List<Region> res = new List<Region>();
+            List<Region> res2 = new List<Region>();
+            List<Region> todo = new List<Region>();
+
+            todo.Add(first);
+
+            while (todo.Count != 0)
+            {
+                List<Region> regs = new List<Region>(todo);
+                todo.Clear();
+                foreach(Region r in regs)
+                    AscendingSequenceOfRegionsR(res, res2, todo, r);
+            }
+
+            res2.Reverse();
+            res.AddRange(res2);
+            return res;
+        }
+
+        public static void TestASoRR(ThreeAddrCode code, StringBuilder sb, Region reg, string delim = "")
+        {
+            if (reg is SimpleRegion)
+            {
+                sb.AppendLine(delim + "Block " + code.blocks.IndexOf((reg as SimpleRegion).Block).ToString());
+            }
+            else if (reg is CycleRegion)
+            {
+                sb.AppendLine(delim + "Cycle {");
+                TestR(code, sb, (reg as CycleRegion).CycleBody.Head, delim + "\t");
+                sb.AppendLine(delim + "}");
+            }
+        }
+
+        public static string TestASoR(ThreeAddrCode code)
+        {
+            List<Region> regs = AscendingSequenceOfRegions(RegionsDetermination(code));
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Region r in regs)
+            {
+                TestASoRR(code, sb, r);
+            }
+
+            return sb.ToString();
+        }
     }
 
     /// <summary>
