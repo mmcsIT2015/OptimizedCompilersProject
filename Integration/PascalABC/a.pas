@@ -1,16 +1,18 @@
 ﻿label A,B,C;
 
 var 
-  i,j: integer := 0;
-  t, k, u, s: integer;
+	i,j: real;
+	t, k, u, s: real;
 begin
-  while (i < 1000000) do
-  begin
-    i := i + 1;
-	s := i + 1;
-    j := j + (t + k);
-    u := u * (t + k);
-	t := 8 + 9 * 7;
-	s := 8;
-  end;
+	i := 0;
+	j := 0;
+	while (i < 100000000) do
+	begin
+		i := i + 1;
+		s := i + 1;
+		j := j * (t * k);
+		u := u * (t * k);
+		t := 8 * 9 * 7;
+		s := 8;
+	end;
 end.

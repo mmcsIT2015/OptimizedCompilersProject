@@ -16,6 +16,7 @@ using iCompiler;
 using ParsePABC;
 using PascalABCCompiler;
 using PascalABCCompiler.Errors;
+using System.Diagnostics;
 
 namespace GUI
 {
@@ -38,10 +39,21 @@ namespace GUI
             FillingOptimizationTypes();
         }
 
+        private void ClearErrors()
+        {
+            errorsTextBox.Text = "";
+        }
+
         private void AcceptError(string error)
         {
-            errorsTextBox.Text = error + "\r\n";
+            errorsTextBox.Text = (error + "\r\n");
             outputTabControl.SelectTab(0);
+        }
+
+        private void AcceptOutput(string message)
+        {
+            outputTextBox.Text = (message + "\r\n");
+            outputTabControl.SelectTab(1);
         }
 
         private void FillingOptimizationTypes()
@@ -60,7 +72,7 @@ namespace GUI
         {
             try
             {
-                switch(optimizationTypeToolStripComboBox.Text)
+                switch (optimizationTypeToolStripComboBox.Text)
                 {
                     case "CommonSubexpressionsOptimization":
                         var cso = new CommonSubexpressionsOptimization(mCode);
@@ -102,11 +114,11 @@ namespace GUI
                         optimizer.Optimize();
                         break;
                 }
-                
+
 
                 ResultView.Text = mCode.ToString().Replace("\n", Environment.NewLine);
                 ILResultView.Text = ILCodeGenerator.Generate(mCode);
-        }
+            }
 
             catch (LexException ee)
             {
@@ -122,7 +134,11 @@ namespace GUI
             }
             catch (Exception ee)
             {
-                AcceptError("Unexpected error: " + ee.Message);
+                string message = "Unexpected error: " + ee.Message + "\r\n";
+                message += "Call stack:\r\n";
+                var stackObject = new System.Diagnostics.StackTrace(ee);
+                message += stackObject.ToString();
+                AcceptError(message);
             }
         }
 
@@ -134,7 +150,7 @@ namespace GUI
                 try
                 {
                     mFullFilename = openFileDialog.FileName;
-                    string text = File.ReadAllText(openFileDialog.FileName, Encoding.UTF8);                    
+                    string text = File.ReadAllText(openFileDialog.FileName, Encoding.UTF8);
                     WorkingArea.Text = text;
                     mType = FileLoader.GetGrammarType(openFileDialog.FileName);
                     switch (mType)
@@ -151,7 +167,7 @@ namespace GUI
                     }
                     mTextModified = false;
                     Text = mFormName + " - " + openFileDialog.FileName;
-                    RunParser_Click(null, EventArgs.Empty);                
+                    RunParser_Click(null, EventArgs.Empty);
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -212,24 +228,18 @@ namespace GUI
             }
             catch (Exception ee)
             {
-                AcceptError("Unexpected error: " + ee.Message);
+                string message = "Unexpected error: " + ee.Message + "\r\n";
+                message += "Call stack:\r\n";
+                var stackObject = new System.Diagnostics.StackTrace(ee);
+                message += stackObject.ToString();
+                AcceptError(message);
             }
         }
 
-        private void ProcessPascalABCNETCode(string content)
+        private string CompilePascalABCNetCode(Compiler compiler, CompilerOptions options)
         {
-            var filename = String.Format(@"{0}.pas", System.Guid.NewGuid());
-            File.WriteAllText(filename, WorkingArea.Text);
-            var path = Path.GetFullPath(filename);
-
-            Compiler compiler = new Compiler();
-            var changer = new SyntaxTreeChanger();
-            compiler.SyntaxTreeChanger = changer;
-            var opts = new CompilerOptions(filename, CompilerOptions.OutputType.ConsoleApplicaton);
-            opts.GenerateCode = true;
-            opts.Optimise = false;
-            
-            var output = compiler.Compile(opts);
+            var path = Path.GetFullPath(options.SourceFileName);
+            var output = compiler.Compile(options);
             if (compiler.ErrorsList.Count > 0)
             {
                 foreach (var error in compiler.ErrorsList)
@@ -243,11 +253,50 @@ namespace GUI
 
                     AcceptError("PascalABC.Net error: " + desc);
                 }
+
+                return "";
             }
-            else
+
+            return output;
+        }
+
+        private void ProcessPascalABCNETCode(string content)
+        {
+            var filename = String.Format(@"{0}.pas", System.Guid.NewGuid());
+            File.WriteAllText(filename, WorkingArea.Text);
+            var path = Path.GetFullPath(filename);
+
+            Compiler compiler = new Compiler();
+            var opts = new CompilerOptions(filename, CompilerOptions.OutputType.ConsoleApplicaton);
+            opts.GenerateCode = true;
+            opts.Optimise = false;
+
+            long t1 = -1, t2 = -1;
+            var slow = CompilePascalABCNetCode(compiler, opts);
+            if (slow.Length > 0)
             {
-                File.Delete(output);
-            ResultView.Text = changer.Code.ToString().Replace("\n", Environment.NewLine);
+                var time = Task.Factory.StartNew<long>(() => ExecuteAndEvaluateTime(slow));
+                t1 = time.Result;
+                File.Delete(slow);
+            }
+
+            var changer = new SyntaxTreeChanger();
+            compiler.SyntaxTreeChanger = changer;
+            var fast = CompilePascalABCNetCode(compiler, opts);
+            if (fast.Length > 0)
+            {
+                var time = Task.Factory.StartNew<long>(() => ExecuteAndEvaluateTime(fast));
+                t2 = time.Result;
+                File.Delete(fast);
+                ResultView.Text = changer.Printer.Code.ToString().Replace("\n", Environment.NewLine);
+            }
+
+            if (t1 >= 0 && t2 >= 0)
+            {
+                ClearErrors();
+                string description = "Original version: " + t1 + " ms.\r\n";
+                description += "Optimized version " + t2 + " ms.";
+                AcceptOutput(description);
             }
 
             File.Delete(path);
@@ -332,7 +381,7 @@ namespace GUI
 
         private void GrammarToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            mType = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1 
+            mType = GrammarToolStripComboBox.SelectedIndex == 0 ? FileLoader.GrammarType.C : GrammarToolStripComboBox.SelectedIndex == 1
                                                                ? FileLoader.GrammarType.PASCAL : FileLoader.GrammarType.PASCALABCNET;
 
             hideILView(mType);
@@ -386,13 +435,13 @@ namespace GUI
             }
         }
 
-        private Tuple<long, TOUT> ExecuteAndEvaluateTime<TIN, TOUT>(Func<TIN, TOUT> operation, TIN in_value)
+        private long ExecuteAndEvaluateTime(string executable)
         {
-            System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
-            s.Start();
-            TOUT ret = operation(in_value);
-            s.Stop();
-            return new Tuple<long, TOUT>(s.ElapsedMilliseconds, ret);
+            System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
+            Process.Start(executable).WaitForExit();
+            timer.Stop();
+            return timer.ElapsedMilliseconds;
         }
 
         private void startApplicationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -409,55 +458,14 @@ namespace GUI
             }
             else
             {
-            p.Start();
-            p.WaitForExit();
-                //MessageBox.Show(p.StandardOutput.ReadToEnd(), "Результат работы программы");
-                errorsTextBox.Text = "";
-                outputTextBox.Text = p.StandardOutput.ReadToEnd();
-                outputTextBox.Text += "\r\nSuccessfully finished";
-                outputTabControl.SelectTab(1);
+                p.Start();
+                p.WaitForExit();
+
+                ClearErrors();
+                var output = p.StandardOutput.ReadToEnd();
+                output += "\r\nSuccessfully finished";
+                AcceptOutput(output);
             }
-            return; // TODO
-
-            //NEEDS REWORK: call parameters, can use anything for it.
-            Task.Factory.StartNew(() =>
-                {
-                    this.toolStripStatusLabel1.Text = "Execution speed comparison is in progress...";
-                    string path_vanilla="";
-                    string path_optimized="";
-                    var t1 = Task.Factory.StartNew<Tuple<long, bool>>(() => ExecuteAndEvaluateTime(RunVanilla, path_vanilla));
-                    var t2 = Task.Factory.StartNew<Tuple<long, bool>>(() => ExecuteAndEvaluateTime(RunOptimized, path_optimized));
-                    Task.WaitAll(t1, t2);
-                    if (t1.Result.Item1 > t2.Result.Item1)
-                        this.toolStripStatusLabel1.Text = "Comparison complete. " + "Optimized compared to vanilla code: " + (t1.Result.Item1 - t2.Result.Item1) + "ms faster";
-                    else
-                        this.toolStripStatusLabel1.Text = "Comparison complete. " + "Optimized compared to vanilla code: " + (t1.Result.Item1 - t2.Result.Item1) + "ms slower";
-                });            
-        }
-
-        /// <summary>
-        /// Starts optimized version of a program
-        /// NEEDS REWORK
-        /// </summary>
-        /// <param name="arg">param for program start; path probably</param>
-        /// <returns>exit code?</returns>
-        private bool RunOptimized(string arg)
-        {
-            System.Threading.Thread.Sleep(2000);
-            return true;
-        }
-
-
-        /// <summary>
-        /// Starts vanilla version of a program
-        /// NEEDS REWORK
-        /// </summary>
-        /// <param name="arg">param for program start; path probably</param>
-        /// <returns>exit code?</returns>
-        private bool RunVanilla(string arg)
-        {
-            System.Threading.Thread.Sleep(3000);
-            return true;
         }
 
         private string CompileILCode(string ilcode)
@@ -480,7 +488,7 @@ namespace GUI
             p.WaitForExit();
             File.Delete(tmp_fn);
             if (p.StandardOutput.ReadToEnd().Contains("Operation completed successfully"))
-            return (new FileInfo(tmp_exefn)).FullName;
+                return (new FileInfo(tmp_exefn)).FullName;
             else
                 return null;
         }

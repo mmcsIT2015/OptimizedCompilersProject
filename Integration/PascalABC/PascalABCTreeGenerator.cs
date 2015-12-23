@@ -115,38 +115,52 @@ namespace ParsePABC
             return exprs;
         }
 
-        public syntax_tree_node generate(iCompiler.ThreeAddrCode code)
+        private var_def_statement GetDeclVariables(iCompiler.ThreeAddrCode code, ProgramTree.SimpleVarType type)
         {
-            var rolledExprs = RollExpressionsToNormalForm(code);
-
-            block root = new block();
-            root.defs = new declarations();
+            var decl = new var_def_statement();
+            decl.vars_type = new named_type_reference(Map(type));
+            decl.vars = new ident_list();
+            bool found = false;
             foreach (var name in code.tableOfNames.Keys)
             {
-                var decl = new var_def_statement();
-                decl.vars = new ident_list(new ident(name));
-                decl.vars_type = new named_type_reference(Map(code.tableOfNames[name]));
-                root.defs.Add(decl);
+                if (code.tableOfNames[name] == type)
+                {
+                    found = true;
+                    decl.vars.Add(new ident(name));
+                }
             }
 
+            return found ? decl : null;
+        }
+
+        public block Generate(iCompiler.ThreeAddrCode code)
+        {
+            block root = new block();
+            root.defs = new declarations();
+
+            var intDecl = GetDeclVariables(code, ProgramTree.SimpleVarType.Int);
+            if (intDecl != null) root.defs.Add(intDecl);
+
+            var boolDecl = GetDeclVariables(code, ProgramTree.SimpleVarType.Bool);
+            if (boolDecl != null) root.defs.Add(boolDecl);
+
+            var floatDecl = GetDeclVariables(code, ProgramTree.SimpleVarType.Float);
+            if (floatDecl != null) root.defs.Add(floatDecl);
+
             root.program_code = new statement_list();
+            var labels = new label_definitions();
+            labels.labels = new ident_list();
+            
             foreach (var block in code.blocks) {
                 foreach (var line in block)
                 {
                     var lineId = code.GetLineId(line).ToString();
                     if (line.HasLabel())
                     {
-                        root.defs.Add(new label_definitions(new ident(line.label)));
+                        labels.labels.Add(new ident(line.label));
 
                         var st = new labeled_statement(line.label);
                         root.program_code.Add(st);
-                    }
-
-                    if (false && rolledExprs.ContainsKey(lineId))
-                    {
-                        var left = (line as iCompiler.Line.Expr).left;
-                        root.program_code.Add(new assign(left, rolledExprs[lineId]));
-                        continue;
                     }
 
                     if (line is iCompiler.Line.Identity)
@@ -188,6 +202,7 @@ namespace ParsePABC
                 }
             }
 
+            root.defs.Add(labels);
             return root;
         }
     }

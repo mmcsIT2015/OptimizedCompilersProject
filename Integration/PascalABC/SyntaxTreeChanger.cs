@@ -16,13 +16,15 @@ namespace ParsePABC
     {
         public override void visit(if_node ifn)
         {
-
+            ifn.then_body = new empty_statement();
+            ifn.else_body = new empty_statement();
         }
     }
 
     public class SyntaxTreeChanger : ISyntaxTreeChanger
     {
         public iCompiler.ThreeAddrCode Code { get; protected set; }
+        public PrintVisitor Printer { get; protected set; }
 
         public void Change(syntax_tree_node sn)
         {
@@ -38,7 +40,8 @@ namespace ParsePABC
 
                 var optimizer = new iCompiler.Optimizer();
                 optimizer.AddOptimization(new iCompiler.DraggingConstantsOptimization());
-                optimizer.AddOptimization(new iCompiler.ConstantsPropagationOptimization());
+                optimizer.AddOptimization(new iCompiler.CommonSubexpressionsOptimization());
+                //optimizer.AddOptimization(new iCompiler.ConstantsPropagationOptimization());
                 optimizer.AddOptimization(new iCompiler.ReachExprOptimization());
                 optimizer.AddOptimization(new iCompiler.ActiveVarsOptimization());
                 optimizer.AddOptimization(new iCompiler.ConstantFolding());
@@ -50,8 +53,11 @@ namespace ParsePABC
 
                 //Console.WriteLine("\ntest:\n---");
                 PascalABCTreeGenerator gen = new PascalABCTreeGenerator();
-                sn = gen.generate(Code);
-                //sn.visit(new SimplePrettyPrinterVisitor());
+                var program_block = gen.Generate(Code);
+                (sn as program_module).program_block = program_block;
+                
+                Printer = new PrintVisitor();
+                sn.visit(Printer);
             }
             catch (SemanticException e)
             {
