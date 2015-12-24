@@ -458,11 +458,12 @@ namespace GUI
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.UseShellExecute = false;
-            p.StartInfo.FileName = CompileILCode(ILResultView.Text);
 
-            if (p.StartInfo.FileName == null)
+            string genOutput;
+            p.StartInfo.FileName = CompileILCode(ILResultView.Text, out genOutput);
+            if (p.StartInfo.FileName == null || p.StartInfo.FileName.Length == 0)
             {
-                AcceptError("Ошибка компиляции IL-кода");
+                AcceptError(genOutput + "\r\n" + "Ошибка компиляции IL-кода!");
             }
             else
             {
@@ -471,12 +472,12 @@ namespace GUI
 
                 ClearErrors();
                 var output = p.StandardOutput.ReadToEnd();
-                output += "\r\nSuccessfully finished";
+                output += "\r\nSuccessfully finished!";
                 AcceptOutput(output);
             }
         }
 
-        private string CompileILCode(string ilcode)
+        private string CompileILCode(string ilcode, out string output)
         {
             var version = Microsoft.Build.Utilities.TargetDotNetFrameworkVersion.VersionLatest;
             string ilcomp = Microsoft.Build.Utilities.ToolLocationHelper.GetPathToDotNetFrameworkFile("ILAsm.exe", version);
@@ -495,7 +496,9 @@ namespace GUI
             p.Start();
             p.WaitForExit();
             File.Delete(tmp_fn);
-            if (p.StandardOutput.ReadToEnd().Contains("Operation completed successfully"))
+
+            output = p.StandardOutput.ReadToEnd();
+            if (output.Contains("Operation completed successfully"))
                 return (new FileInfo(tmp_exefn)).FullName;
             else
                 return null;
