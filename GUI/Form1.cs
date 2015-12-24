@@ -183,6 +183,11 @@ namespace GUI
             {
                 ResultView.Text = string.Empty;
                 string content = WorkingArea.Text;
+                optimizeToolStripMenuItem.Enabled = false;
+                startApplicationToolStripMenuItem.Enabled = false;
+                ILResultView.Text = string.Empty;
+                AcceptError(string.Empty); AcceptOutput(string.Empty);
+
                 if (mType != FileLoader.GrammarType.PASCALABCNET)
                 {
                     var root = FileLoader.Parse(content, mType);
@@ -197,18 +202,18 @@ namespace GUI
                         ResultView.Text = mCode.ToString().Replace("\n", Environment.NewLine);
                         ILResultView.Text = ILCodeGenerator.Generate(mCode);
                         optimizeToolStripMenuItem.Enabled = true;
+                        startApplicationToolStripMenuItem.Enabled = true;
                     }
                     else
                     {
                         string errors = String.Join(System.Environment.NewLine, codeGenerator.Errors.Select(x => x.ToString()));
                         AcceptError(errors);
+
                     }
                 }
                 else
-                {
                     ProcessPascalABCNETCode(content);
-                    optimizeToolStripMenuItem.Enabled = false;
-                }
+                    
             }
             catch (FileNotFoundException ee)
             {
