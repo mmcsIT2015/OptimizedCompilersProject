@@ -306,6 +306,31 @@ namespace ParsePABC
                 var stat = node as goto_statement;
                 mLines.Add(new iCompiler.Line.GoTo(stat.label.name));
             }
+            else if (node is procedure_call)
+            {
+                var proc = node as procedure_call;
+
+                int nparams = 0;
+                if ((proc.func_name as method_call).parameters != null)
+                {
+                    nparams = (proc.func_name as method_call).parameters.expressions.Count;
+                }
+
+                string func_name = mStack.Pop();
+                mLines.Add(new iCompiler.Line.FunctionCall(func_name, nparams));
+            }
+            else if (node is method_call)
+            {
+                var method = node as method_call;
+                if (method.parameters != null)
+                {
+                    for (int i = 0; i < method.parameters.expressions.Count; ++i)
+                    {
+                        string param = mStack.Pop();
+                        mLines.Add(new iCompiler.Line.FunctionParam(param));
+                    }
+                }
+            }
 
             if (mAuxStack.Count() > 0 && node == mAuxStack.Peek())
             {

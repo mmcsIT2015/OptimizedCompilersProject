@@ -151,6 +151,7 @@ namespace ParsePABC
             var labels = new label_definitions();
             labels.labels = new ident_list();
             
+            List<string> parameters = new List<string>(); // будем накапливать параметры вызываемых функций
             foreach (var block in code.blocks) {
                 foreach (var line in block)
                 {
@@ -198,6 +199,26 @@ namespace ParsePABC
                     {
                         var st = line as iCompiler.Line.GoTo;
                         root.program_code.Add(new goto_statement(st.target));
+                    }
+                    else if (line is iCompiler.Line.FunctionParam)
+                    {
+                        var st = line as iCompiler.Line.FunctionParam;
+                        parameters.Insert(0, st.param);
+                    }
+                    else if (line is iCompiler.Line.FunctionCall)
+                    {
+                        var call = line as iCompiler.Line.FunctionCall;
+                        expression_list params_list = new expression_list();
+                        foreach (var p in parameters) {
+                            params_list.Add(new ident(p));
+                        }
+                        parameters.Clear();
+
+                        var method = new method_call(params_list);
+                        method.dereferencing_value = new ident(call.name);
+
+                        var proc = new procedure_call(method);
+                        root.program_code.Add(proc);
                     }
                 }
             }
