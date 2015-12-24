@@ -84,6 +84,7 @@
   <ItemGroup>
     <Compile Include="Gen3AddrCodeVisitor.cs" />
     <Compile Include="PascalABCTreeGenerator.cs" />
+    <Compile Include="PrintVisitor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SyntaxTreeChanger.cs" />
