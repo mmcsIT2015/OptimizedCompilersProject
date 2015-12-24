@@ -124,6 +124,7 @@ namespace iCompiler
             // тип переменных в услови СonditionalJump - bool
             foreach (var line in mLines.Where(e => e is Line.ConditionalJump).Select(e => e as Line.ConditionalJump))
             {
+                if (line.ConditionIsNumber()) continue;
                 if (mTableOfNames.ContainsKey(line.condition))
                 {
                     mTableOfNames[line.condition] = SimpleVarType.Bool;
