@@ -34,14 +34,9 @@ namespace iCompiler
 
                     string const_value = "";
                     if (jLine.left.Equals(variable) && !block.GetAliveVariables(j).Contains(jLine.right))
-                    {
                         const_value = jLine.right;
-                    }
                     else
-                    {
-                        //const_value = variable; // при таком случае мы можем получить зацикливание
                         continue;
-                    }
 
                     if (block[targetLine].Is<Line.BinaryExpr>())
                     {
@@ -56,7 +51,6 @@ namespace iCompiler
                             NumberOfChanges += 1;
                             iLine.second = const_value;
                         }
-
                         j = -1;
                     }
                     else if (block[targetLine].Is<Line.Identity>())
@@ -65,8 +59,7 @@ namespace iCompiler
                         if (variable.Equals(iLine.right))
                         {
                             NumberOfChanges += 1;
-                            iLine.right = const_value;
-                            
+                            iLine.right = const_value; 
                         }
                         j = -1;
                     }
@@ -82,10 +75,7 @@ namespace iCompiler
             {
                 block.CalculateDefUseData();
                 for (int i = 0; i < block.Count; ++i)
-                {
-                    if (block[i].Is<Line.BinaryExpr>() || block[i].Is<Line.Identity>())
-                        CheckDragging(block, i);
-                }
+                     CheckDragging(block, i);
             }
         }
     }
