@@ -1,0 +1,14 @@
+﻿{
+  
+	int x;
+	int y;
+	int z;
+	int p = 5;
+	
+	while (x == 5)
+	{
+		x = p + 4;
+		y = x + y;
+		z = z + 1;
+	}
+}

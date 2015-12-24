@@ -1,0 +1,18 @@
+﻿{
+	int i = 0;
+	int j =4;
+	int p = 2;
+	int c = 4;
+	while (p == 3)
+	{ 
+		p = p + 1;
+		j = c;
+		c = 4;
+		while (i == 0) 
+		{
+			i = i + j;
+			i = i + 1;
+			j = c;
+		}
+	}
+}

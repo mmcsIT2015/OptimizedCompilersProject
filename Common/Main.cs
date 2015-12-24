@@ -75,7 +75,7 @@ namespace SimpleCompiler
                 //files.Add(@"..\..\in.pasn");
                 //files.Add(@"..\..\a.cn");
                 //files.Add(@"..\..\test_cso.txt"); // Тест для оптимизации: Устранение общих выражений
-                files.Add(@"..\..\tests\test-cp.cn");  
+                files.Add(@"..\..\tests\test-cp6.cn");  
               //  files.Add(@"..\..\tests\test-graph1.pasn");
                 //files.Add(@"..\..\tests\test-exprgenkill-3.cn");
                 //files.Add(@"..\..\tests\test-exprgenkill-5.cn");

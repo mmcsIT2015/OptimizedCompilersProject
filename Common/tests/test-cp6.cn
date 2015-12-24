@@ -1,0 +1,20 @@
+﻿{
+  
+	int x;
+	int y;
+	int z;
+	int p = 5;
+	y = 3;
+	while (x == 5)
+	{
+		x = p + 4;
+		p = 7;
+		while (p == 5)
+		{
+			y = x + y;
+			z = p + 1;		
+		}
+		p = 5;
+		
+	}
+}
