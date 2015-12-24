@@ -297,36 +297,29 @@ namespace ParsePABC
             }
             else if (node is goto_statement)
             {
-                var stat = node as goto_statement;
+                if (mAuxStack.Count() > 0 && mAuxStack.Peek() == node)
+                {
+                    mAuxStack.Pop();
+                    return;
+                }
 
+                var stat = node as goto_statement;
                 mLines.Add(new iCompiler.Line.GoTo(stat.label.name));
             }
 
             if (mAuxStack.Count() > 0 && node == mAuxStack.Peek())
             {
                 var top = mAuxStack.Pop();
-
                 if (mAuxStack.Count() > 0 && mAuxStack.Peek() is if_node)
                 {
-                    var temp = mStack.Pop();
+                    var condition = mStack.Pop();
                     var last = mAuxStack.Pop() as if_node;
-                    var ifLabel = UniqueIdsGenerator.Instance().Get("l");
-                    mLines.Add(new iCompiler.Line.ConditionalJump(temp, ifLabel));
-                    mStack.Push("if:" + mLines.Count());
 
-                    mLines.Add(new iCompiler.Line.GoTo("")); // goto на тело else
-                    mLines.Add(new iCompiler.Line.EmptyLine(ifLabel)); // метка на тело then
-
-                    mAuxStack.Push(last.then_body);
-                }
-                else // конец if'а
-                {
-                    var gotoStatment = mLines[int.Parse(mStack.Pop().Split(':')[1])];
-
-                    var label = UniqueIdsGenerator.Instance().Get("l");
-                    mLines.Add(new iCompiler.Line.EmptyLine(label)); // метка на тело else
-
-                    (gotoStatment as iCompiler.Line.GoTo).target = label;
+                    Debug.Assert(last.then_body is goto_statement); /* последствия lowering'а */
+                    
+                    var ifLabel = (last.then_body as goto_statement).label.name;
+                    mLines.Add(new iCompiler.Line.ConditionalJump(condition, ifLabel));
+                    mAuxStack.Push(last.then_body); // чтобы для goto не генерировать инструкцию снова
                 }
             }
         }

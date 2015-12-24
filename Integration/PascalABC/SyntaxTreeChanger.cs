@@ -41,7 +41,7 @@ namespace ParsePABC
                 var optimizer = new iCompiler.Optimizer();
                 optimizer.AddOptimization(new iCompiler.DraggingConstantsOptimization());
                 optimizer.AddOptimization(new iCompiler.CommonSubexpressionsOptimization());
-                //optimizer.AddOptimization(new iCompiler.ConstantsPropagationOptimization());
+                optimizer.AddOptimization(new iCompiler.ConstantsPropagationOptimization());
                 optimizer.AddOptimization(new iCompiler.ReachExprOptimization());
                 optimizer.AddOptimization(new iCompiler.ActiveVarsOptimization());
                 optimizer.AddOptimization(new iCompiler.ConstantFolding());
