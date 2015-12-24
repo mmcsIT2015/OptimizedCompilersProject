@@ -190,7 +190,12 @@ namespace iCompiler
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine("\tldloc " + cj.condition);
+            OperandInfo oi = new OperandInfo(), rop = new OperandInfo();
+            oi.isConstant = !code.tableOfNames.ContainsKey(cj.condition);
+            oi.isFloat = oi.isConstant ? !cj.ConditionIsIntNumber() : (code.tableOfNames[cj.condition] == SimpleVarType.Float);
+            rop.isFloat = oi.isFloat;
+
+            sb.Append(GenOperandLoading(cj.condition, oi, rop));
             sb.AppendLine("\tbrtrue " + cj.target);
 
             return sb.ToString();

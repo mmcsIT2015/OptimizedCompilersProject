@@ -26,6 +26,12 @@ namespace iCompiler.Line
             return double.TryParse(condition, style, nfi, out temp);
         }
 
+        public virtual bool ConditionIsIntNumber() // является ли условиие целым числом
+        {
+            int temp;
+            return int.TryParse(condition, out temp);
+        }
+
         public override string ToString()
         {
             return "if " + condition + " goto " + target;
