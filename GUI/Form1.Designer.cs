@@ -50,13 +50,13 @@
             this.taCodeGroupBox = new System.Windows.Forms.GroupBox();
             this.ilGroupBox = new System.Windows.Forms.GroupBox();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.codeSplitContainer = new System.Windows.Forms.SplitContainer();
             this.ErAndOutSplitContainer = new System.Windows.Forms.SplitContainer();
             this.outputTabControl = new System.Windows.Forms.TabControl();
             this.errorsPage = new System.Windows.Forms.TabPage();
+            this.errorsTextBox = new System.Windows.Forms.TextBox();
             this.outputPage = new System.Windows.Forms.TabPage();
             this.outputTextBox = new System.Windows.Forms.TextBox();
-            this.errorsTextBox = new System.Windows.Forms.TextBox();
+            this.codeSplitContainer = new System.Windows.Forms.SplitContainer();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.taCodeGroupBox.SuspendLayout();
@@ -65,10 +65,6 @@
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.codeSplitContainer)).BeginInit();
-            this.codeSplitContainer.Panel1.SuspendLayout();
-            this.codeSplitContainer.Panel2.SuspendLayout();
-            this.codeSplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ErAndOutSplitContainer)).BeginInit();
             this.ErAndOutSplitContainer.Panel1.SuspendLayout();
             this.ErAndOutSplitContainer.Panel2.SuspendLayout();
@@ -76,6 +72,10 @@
             this.outputTabControl.SuspendLayout();
             this.errorsPage.SuspendLayout();
             this.outputPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.codeSplitContainer)).BeginInit();
+            this.codeSplitContainer.Panel1.SuspendLayout();
+            this.codeSplitContainer.Panel2.SuspendLayout();
+            this.codeSplitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -159,6 +159,7 @@
             // 
             // startApplicationToolStripMenuItem
             // 
+            this.startApplicationToolStripMenuItem.Enabled = false;
             this.startApplicationToolStripMenuItem.Name = "startApplicationToolStripMenuItem";
             this.startApplicationToolStripMenuItem.Size = new System.Drawing.Size(105, 24);
             this.startApplicationToolStripMenuItem.Text = "Start application";
@@ -167,6 +168,7 @@
             // optimizationTypeToolStripComboBox
             // 
             this.optimizationTypeToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.optimizationTypeToolStripComboBox.Enabled = false;
             this.optimizationTypeToolStripComboBox.Name = "optimizationTypeToolStripComboBox";
             this.optimizationTypeToolStripComboBox.Size = new System.Drawing.Size(200, 24);
             // 
@@ -287,24 +289,6 @@
             this.mainSplitContainer.SplitterDistance = 600;
             this.mainSplitContainer.TabIndex = 9;
             // 
-            // codeSplitContainer
-            // 
-            this.codeSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.codeSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.codeSplitContainer.Name = "codeSplitContainer";
-            this.codeSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // codeSplitContainer.Panel1
-            // 
-            this.codeSplitContainer.Panel1.Controls.Add(this.taCodeGroupBox);
-            // 
-            // codeSplitContainer.Panel2
-            // 
-            this.codeSplitContainer.Panel2.Controls.Add(this.ilGroupBox);
-            this.codeSplitContainer.Size = new System.Drawing.Size(381, 536);
-            this.codeSplitContainer.SplitterDistance = 273;
-            this.codeSplitContainer.TabIndex = 0;
-            // 
             // ErAndOutSplitContainer
             // 
             this.ErAndOutSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -345,6 +329,18 @@
             this.errorsPage.Text = "Errors";
             this.errorsPage.UseVisualStyleBackColor = true;
             // 
+            // errorsTextBox
+            // 
+            this.errorsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.errorsTextBox.Location = new System.Drawing.Point(3, 3);
+            this.errorsTextBox.Multiline = true;
+            this.errorsTextBox.Name = "errorsTextBox";
+            this.errorsTextBox.ReadOnly = true;
+            this.errorsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.errorsTextBox.Size = new System.Drawing.Size(586, 150);
+            this.errorsTextBox.TabIndex = 0;
+            this.errorsTextBox.WordWrap = false;
+            // 
             // outputPage
             // 
             this.outputPage.Controls.Add(this.outputTextBox);
@@ -368,17 +364,23 @@
             this.outputTextBox.TabIndex = 0;
             this.outputTextBox.WordWrap = false;
             // 
-            // errorsTextBox
+            // codeSplitContainer
             // 
-            this.errorsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.errorsTextBox.Location = new System.Drawing.Point(3, 3);
-            this.errorsTextBox.Multiline = true;
-            this.errorsTextBox.Name = "errorsTextBox";
-            this.errorsTextBox.ReadOnly = true;
-            this.errorsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.errorsTextBox.Size = new System.Drawing.Size(586, 150);
-            this.errorsTextBox.TabIndex = 0;
-            this.errorsTextBox.WordWrap = false;
+            this.codeSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.codeSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.codeSplitContainer.Name = "codeSplitContainer";
+            this.codeSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // codeSplitContainer.Panel1
+            // 
+            this.codeSplitContainer.Panel1.Controls.Add(this.taCodeGroupBox);
+            // 
+            // codeSplitContainer.Panel2
+            // 
+            this.codeSplitContainer.Panel2.Controls.Add(this.ilGroupBox);
+            this.codeSplitContainer.Size = new System.Drawing.Size(381, 536);
+            this.codeSplitContainer.SplitterDistance = 273;
+            this.codeSplitContainer.TabIndex = 0;
             // 
             // Form1
             // 
@@ -405,10 +407,6 @@
             this.mainSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
             this.mainSplitContainer.ResumeLayout(false);
-            this.codeSplitContainer.Panel1.ResumeLayout(false);
-            this.codeSplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.codeSplitContainer)).EndInit();
-            this.codeSplitContainer.ResumeLayout(false);
             this.ErAndOutSplitContainer.Panel1.ResumeLayout(false);
             this.ErAndOutSplitContainer.Panel1.PerformLayout();
             this.ErAndOutSplitContainer.Panel2.ResumeLayout(false);
@@ -419,6 +417,10 @@
             this.errorsPage.PerformLayout();
             this.outputPage.ResumeLayout(false);
             this.outputPage.PerformLayout();
+            this.codeSplitContainer.Panel1.ResumeLayout(false);
+            this.codeSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.codeSplitContainer)).EndInit();
+            this.codeSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

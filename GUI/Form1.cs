@@ -58,14 +58,15 @@ namespace GUI
 
         private void FillingOptimizationTypes()
         {
-            optimizationTypeToolStripComboBox.Items.Add("CommonSubexpressionsOptimization");
-            optimizationTypeToolStripComboBox.Items.Add("DeadCodeElimination");
-            optimizationTypeToolStripComboBox.Items.Add("DraggingConstantsOptimization");
-            optimizationTypeToolStripComboBox.Items.Add("ReachExprOptimization");
-            optimizationTypeToolStripComboBox.Items.Add("ActiveVarsOptimization");
-            optimizationTypeToolStripComboBox.Items.Add("ConstantFolding");
-            optimizationTypeToolStripComboBox.Items.Add("ConstantsPropagationOptimization");
-            optimizationTypeToolStripComboBox.Items.Add("AllOptimizations");
+            optimizationTypeToolStripComboBox.Items.Add("Common subexpressions optimization");
+            optimizationTypeToolStripComboBox.Items.Add("Eliminating dead code optimization");
+            optimizationTypeToolStripComboBox.Items.Add("Dragging constants optimization");
+            optimizationTypeToolStripComboBox.Items.Add("Reach expression optimization");
+            optimizationTypeToolStripComboBox.Items.Add("Active variables optimization");
+            optimizationTypeToolStripComboBox.Items.Add("Constants folding optimization");
+            optimizationTypeToolStripComboBox.Items.Add("Constants propagation optimization");
+            optimizationTypeToolStripComboBox.Items.Add("All optimizations");
+            optimizationTypeToolStripComboBox.SelectedIndex = optimizationTypeToolStripComboBox.Items.Count - 1;
         }
 
         private void optimizeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -74,35 +75,35 @@ namespace GUI
             {
                 switch (optimizationTypeToolStripComboBox.Text)
                 {
-                    case "CommonSubexpressionsOptimization":
+                    case "Common subexpressions optimization":
                         var cso = new CommonSubexpressionsOptimization(mCode);
                         cso.Optimize();
                         break;
-                    case "DraggingConstantsOptimization":
+                    case "Dragging constants optimization":
                         var dco = new DraggingConstantsOptimization(mCode);
                         dco.Optimize();
                         break;
-                    case "ReachExprOptimization":
+                    case "Reach expression optimization":
                         var reo = new ReachExprOptimization(mCode);
                         reo.Optimize();
                         break;
-                    case "ActiveVarsOptimization":
+                    case "Active variables optimization":
                         var avo = new ActiveVarsOptimization(mCode);
                         avo.Optimize();
                         break;
-                    case "ConstantFolding":
+                    case "Constants folding optimization":
                         var cf = new ConstantFolding(mCode);
                         cf.Optimize();
                         break;
-                    case "ConstantsPropagationOptimization":
+                    case "Constants propagation optimization":
                         var cpo = new ConstantsPropagationOptimization(mCode);
                         cpo.Optimize();
                         break;
-                    case "DeadCodeElimination":
+                    case "Eliminating dead code optimization":
                         var dce = new DeadCodeElimination(mCode);
                         dce.Optimize();
                         break;
-                    case "AllOptimizations":
+                    case "All optimizations":
                         var optimizer = new iCompiler.Optimizer();
                         optimizer.AddOptimization(new iCompiler.DraggingConstantsOptimization());
                         optimizer.AddOptimization(new iCompiler.ReachExprOptimization());
@@ -185,6 +186,7 @@ namespace GUI
                 string content = WorkingArea.Text;
                 optimizeToolStripMenuItem.Enabled = false;
                 startApplicationToolStripMenuItem.Enabled = false;
+                optimizationTypeToolStripComboBox.Enabled = false;
                 ILResultView.Text = string.Empty;
                 AcceptError(string.Empty); AcceptOutput(string.Empty);
 
@@ -203,6 +205,7 @@ namespace GUI
                         ILResultView.Text = ILCodeGenerator.Generate(mCode);
                         optimizeToolStripMenuItem.Enabled = true;
                         startApplicationToolStripMenuItem.Enabled = true;
+                        optimizationTypeToolStripComboBox.Enabled = true;
                     }
                     else
                     {
