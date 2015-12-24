@@ -347,36 +347,31 @@ namespace iCompiler
 
         public void Visit(IfNode node)
         {
-            int nextLine = mLines.Count();
-
             node.Expr.Accept(this);
-            string condition = mStack.Pop();
-            var labelForTrue = UniqueIdsGenerator.Instance().Get("l");
-            var labelForFalse = UniqueIdsGenerator.Instance().Get("l");
+            string temp = mStack.Pop();
+            var outLabel = UniqueIdsGenerator.Instance().Get("l");
 
-            var conditionalLine = new Line.ConditionalJump(condition, labelForTrue);
-            mLines.Add(conditionalLine);
-            CheckRealLabel(node, nextLine);
+            var condition = UniqueIdsGenerator.Instance().Get("t");
+            mLines.Add(new Line.UnaryExpr(condition, Operator.Not, temp));
+
+            mLines.Add(new Line.ConditionalJump(condition, outLabel));
+
+            node.Stat.Accept(this); //тело для true
 
             if (node.StatElse != null)
             {
+                var newOutLabel = UniqueIdsGenerator.Instance().Get("l");
+                mLines.Add(new Line.GoTo(newOutLabel)); // это GoTo пропускает ветку `else`, если мы были в теле `true`  
+
+                mLines.Add(new Line.EmptyLine(outLabel)); // outLabel у нас стала меткой на ветку `false`
                 node.StatElse.Accept(this); //тело для false/else
+
+                mLines.Add(new Line.EmptyLine(newOutLabel));
             }
-
-            mLines.Add(new Line.GoTo(labelForFalse));
-
-            var gotoPosition = mLines.Count - 1;
-
-            node.Stat.Accept(this); //тело для true
-        
-            if (mLines[gotoPosition + 1].label.Count() != 0)
+            else
             {
-                conditionalLine.target = mLines[gotoPosition + 1].label;
+                mLines.Add(new Line.EmptyLine(outLabel));
             }
-            else mLines[gotoPosition + 1].label = labelForTrue;
-
-            mLines.Add(new Line.EmptyLine());
-            mLines.Last().label = labelForFalse;
         }
 
         public void Visit(CoutNode node)
