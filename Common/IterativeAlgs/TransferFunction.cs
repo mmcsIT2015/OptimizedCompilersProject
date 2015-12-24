@@ -113,13 +113,9 @@ namespace iCompiler
             foreach (ConstNACInfo c in x)
             {
                 var tmp = mGen.Count(el => el.VarName == c.VarName);
-
-                foreach (var kk in mGen)
-                    Debug.Assert(mGen.Count(el => el.VarName == kk.VarName) <= 1);
                 if (tmp > 0)
                     continue;
-                else
-                    newGen.Add(new ConstNACInfo(c));
+                newGen.Add(new ConstNACInfo(c));
             }
             return newGen;
         }
@@ -134,4 +130,5 @@ namespace iCompiler
             return new TransferFunctionForDraggingConstants(this.Map(mGen));
         }
     }
+
 }

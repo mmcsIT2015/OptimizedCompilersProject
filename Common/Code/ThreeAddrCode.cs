@@ -419,15 +419,22 @@ namespace iCompiler
                 HashSet<ConstNACInfo> blockRes = new HashSet<ConstNACInfo>();
                 for (int j = blocks[i].Count - 1; j >= 0; --j)
                 {
+                    if (blocks[i][j].Is<Expr>() && ((blocks[i][j] as Expr).left[0].Equals('@') || variables.Contains((blocks[i][j] as Expr).left)))
+                        continue;
                     if (blocks[i][j].Is<Identity>())
                     {
                         Identity ident = blocks[i][j] as Identity;
-
                         //Если уже есть константное значение для этой переменной, то пропускаем. 
-                        if (variables.Contains(ident.left) || !ident.RightIsNumber())
-                            continue;
-                        blockRes.Add(new ConstNACInfo(VariableConstType.CONSTANT, ident.left, ident.right));
+                        if (!ident.RightIsNumber())
+                            blockRes.Add(new ConstNACInfo(VariableConstType.NOT_A_CONSTANT, ident.left, ""));
+                        else
+                            blockRes.Add(new ConstNACInfo(VariableConstType.CONSTANT, ident.left, ident.right));
                         variables.Add(ident.left.ToString());
+                    }
+                    else if (blocks[i][j].Is<BinaryExpr>())
+                    {
+                        blockRes.Add(new ConstNACInfo(VariableConstType.NOT_A_CONSTANT, (blocks[i][j] as BinaryExpr).left));
+                        variables.Add((blocks[i][j] as BinaryExpr).left.ToString());
                     }
                 }
                 res.Add(blockRes);
