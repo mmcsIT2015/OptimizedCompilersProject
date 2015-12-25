@@ -20,18 +20,18 @@ __Пример использования__
 ~~~~~~~{.cs}
 
 	ThreeAddrCode code;
-	
+
 	// ...
-	
+
 	string ILCode = ILCodeGenerator.Generate(code);
 
-~~~~~~~~~~~~~~
+~~~~~~~
 
 __Пример генерации__
 
 Исходный трехадресный код:
-
-	i = 0
+```
+i = 0
 
 @l2:	@t0 = i < 10
 	if @t0 goto @l0
@@ -45,10 +45,11 @@ __Пример генерации__
 	goto @l2
 
 @l1:	<empty statement>
-
+```
 
 Сгенерированный IL-код:
 
+```
 .assembly extern mscorlib {}
 .assembly program {}
 
@@ -81,4 +82,4 @@ __Пример генерации__
 	nop
 	ret
 }
-	
+```
