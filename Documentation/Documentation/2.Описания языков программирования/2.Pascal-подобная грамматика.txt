@@ -1,0 +1,23 @@
+Реализовано:
+объявление и инициализация переменных различных типов, арифметические выражения, ветвление (if-else), циклы (while-do и repeat-until), write,
+метки (label, goto), вызов функций.
+
+Пример:
+
+~~~~~~~{.cs}
+
+begin
+	var a : integer := 5.6;
+	var b : integer;
+	var d : float;
+label1:
+	b := 89+5*4;
+	var c : integer;
+	c := 78;
+label2:
+	d := 23.78;
+	goto label1
+	
+end.
+
+~~~~~~~~~~~~~~~
