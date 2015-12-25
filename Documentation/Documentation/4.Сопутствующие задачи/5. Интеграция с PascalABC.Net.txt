@@ -16,8 +16,8 @@ class Gen3AddrCodeVisitor : WalkingVisitorNew {
 
 Метод `CreateCode();` генерирует трехадресный код (который и возвращает) из данных, полученных в процессе выполнения обхода дерева. Также именно в этой функции создается таблица имен.
 
-
 Для генерации синтаксического дерева из трехадресного кода реализован класс `PascalABCTreeGenerator`:
+
 ~~~~~~{.cs}
 public class PascalABCTreeGenerator {
   public block Generate(iCompiler.ThreeAddrCode code);
