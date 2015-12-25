@@ -124,3 +124,5 @@ https://docs.google.com/spreadsheets/d/1kz_l02P7xZTzKq8kvne4xIBotsjbPTW8zV1JeOcs
 ## Деление бюджета
 https://docs.google.com/spreadsheets/d/1Dh1GuR8s3RbV2dRjnpvORUo6VNIyjc93d2Q_cUQX-rA/edit?usp=sharing
 
+## Заполните форму
+https://docs.google.com/forms/d/1aaFplsmf_d55edBGKnXANV8FEzGhbHXul3PkiDcDOhc/viewform
