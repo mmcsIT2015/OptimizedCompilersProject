@@ -51,7 +51,7 @@ namespace iCompiler
                     //добавляем известные константы в начало блока, чтобы протянуть внутрь него.
                     foreach (ConstNACInfo cInfo in constsList.Value)
                     {
-                        if (cInfo.mType == VariableConstType.CONSTANT)
+                        if (cInfo.VarType == VariableConstType.CONSTANT)
                         {
                             Code.blocks[ind].Insert(0, new Identity(cInfo.VarName, cInfo.ConstVal));
                             ++insertsCount[ind];

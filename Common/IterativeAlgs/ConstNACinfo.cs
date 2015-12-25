@@ -26,7 +26,7 @@ namespace iCompiler
     public class ConstNACInfo : ICloneable
     {
         //Состояние переменной
-        public VariableConstType mType;
+        private VariableConstType mType;
 
         //Имя переменной
         private string mVName;
@@ -34,6 +34,7 @@ namespace iCompiler
         private string mValue;
         public string VarName { get { return mVName; } }
 
+        public VariableConstType VarType { get { return mType; } }
         public bool NameEquals(ConstNACInfo c1)
         {
             return this.VarName == c1.VarName;
