@@ -259,7 +259,7 @@
             this.taCodeGroupBox.Size = new System.Drawing.Size(381, 273);
             this.taCodeGroupBox.TabIndex = 7;
             this.taCodeGroupBox.TabStop = false;
-            this.taCodeGroupBox.Text = "TA Code";
+            this.taCodeGroupBox.Text = "Code";
             // 
             // ilGroupBox
             // 

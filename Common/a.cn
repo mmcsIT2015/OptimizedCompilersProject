@@ -1,5 +1,5 @@
-{	
-		int a, b, c, d, e, f, h;
+﻿{	
+		int a, b = 2, c = 5, d, e, f, h;
 		a = b + c;
 		if (1) {
 			d = b + c;
@@ -8,5 +8,6 @@
 		}
 
 		e = b + c;
+		cout << e;
 }
 
