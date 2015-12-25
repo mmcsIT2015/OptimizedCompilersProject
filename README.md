@@ -115,3 +115,12 @@ Optimized compilers project
 ## 4.12.15
 1. Выделение областей (__Source_Code__)
 2. Реализация алгоритма на основе областей
+
+# 25.12.15
+
+## Оценивание вклада
+https://docs.google.com/spreadsheets/d/1kz_l02P7xZTzKq8kvne4xIBotsjbPTW8zV1JeOcspEI/edit?usp=sharing
+
+## Деление бюджета
+https://docs.google.com/spreadsheets/d/1Dh1GuR8s3RbV2dRjnpvORUo6VNIyjc93d2Q_cUQX-rA/edit?usp=sharing
+
