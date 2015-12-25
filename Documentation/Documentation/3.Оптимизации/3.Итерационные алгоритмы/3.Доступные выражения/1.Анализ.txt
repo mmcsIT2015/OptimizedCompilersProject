@@ -1,9 +1,6 @@
-
-# Анализ доступных выражений
-
 Класс `ReachableExprsGenerator` имеет несколько важных статических методов:
 
-#### Генерация Gen-Kill
+__Генерация Gen-Kill__
 
 ~~~~~~{.cs}
 Dictionary<Block, ExpressionGenKill> BuildExpressionsGenKill(ThreeAddrCode code)
@@ -16,7 +13,7 @@ Dictionary<Block, ExpressionGenKill> BuildExpressionsGenKill(ThreeAddrCode code)
 
 - множество kill - множество выражений все программы, что переменные входящие в них переопредяются в текущем базового блоке и потом эти выражения не генерируются базовым блоком заново.
 
-#### Конвертация из внутреннего представления множеств Gen-Kill в представление, совместимоe с остальными решениями
+__Конвертация из внутреннего представления множеств Gen-Kill в представление, совместимоe с остальными решениями__
 
 ~~~~~~{.cs}
 InOutData<Line.Expr> BuildReachableExpressionsGenKill(ThreeAddrCode code)
@@ -24,7 +21,7 @@ InOutData<Line.Expr> BuildReachableExpressionsGenKill(ThreeAddrCode code)
 
 (детали реализации)
 
-#### Генерация семейства передаточных функций:
+__Генерация семейства передаточных функций:__
 
 ~~~~~~{.cs}
 Dictionary<Block, ...> BuildTransferFuncsForReachableExprs(ThreeAddrCode code)
