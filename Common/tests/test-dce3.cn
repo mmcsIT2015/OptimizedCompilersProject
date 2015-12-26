@@ -1,7 +1,7 @@
-{
-	int x = u;
+﻿{
+	int u, x = u;
 	x = x;
-	int u = !u;
+	u = !u;
 	u = !u;
 	int l = l;
 	int a = 89;

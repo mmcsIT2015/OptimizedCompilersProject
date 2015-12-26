@@ -1,7 +1,7 @@
-{
+﻿{
   int a1 = 1;
   int a2 = 2;
-  int a3 = 3;
+  int a3 = 3, a5;
 
   if (a1 > 5)
   {
